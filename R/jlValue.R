@@ -5,6 +5,32 @@ jlvalue.default <- function(expr, ...) {
   NULL
 }
 
+jlvalue_function_with_exception <- function(jlval, code, parent_envir=parent.frame()) {
+    if(is.jlexception(jlval)) {
+        jlexception(code, jlval)
+    } else if (is.jlfunction(jlval)) {
+        jlfunction(jlval, parent_envir)
+    } else {
+        jlval
+    }
+}
+
+jlvalue_with_exception <-  function(code, jlval) { 
+    if(is.jlexception(jlval)) {
+        jlexception(code, jlval)
+    } else {
+        jlval
+    }
+}
+
+jlvalue_function <-  function(jlval, parent_envir = parent.frame()) { 
+    if(is.jlfunction(jlval)) {
+        jlfunction(jlval, parent_envir)
+    } else {
+        jlval
+    }
+}
+
 ## add code as attribute
 jlvalue_with_code <- function(jlval, code) {
     attr(jlval, "code") <- code

@@ -22,29 +22,57 @@ jl_rexprs <- function(rexprs, objs) { # rexpr is generally the result of substit
 ## jl_rexprs is failing
 ## jl() would benefit too of jl_rexpr2 instead of jl_rexpr 
 
-jl_arg_rexpr <- function(rexpr, parent_envir= parent.frame()) { # rexpr is generally the result of substitute(obj) 
-    # print(list(rexpr=rexpr,class=class(rexpr)))
-    if (class(rexpr) == "name") {
+## OLD IMPLEMENTATION
+# jl_arg_rexpr <- function(rexpr, parent_envir= parent.frame()) { # rexpr is generally the result of substitute(obj) 
+#     # print(list(rexpr=rexpr,class=class(rexpr)))
+#     if (class(rexpr) == "name") {
+#         obj <- deparse(rexpr)
+#         jlval <- jlvalue_eval(obj)
+#         # print(list(obj=obj, isjlf=is.jlfunction(jlval), robj = obj %in% ls(parent_envir), envir=ls(parent_envir)))
+#         if(is.jlfunction(jlval)) {
+#            jlfunction(jlval, parent_envir) 
+#         } else if(is.variable(obj, parent_envir)) {# (obj %in% ls(parent_envir) ) {
+#             obj <- eval(rexpr, envir=parent_envir)
+#             jlvalue(obj)
+#         } else {
+#             jlval
+#         }
+#     } else {
+#         if(class(rexpr) == "call") {
+#             # print(list(rexpr=rexpr, envir=ls(parent_envir)))
+#             obj <- eval(rexpr, envir = parent_envir)
+#             jlvalue(obj)
+#         } else {
+#             jlvalue(rexpr)
+#         }
+#     }
+# }
+
+
+# rexpr is generally the result of substitute(obj) 
+jl_arg_rexpr <- function(rexpr, parent_envir= parent.frame()) {
+    jlval <- if (class(rexpr) == "name") {
         obj <- deparse(rexpr)
-        jlval <- jlvalue_eval(obj)
-        # print(list(obj=obj, isjlf=is.jlfunction(jlval), robj = obj %in% ls(parent_envir), envir=ls(parent_envir)))
-        if(is.jlfunction(jlval)) {
-           jlfunction(jlval, parent_envir) 
-        } else if(is.variable(obj, parent_envir)) {# (obj %in% ls(parent_envir) ) {
+        if(is.variable(obj, parent_envir)) {
+            ## Priority 1: obj is an R object
             obj <- eval(rexpr, envir=parent_envir)
             jlvalue(obj)
         } else {
-            jlval
+            ## Priority 2: obj is a string corresponding to a julia expression
+            jlvalue_eval(obj)
         }
     } else {
         if(class(rexpr) == "call") {
+            ## Priority 1 as a call:  
             # print(list(rexpr=rexpr, envir=ls(parent_envir)))
             obj <- eval(rexpr, envir = parent_envir)
             jlvalue(obj)
         } else {
+            ## as a julia obj 
             jlvalue(rexpr)
         }
     }
+    jlvalue_function_with_exception(jlval, obj, parent_envir)
 }
 
 jl_args_rexprs <- function(rexprs, parent_envir) { # rexpr is generally the result of substitute(obj) 
