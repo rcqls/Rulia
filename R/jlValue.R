@@ -5,6 +5,12 @@ jlvalue.default <- function(expr, ...) {
   NULL
 }
 
+## add code as attribute
+jlvalue_with_code <- function(jlval, code) {
+    attr(jlval, "code") <- code
+    return(jlval)
+}
+
 ########################
 ## eval functions
 ## 1) jlvalue mode 
@@ -17,7 +23,7 @@ jlvalue_eval <- function(expr) {
 jleval <- function(obj, ...) {
     if (length(obj) == 1 && is.character(obj)) {
         jlval <- .jlvalue_eval_with_class(obj)
-        jlvalue_or_jlexception(obj, jlval)
+        jlvalue_with_exception(obj, jlval)
     } else {
         warning("Bad input for jlvalue_eval function!")
         NULL

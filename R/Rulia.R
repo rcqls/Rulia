@@ -8,7 +8,7 @@ jl <- function(obj, ..., name_class = TRUE) {
   if( name_class && !is.variable(name, parent.frame())) {
     return(jl_rexpr(substitute(obj), obj, ...))
   }
-  jlvalue_or_jlexception(name, jlvalue(obj, ...))
+  jlvalue_with_exception(name, jlvalue(obj, ...))
 }
 
 jlR <- function(obj, ..., name_class = TRUE) {
@@ -17,7 +17,7 @@ jlR <- function(obj, ..., name_class = TRUE) {
     res <- jl_rexpr(substitute(obj), ...)
     if (!is.null(res)) return(toR(res))
   }
-  toR(jlvalue_or_jlexception(name, jlvalue(obj, ...)))
+  toR(jlvalue_with_exception(name, jlvalue(obj, ...)))
 }
 
 jl2 <- function(obj, ..., parent_envir = parent.frame(), name_class = TRUE) {
@@ -25,7 +25,7 @@ jl2 <- function(obj, ..., parent_envir = parent.frame(), name_class = TRUE) {
   if (name_class && !is.variable(name, parent_envir)) {
     return(jl_rexpr2(substitute(obj), parent_envir))
   }
-  jlvalue_or_jlexception(name, jlvalue(obj, ...))
+  jlvalue_with_exception(name, jlvalue(obj, ...))
 }
 
 jl2R <- function(obj, ..., parent_envir = parent.frame(), name_class = TRUE) {
@@ -86,7 +86,7 @@ jlcall <- jltrycall <- function(meth, ..., parent_envir =  parent.frame()) {
   ## print(lapply(args, jl))
   ## print(.RNamedList2jlNamedTuple(kwargs))
   jlval <- .jlvalue_trycall(jlvalue(meth), jl(lapply(args, jl)), .RNamedList2jlNamedTuple(kwargs))
-  jlvalue_or_jlexception(match.call(), jlval)
+  jlvalue_with_exception(match.call(), jlval)
 }
 
 jlfunc <- jltryfunc <- function(meth, ..., parent_envir =  parent.frame()) {
@@ -100,7 +100,7 @@ jlfunc <- jltryfunc <- function(meth, ..., parent_envir =  parent.frame()) {
   ## print(lapply(args, jl))
   ## print(.RNamedList2jlNamedTuple(kwargs))
   jlval <- .jlvalue_tryfunc(meth, jl(lapply(args, jl)), .RNamedList2jlNamedTuple(kwargs))
-  jlvalue_or_jlexception(match.call(), jlval)
+  jlvalue_with_exception(match.call(), jlval)
 }
 
 jlcallR <- jltrycallR <- function(meth, ...) toR(jltrycall(meth, ...))

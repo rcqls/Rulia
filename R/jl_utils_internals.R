@@ -5,7 +5,7 @@ jl_rexpr <- function(rexpr, obj, ...) { # rexpr is generally the result of subst
         if(is.jlfunction(jlval)) {
            jlfunction(jlval) 
         } else {
-            jlvalue_or_jlexception(rexpr, jlval)
+            jlvalue_with_exception(rexpr, jlval)
         }
     } else {
         jlvalue(obj, ...)

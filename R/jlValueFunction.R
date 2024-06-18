@@ -1,31 +1,3 @@
-## FIRST VERSION
-# jlfunction <- function(jlval, parent_envir = parent.frame(3)) {
-#     isjlf <- is.jlfunction(jlval)
-#     if(isjlf$ok) {
-#         key <- isjlf$name
-#         attrsR <- list(
-#             name = key,
-#             jlvalue = jlval,
-#             parent_envir = parent_envir ## VERY IMPORTANT (see comment below)
-#         )
-#         ## IMPORTANT:
-#         ## parent_envir is required for the next closure to know parent_envir inside
-#         jlf <- function(...) {
-#             jlval <- jltrycall(key, ..., parent_envir = parent_envir)
-#             jlval #jlvalue_or_jlexception(match.call(), jlval)
-#         }
-#         body(jlf)[[2]][[3]][[2]] <- key
-#         attributes(jlf) <- attrsR
-#         class(jlf) <- "jlfunction"
-#         jlf
-#     } else {
-#         function(...) {
-#             warning("Not a julia function!")
-#             jlval
-#         }
-#     }
-# }
-
 jlfunction <- function(jlval, parent_envir = parent.frame(3)) {
     if(is.jlfunction(jlval)) {
         attrsR <- list(

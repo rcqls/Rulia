@@ -45,7 +45,7 @@ jlEnv <- function() get("jl", envir = globalenv())
             #     do.call("jlvalue_call", c(key, lapply(args, jl)))
             # }
             jlval <- jltrycall(key, ..., parent_envir = parent_envir)
-            jlval ## jlvalue_or_jlexception(match.call(), jlval)
+            jlval ## jlvalue_with_exception(match.call(), jlval)
         }
     }
 }
