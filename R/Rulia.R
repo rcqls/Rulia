@@ -2,24 +2,6 @@
 ## 1) jl(`<multiline julia expression>`) redirect to jleval("<multiline julia expression>")
 ## 2) jl(<R object>) is redirected to jlvalue(<RObject>)
 
-
-jl <- function(obj, ..., name_class = TRUE) {
-  name <- deparse(substitute(obj))
-  if( name_class && !is.variable(name, parent.frame())) {
-    return(jl_rexpr(substitute(obj), obj, ...))
-  }
-  jlvalue_with_exception(name, jlvalue(obj, ...))
-}
-
-jlR <- function(obj, ..., name_class = TRUE) {
-  name <- deparse(substitute(obj))
-  if (name_class && !is.variable(name, parent.frame())) {
-    res <- jl_rexpr(substitute(obj), ...)
-    if (!is.null(res)) return(toR(res))
-  }
-  toR(jlvalue_with_exception(name, jlvalue(obj, ...)))
-}
-
 jl <- function(obj, name_class = TRUE) {
     rexpr <- substitute(obj)
     if( name_class ) {
@@ -37,34 +19,12 @@ jlR <- function(obj, name_class = TRUE) {
 }
 
 
-
-jl2 <- function(obj, ..., parent_envir = parent.frame(), name_class = TRUE) {
-  name <- deparse(substitute(obj))
-  if (name_class && !is.variable(name, parent_envir)) {
-    return(jl_rexpr2(substitute(obj), parent_envir))
-  }
-  jlvalue_with_exception(name, jlvalue(obj, ...))
-}
-
-jl2R <- function(obj, ..., parent_envir = parent.frame(), name_class = TRUE) {
-  if (name_class && !is.variable(name, parent_envir)) {
-    res <- jl_rexpr2(substitute(obj), parent_envir)
-    if (!is.null(res)) return(toR(res))
-  }
-  toR(jlvalue(obj, ...))
-}
-
-# jlrun_safe <- function(expr) {
-#   if(!.jlrunning()) .jlinit()
-#   invisible(.External("Rulia_run", .jlsafe(expr), PACKAGE = "Rulia"))
-# }
-
 jlrun_ <- function(expr) {
   if(!.jlrunning()) .jlinit()
   invisible(.External("Rulia_run", expr, PACKAGE = "Rulia"))
 }
 
-jlrun <- jlrun_with_jlexception <- function(expr) {
+jlrun <- jlrun_with_exception <- function(expr) {
   if(!.jlrunning()) .jlinit()
   res <- .External("Rulia_run_with_exception", expr, PACKAGE = "Rulia")
   if(!is.null(res)) {

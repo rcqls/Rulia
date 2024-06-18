@@ -18,37 +18,6 @@ jl_rexprs <- function(rexprs, objs) { # rexpr is generally the result of substit
 
 }
 
-## Proposition of replacement of jl_rexpr and jl_rexprs mostly because
-## jl_rexprs is failing
-## jl() would benefit too of jl_rexpr2 instead of jl_rexpr 
-
-## OLD IMPLEMENTATION
-# jl_arg_rexpr <- function(rexpr, parent_envir= parent.frame()) { # rexpr is generally the result of substitute(obj) 
-#     # print(list(rexpr=rexpr,class=class(rexpr)))
-#     if (class(rexpr) == "name") {
-#         obj <- deparse(rexpr)
-#         jlval <- jlvalue_eval(obj)
-#         # print(list(obj=obj, isjlf=is.jlfunction(jlval), robj = obj %in% ls(parent_envir), envir=ls(parent_envir)))
-#         if(is.jlfunction(jlval)) {
-#            jlfunction(jlval, parent_envir) 
-#         } else if(is.variable(obj, parent_envir)) {# (obj %in% ls(parent_envir) ) {
-#             obj <- eval(rexpr, envir=parent_envir)
-#             jlvalue(obj)
-#         } else {
-#             jlval
-#         }
-#     } else {
-#         if(class(rexpr) == "call") {
-#             # print(list(rexpr=rexpr, envir=ls(parent_envir)))
-#             obj <- eval(rexpr, envir = parent_envir)
-#             jlvalue(obj)
-#         } else {
-#             jlvalue(rexpr)
-#         }
-#     }
-# }
-
-
 # rexpr is generally the result of substitute(obj) 
 jl_arg_rexpr <- function(rexpr, parent_envir= parent.frame()) {
     jlval <- if (class(rexpr) == "name") {
