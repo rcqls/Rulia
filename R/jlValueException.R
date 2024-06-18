@@ -9,7 +9,7 @@ jlvalue_with_exception <-  function(code, jlval) {
 jlexception <- function(code, jlval) {
     jlval <- jlvalue_with_code(jlval, code)
     class(jlval) <- c(toR(jlvalue_call("string", jlvalue_call("typeof",jlval))) , "jlexception", "jlvalue")
-    exc
+    jlval
 }
 
 jlvalue.jlexception <- function(jlval) jlval

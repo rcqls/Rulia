@@ -54,8 +54,8 @@ jlgetfieldR <- function(jlval, field) toR(jlgetfield(jlval, field))
 jlshow <- function(jlval) invisible(jltrycall("show",jlval))
 jldisplay <- function(jlval) invisible(jltrycall("display",jlval))
 
-"%<:%" <- function(a, b) {args <- Rulia:::jl_rexprs2(substitute(list(a,b)), parent_envir=parent.frame());jl(`<:`)(args[[1]],args[[2]])}
+"%<:%" <- function(a, b) {args <- jl_args_rexprs(substitute(list(a,b)), parent_envir=parent.frame());jl(`<:`)(args[[1]],args[[2]])}
 
-"%isa%" <- function(a, b) {args <- Rulia:::jl_rexprs2(substitute(list(a,b)), parent_envir=parent.frame());jl(isa)(args[[1]],args[[2]])}
+"%isa%" <- function(a, b) {args <- jl_args_rexprs(substitute(list(a,b)), parent_envir=parent.frame());jl(isa)(args[[1]],args[[2]])}
 
 expect_jlequal <- function(jlval, res, ...) expect_equal(Rulia:::jlvalue_capture_display(jlval), paste0(res, "\n"), ...)

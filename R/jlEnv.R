@@ -38,7 +38,7 @@ jlEnv <- function() get("jl", envir = globalenv())
     } else {
         parent_envir <- parent.frame()
         function(...) {
-            # args <- jl_rexprs2(substitute(list(...)), parent.frame())
+            # args <- jl_args_rexprs(substitute(list(...)), parent.frame())
             # if(any(sapply(args, is.jlexception))) {
             #     jlexceptions(args)
             # } else {
@@ -50,7 +50,7 @@ jlEnv <- function() get("jl", envir = globalenv())
     }
 }
 
-## TODO: same spirit than jltrycall or at least jl_rexprs2
+## TODO: same spirit than jltrycall or at least jl_args_rexprs
 `[.jlEnv` <- function(obj, key) {
     if(class(substitute(key)) != "character") {
         key <- deparse(substitute(key))

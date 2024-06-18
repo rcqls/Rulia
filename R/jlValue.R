@@ -11,7 +11,7 @@ jlvalue_with_code <- function(jlval, code) {
     return(jlval)
 }
 
-########################
+###########################################
 ## eval functions
 ## 1) jlvalue mode 
 ## IMPORTANT: the user knows that the argument is a character and the content is a valid julia code
@@ -19,7 +19,7 @@ jlvalue_eval <- function(expr) {
     .jlvalue_eval_with_class(expr)
 }
 
-## 2) jl mode: test on length on obj and jlexception 
+## 2) jl mode: test on length of obj and jlexception 
 jleval <- function(obj, ...) {
     if (length(obj) == 1 && is.character(obj)) {
         jlval <- .jlvalue_eval_with_class(obj)
@@ -29,6 +29,9 @@ jleval <- function(obj, ...) {
         NULL
     }
 }
+
+## 3) jl+ mode: see jl() function
+################################################
 
 jlvalue_invisible <- function(jlval) {
     if(jlvalue_callR("isnothing", jlval)) {
