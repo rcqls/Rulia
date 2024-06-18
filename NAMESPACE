@@ -1,0 +1,102 @@
+useDynLib(Rulia, .registration = TRUE)
+
+# exportPattern("^\\jl_")
+# exportPattern("^\\jlR_")
+export(
+  jl, jleval, jlrun, jlcall, jlfunc,
+  R, toR, 
+  jlR, jlcallR, jlfuncR,
+  ## unsafe function (closest to julia C API)
+  jlvalue_eval,
+  jlvalue, is.jlvalue,
+  jlvalue_call, jlvalue_callR,
+  jlfunction, is.jlfunction,
+  jlvalue_set, jlvalue_get,
+  ## User sugar
+  jlusing, jlpkg,
+  jlpkgisinstalled, jlpkgadd, 
+  is.Struct,
+  jltypeof, jlstring,
+  jltypeofR, jlstringR,
+  jlArray, jlCategoricalArray, jlDataFrame,
+  jlDict, jlTuple, jlNamedTuple, jlStruct,
+  jlcolon, jlsymbol,
+  jlshow, jldisplay,
+  "%<:%", "%isa%",
+  rand, jl_set.seed,
+  ## extra
+  rexpr2jlexpr, 
+  expect_jlequal # useful for testthat
+)
+
+S3method(print,jlvalue)
+S3method(print,jlfunction)
+S3method(rand, double)
+S3method(rand, integer)
+S3method(rand, default)
+
+#S3methods are not viewable inside the R system. If you want this functionality available put it in the previous export
+S3method("jlvalue",default)
+S3method("jlvalue",jlvalue)
+S3method("jlvalue",jlfunction)
+S3method("jlvalue",jlexception)
+S3method("jlvalue",name)
+S3method("jlvalue",data.frame)
+S3method("jlvalue",list)
+S3method("jlvalue",integer)
+S3method("jlvalue",double)
+S3method("jlvalue",logical)
+S3method("jlvalue",character)
+S3method("jlvalue",factor)
+
+S3method(toR,default)
+S3method(toR,jlvalue)
+S3method(toR,DataFrame)
+S3method(toR,CategoricalArray)
+S3method(toR,NamedTuple)
+S3method(toR,Tuple)
+
+S3method("names",jlEnv)
+S3method("[",jlEnv)
+S3method("[[",jlEnv)
+S3method("$",jlEnv)
+S3method("$<-",jlEnv)
+S3method("print",jlEnv)
+# S3method("@",jlEnv)
+
+S3method("names",Struct)
+S3method("[",Struct)
+S3method("$",Struct)
+
+S3method("names",NamedTuple)
+S3method("[",NamedTuple)
+S3method("$",NamedTuple)
+
+S3method("length",Tuple)
+S3method("[",Tuple)
+
+S3method("names",Dict)
+S3method("[",Dict)
+S3method("$",Dict)
+
+S3method("length", Array)
+S3method("[", Array)
+S3method("[",AbstractArray)
+# S3method("[<-",AbstractArray)
+
+S3method("names", DataFrame)
+S3method("[", DataFrame)
+S3method("$", DataFrame)
+
+S3method("levels", CategoricalArray)
+
+S3method("print", jlexception)
+S3method("summary", jlexception)
+S3method("print", jlexceptions)
+S3method("summary", jlexceptions)
+
+# S3method(print,jlvector)
+# S3method("[<-",jlvector)
+# S3method("[[",jlvector)
+# S3method("[[<-",jlvector)
+# S3method(as.vector,jlvector)

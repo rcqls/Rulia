@@ -1,0 +1,10 @@
+Package: Rulia
+Version: 0.0.1
+Title: Julia Interface
+Author: Cqls Team
+Maintainer: Remy Drouilhet <remy.drouilhet@univ-grenoble-alpes.fr>
+Description: Interface to julia
+License: GPL Version 2 or later.
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

@@ -1,0 +1,2 @@
+PKG_CFLAGS = -I${JULIA_DIR}/include/julia -I. 
+PKG_LIBS = -fPIC -L${JULIA_DIR}/lib/julia -Wl,-rpath,${JULIA_DIR}/lib/julia -L${JULIA_DIR}/lib -Wl,-rpath,${JULIA_DIR}/lib -ljulia
