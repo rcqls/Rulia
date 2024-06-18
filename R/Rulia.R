@@ -20,6 +20,24 @@ jlR <- function(obj, ..., name_class = TRUE) {
   toR(jlvalue_with_exception(name, jlvalue(obj, ...)))
 }
 
+jl <- function(obj, name_class = TRUE) {
+    rexpr <- substitute(obj)
+    if( name_class ) {
+      return(jl_arg_rexpr(rexpr, parent_envir = parent.frame()))
+    }
+    jlvalue_function_with_exception(deparse(rexpr), jlvalue(obj))
+}
+
+jlR <- function(obj, name_class = TRUE) {
+    rexpr <- substitute(obj)
+    if( name_class ) {
+      return(R(jl_arg_rexpr(rexpr, parent_envir = parent.frame())))
+    }
+    R(jlvalue_function_with_exception(deparse(rexpr), jlvalue(obj)))
+}
+
+
+
 jl2 <- function(obj, ..., parent_envir = parent.frame(), name_class = TRUE) {
   name <- deparse(substitute(obj))
   if (name_class && !is.variable(name, parent_envir)) {
