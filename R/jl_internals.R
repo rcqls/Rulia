@@ -5,18 +5,19 @@
     res
 }
 
-.jlvalue_eval_ <- function(expr) {
+## the raw one from the R and julia APIs
+.jlvalue_eval <- function(expr) {
   if(!.jlrunning()) .jlinit()
   jlval <- .External("Rulia_jlvalue_eval", expr, PACKAGE = "Rulia")
   return(jlval)
 }
 
-.jlvalue_eval_addclass <- function(expr) {
+.jlvalue_eval_with_class <- function(expr) {
   if(!.jlrunning()) .jlinit()
-  jlval <- .jlvalue_eval_(expr)
+  jlval <- .jlvalue_eval(expr)
   if(is.Struct(jlval)) {
     addclass <- "Struct"
-    if(jlvalue_callR("isa",jlval,.jlvalue_eval_("AbstractArray"))) {
+    if(jlvalue_callR("isa",jlval,.jlvalue_eval("AbstractArray"))) {
         addclass <- c("AbstractArray", addclass)
     }
     class(jlval) <- c(class(jlval)[1:(length(class(jlval)) - 1)],
