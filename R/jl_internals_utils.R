@@ -2,6 +2,10 @@
 jl_arg_rexpr <- function(rexpr, parent_envir= parent.frame()) {
     jlval <- if (class(rexpr) == "name") {
         obj <- deparse(rexpr)
+        ## Not a good idea!
+        #if(is.jlvariable(obj)) {
+        #    jlvalue_eval(obj)
+        #} else 
         if(is.variable(obj, parent_envir)) {
             ## Priority 1: obj is an R object
             obj <- eval(rexpr, envir=parent_envir)
@@ -46,4 +50,13 @@ rexpr2jlexpr <- function(term) {
             }
         )
     )
+}
+
+## is a R variable
+is.variable <- function(name, envir) {
+    exists(name,envir=envir) && !is.function(eval(parse(text = name), envir = envir))
+}
+
+is.jlvariable <- function(name) {
+    R(jlvalue_eval(paste0(":",name, " in names(Main)")))
 }
