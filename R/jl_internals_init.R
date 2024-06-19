@@ -44,6 +44,6 @@
 # }
 
 .jlans <- function() {
-  if(!.jlrunning()) .jlinit()
+  ## if(!.jlrunning()) .jlinit()
   .Call("Rulia_get_ans", PACKAGE = "Rulia")
 }

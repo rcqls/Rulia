@@ -1,6 +1,6 @@
 ## Convert to Tuple or NamedTuple
 jlvalue.list <-  function(obj, ...) {
-    if(!.jlrunning()) .jlinit()
+    ## if(!.jlrunning()) .jlinit()
     if(is.null(names(obj))) {
         .RList2jlTuple(obj)
     } else {

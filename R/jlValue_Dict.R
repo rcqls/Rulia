@@ -1,6 +1,6 @@
 jlDict <-  function(...) {
     obj <- list(...)
-    if (!.jlrunning()) .jlinit()
+    ## if (!.jlrunning()) .jlinit()
     jlval <- jlvalue_eval("Dict{Symbol, Any}()")
     vars <- list()
     pairs <- list()

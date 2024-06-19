@@ -28,12 +28,12 @@ jlR <- function(obj) {
 
 
 jlrun_unsafe <- function(expr) {
-  if(!.jlrunning()) .jlinit()
+  ## if(!.jlrunning()) .jlinit()
   invisible(.External("Rulia_run", expr, PACKAGE = "Rulia"))
 }
 
 jlrun <- jlrun_with_exception <- function(expr) {
-  if(!.jlrunning()) .jlinit()
+  ## if(!.jlrunning()) .jlinit()
   res <- .External("Rulia_run_with_exception", expr, PACKAGE = "Rulia")
   if(!is.null(res)) {
     res <- jlexception(expr, res)
@@ -47,13 +47,13 @@ R <- toR <- function(jlval) UseMethod("toR")
 toR.default <- function(obj) obj
 
 jlvalue_get <- function(var) {
-  if (!.jlrunning()) .jlinit()
+  ## if (!.jlrunning()) .jlinit()
   res <- jleval(var)
   return(res)
 }
 
 jlvalue_set <- function(var, value, vector = FALSE) {
-  if (!.jlrunning()) .jlinit()
+  ## if (!.jlrunning()) .jlinit()
   jlval <- jlvalue(value)
   .External("Rulia_set_global_variable", var, jlval, PACKAGE = "Rulia")
   return(invisible())

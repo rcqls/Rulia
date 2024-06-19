@@ -1,5 +1,5 @@
 jlvalue.double <- jlvalue.integer <- jlvalue.logical <- jlvalue.character <-function(obj, vector=FALSE, ...) {
-    if(!.jlrunning()) .jlinit()
+    ## if(!.jlrunning()) .jlinit()
     jlval <- .Call("Rulia_VECSXP_to_jl_array_EXTPTRSXP", obj, PACKAGE = "Rulia")
     if(length(obj) == 1 && !vector) {
         jlval[1]

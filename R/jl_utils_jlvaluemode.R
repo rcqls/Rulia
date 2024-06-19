@@ -2,7 +2,7 @@
 
 
 jlsymbol <- jlvalue_symbol <- function(field) {
-    if(!.jlrunning()) .jlinit()
+    ## if(!.jlrunning()) .jlinit()
     res <- .External("Rulia_jl_symbol", field, PACKAGE = "Rulia")
     res
 }
@@ -14,7 +14,7 @@ jlvalue_isstructtype <- function(jlval) {
 }
 
 jlvalue_typeof <- function(jlval) {
-    if(!.jlrunning()) .jlinit()
+    ## if(!.jlrunning()) .jlinit()
     # res <- .External("Rulia_typeof2R", jlval, PACKAGE = "Rulia")
     jlvalue_call("typeof", jlval)
 }
