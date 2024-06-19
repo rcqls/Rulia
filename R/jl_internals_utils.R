@@ -1,5 +1,5 @@
 # rexpr is generally the result of substitute(obj) 
-jl_arg_rexpr <- function(rexpr, parent_envir= parent.frame()) {
+jlvalue_eval_rexpr <- function(rexpr, parent_envir= parent.frame()) {
     jlval <- if (class(rexpr) == "name") {
         obj <- deparse(rexpr)
         ## Not a good idea!
@@ -28,10 +28,10 @@ jl_arg_rexpr <- function(rexpr, parent_envir= parent.frame()) {
     jlvalue_function_with_exception(jlval, obj, parent_envir)
 }
 
-jl_args_rexprs <- function(rexprs, parent_envir) { # rexpr is generally the result of substitute(obj) 
+jlvalue_eval_rexprs <- function(rexprs, parent_envir) { # rexpr is generally the result of substitute(obj) 
     rexprs <- as.list(rexprs)[-1]
     nms <- names(rexprs)
-    res <- lapply(seq_along(rexprs), function(i) jl_arg_rexpr(rexprs[[i]], parent_envir))
+    res <- lapply(seq_along(rexprs), function(i) jlvalue_eval_rexpr(rexprs[[i]], parent_envir))
     names(res) <- nms
     res
 }

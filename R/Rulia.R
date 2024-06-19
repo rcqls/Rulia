@@ -12,18 +12,18 @@ jl <- function(obj, ...) {
     indvars <- which(nmjlvars != "")
     nmjlvars <- nmjlvars[indvars]
     for (nmvar in nmjlvars) {
-      jlval <- jl_arg_rexpr(jlvars_rexprs[[nmvar]], parent_envir = parent.frame())
+      jlval <- jlvalue_eval_rexpr(jlvars_rexprs[[nmvar]], parent_envir = parent.frame())
       jlvalue_set(nmvar, jlval)
     }
   } else { ## jl+ mode
     rexpr <- substitute(obj)
-    return(jl_arg_rexpr(rexpr, parent_envir = parent.frame()))
+    return(jlvalue_eval_rexpr(rexpr, parent_envir = parent.frame()))
   }
 }
 
 jlR <- function(obj) {
     rexpr <- substitute(obj)
-    return(R(jl_arg_rexpr(rexpr, parent_envir = parent.frame())))
+    return(R(jlvalue_eval_rexpr(rexpr, parent_envir = parent.frame())))
 }
 
 
@@ -62,7 +62,7 @@ jlvalue_set <- function(var, value, vector = FALSE) {
 # jltrycall safe version of jlvalue_call
 
 jlcall <- jltrycall <- function(meth, ..., parent_envir =  parent.frame()) {
-  args <- jl_args_rexprs(substitute(list(...)), parent_envir)
+  args <- jlvalue_eval_rexprs(substitute(list(...)), parent_envir)
   ## TO DEBUG: print(list(jltcargs=args, call=match.call(), s = substitute(list(...)),env=ls(parent_envir)))
   nmargs <- names(args)
   if(is.null(nmargs)) nmargs <- rep("",length(args))
@@ -76,7 +76,7 @@ jlcall <- jltrycall <- function(meth, ..., parent_envir =  parent.frame()) {
 }
 
 jlfunc <- jltryfunc <- function(jlval_meth, ..., parent_envir =  parent.frame()) {
-  args <- jl_args_rexprs(substitute(list(...)), parent_envir)
+  args <- jlvalue_eval_rexprs(substitute(list(...)), parent_envir)
   ## TO DEBUG: print(list(jltcargs=args, call=match.call(), s = substitute(list(...)),env=ls(parent_envir)))
   nmargs <- names(args)
   if(is.null(nmargs)) nmargs <- rep("",length(args))
