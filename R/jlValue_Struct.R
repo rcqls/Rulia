@@ -4,7 +4,7 @@ jlStruct <- function(datatype, ...) {
     }
     jlargs <- lapply(list(...), jl) # TODO: check if jlvalue is better?
     jlnargs <- length(jlargs)
-    jlvalue_new_struct(datatype,jlargs,jlnargs)
+    jlvalue_new_struct(datatype, jlargs, jlnargs)
 }
 
 is.Struct <- function(jlval) {

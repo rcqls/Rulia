@@ -5,26 +5,14 @@ jlvalue.default <- function(expr, ...) {
   NULL
 }
 
+## Main function to manage returned jlvalue object
+# 1) jlexception if thing goes wrong (failure)
+# 2) jlfunction if  the returned jlvalue is a Function
+# 3) the initial jlvalue if everything is correct
 jlvalue_function_with_exception <- function(jlval, code, parent_envir=parent.frame()) {
     if(is.jlexception(jlval)) {
         jlexception(code, jlval)
     } else if (is.jlfunction(jlval)) {
-        jlfunction(jlval, parent_envir)
-    } else {
-        jlval
-    }
-}
-
-jlvalue_with_exception <-  function(code, jlval) { 
-    if(is.jlexception(jlval)) {
-        jlexception(code, jlval)
-    } else {
-        jlval
-    }
-}
-
-jlvalue_function <-  function(jlval, parent_envir = parent.frame()) { 
-    if(is.jlfunction(jlval)) {
         jlfunction(jlval, parent_envir)
     } else {
         jlval
@@ -49,7 +37,7 @@ jlvalue_eval <- function(expr) {
 jleval <- function(obj, ...) {
     if (length(obj) == 1 && is.character(obj)) {
         jlval <- .jlvalue_eval_with_class(obj)
-        jlvalue_with_exception(obj, jlval)
+        jlvalue_function_with_exception(jlval, obj)
     } else {
         warning("Bad input for jlvalue_eval function!")
         NULL

@@ -6,10 +6,11 @@ jlfunction <- function(jlval, parent_envir = parent.frame(3)) {
             parent_envir = parent_envir ## VERY IMPORTANT (see comment below)
         )
         ## IMPORTANT:
-        ## parent_envir is required for the next closure to know parent_envir inside
+        ## parent_envir is required for the next closure to know parent_envir inside its body
         jlf <- function(...) {
             jltryfunc(key, ..., parent_envir = parent_envir)
         }
+        ## replace key with jlval
         body(jlf)[[2]][[2]] <- jlval
         attributes(jlf) <- attrsR
         class(jlf) <- c(R(jlvalue_call("string", jlvalue_call("typeof", jlval))), "jlfunction")
@@ -22,25 +23,10 @@ jlfunction <- function(jlval, parent_envir = parent.frame(3)) {
     }
 }
 
-## FIRST VERSION
-# is.jlfunction <- function(jlval) {
-#     if(is.jlvalue(jlval)) {
-#         typR <- jlvalue_callR("typeof",jlval)
-#         if(substring(typR,1,1) == "#") {
-#             return(list(ok = TRUE, name = substring(typR,2)))
-#         } else {
-#             return(list(ok = FALSE, name = typR))
-#         }
-#     } else {
-#         return(list(ok = FALSE))
-#     }
-# }
-
-
 is.jlfunction <- function(jlval) {
-    is.jlvalue(jlval) && R(jlvalue_call("isa", jlval, jlvalue_eval("Function")))
+    ## Base.Callable is Union{Type, Function} and then ca
+    is.jlvalue(jlval) && R(jlvalue_call("isa", jlval, jlvalue_eval("Base.Callable")))
 }
-
 
 jlvalue.jlfunction <- function(jlf) attr(jlf, "jlvalue")
 

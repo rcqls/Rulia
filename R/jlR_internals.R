@@ -1,4 +1,4 @@
-## Internal (TODO: put in another R file that represents internal stuff)
+##  These functions are internal functions that don't rely on jl+ mode
 
 .RNamedList2jlDataFrame <- function(df) {
     jlusing("DataFrames")
@@ -37,7 +37,7 @@
     types <- c()
     for (nm in names(obj)) {
         vars[[nm]] <- jlvalue(obj[[nm]])
-        types <- c(types, jltypeofR(vars[[nm]]))
+        types <- c(types, R(jlvalue_typeof(vars[[nm]])))
     }
     jlstruct <- paste0("@NamedTuple{", paste(names(obj), "::", types, collapse=",", sep=""), "}") 
     args <- c(jlstruct, unname(vars))

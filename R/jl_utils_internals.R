@@ -1,23 +1,3 @@
-jl_rexpr <- function(rexpr, obj, ...) { # rexpr is generally the result of substitute(obj) 
-    if (class(rexpr) == "name") {
-        obj <- deparse(rexpr)
-        jlval <- jlvalue_eval(obj)
-        if(is.jlfunction(jlval)) {
-           jlfunction(jlval) 
-        } else {
-            jlvalue_with_exception(rexpr, jlval)
-        }
-    } else {
-        jlvalue(obj, ...)
-    }
-}
-
-jl_rexprs <- function(rexprs, objs) { # rexpr is generally the result of substitute(obj) 
-    rexprs <- as.list(rexprs)[-1]
-    lapply(seq_along(rexprs), function(i) jl_rexpr(rexprs[[i]], objs[[i]]))
-
-}
-
 # rexpr is generally the result of substitute(obj) 
 jl_arg_rexpr <- function(rexpr, parent_envir= parent.frame()) {
     jlval <- if (class(rexpr) == "name") {
@@ -52,15 +32,18 @@ jl_args_rexprs <- function(rexprs, parent_envir) { # rexpr is generally the resu
     res
 }
 
-.jlmethod <- function(meth, value) paste0(meth,"(",value,")")
-
-.jltypeof <- function(value) .jleval(.jlmethod("typeof",value))
-
-## No more used! To REMOVE
-# .jlsafe <- function(expr) {
-#   paste0("try\n", expr, "\ncatch e\n showerror(stdout,e); e\n end")
-# }
-
-# .jlsilentsafe <- function(expr) {
-#   paste0("try\n", expr, "\ncatch e\n e\n end")
-# }
+rexpr2jlexpr <- function(term) { 
+    as.call(
+        lapply(
+            as.list(term), 
+            function(e) {
+                if(is.name(e) && as.character(e) ==  "c") 
+                    as.name("vcat")
+                else if(length(e) == 1) 
+                    e 
+                else 
+                    as.call(rexpr2jlexpr(e))
+            }
+        )
+    )
+}

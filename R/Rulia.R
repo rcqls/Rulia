@@ -19,7 +19,7 @@ jlR <- function(obj, name_class = TRUE) {
 }
 
 
-jlrun_ <- function(expr) {
+jlrun_unsafe <- function(expr) {
   if(!.jlrunning()) .jlinit()
   invisible(.External("Rulia_run", expr, PACKAGE = "Rulia"))
 }
@@ -55,30 +55,30 @@ jlvalue_set <- function(var, value, vector = FALSE) {
 
 jlcall <- jltrycall <- function(meth, ..., parent_envir =  parent.frame()) {
   args <- jl_args_rexprs(substitute(list(...)), parent_envir)
-  ## print(list(jltcargs=args, call=match.call(), s = substitute(list(...)),env=ls(parent_envir)))
+  ## TO DEBUG: print(list(jltcargs=args, call=match.call(), s = substitute(list(...)),env=ls(parent_envir)))
   nmargs <- names(args)
   if(is.null(nmargs)) nmargs <- rep("",length(args))
   kwargs <- args[nmargs != ""]
   args <- args[nmargs == ""]
-  ## print(list(args=args, kwargs=kwargs))
-  ## print(lapply(args, jl))
-  ## print(.RNamedList2jlNamedTuple(kwargs))
+  ## TO DEBUG: print(list(args=args, kwargs=kwargs))
+  ## TO DEBUG: print(lapply(args, jl))
+  ## TO DEBUG: print(.RNamedList2jlNamedTuple(kwargs))
   jlval <- .jlvalue_trycall(jlvalue(meth), jl(lapply(args, jl)), .RNamedList2jlNamedTuple(kwargs))
-  jlvalue_with_exception(match.call(), jlval)
+  jlvalue_function_with_exception(jlval, match.call(), parent_envir)
 }
 
 jlfunc <- jltryfunc <- function(jlval_meth, ..., parent_envir =  parent.frame()) {
   args <- jl_args_rexprs(substitute(list(...)), parent_envir)
-  ## print(list(jltcargs=args, call=match.call(), s = substitute(list(...)),env=ls(parent_envir)))
+  ## TO DEBUG: print(list(jltcargs=args, call=match.call(), s = substitute(list(...)),env=ls(parent_envir)))
   nmargs <- names(args)
   if(is.null(nmargs)) nmargs <- rep("",length(args))
   kwargs <- args[nmargs != ""]
   args <- args[nmargs == ""]
-  ## print(list(args=args, kwargs=kwargs))
-  ## print(lapply(args, jl))
-  ## print(.RNamedList2jlNamedTuple(kwargs))
+  ## TO DEBUG: print(list(args=args, kwargs=kwargs))
+  ## TO DEBUG: print(lapply(args, jl))
+  ## TO DEBUG: print(.RNamedList2jlNamedTuple(kwargs))
   jlval <- .jlvalue_tryfunc(jlval_meth, jl(lapply(args, jl)), .RNamedList2jlNamedTuple(kwargs))
-  jlvalue_with_exception(match.call(), jlval)
+  jlvalue_function_with_exception(jlval, match.call(), parent_envir)
 }
 
 jlcallR <- jltrycallR <- function(meth, ...) toR(jltrycall(meth, ...))

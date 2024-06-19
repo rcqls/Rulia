@@ -38,14 +38,7 @@ jlEnv <- function() get("jl", envir = globalenv())
     } else {
         parent_envir <- parent.frame()
         function(...) {
-            # args <- jl_args_rexprs(substitute(list(...)), parent.frame())
-            # if(any(sapply(args, is.jlexception))) {
-            #     jlexceptions(args)
-            # } else {
-            #     do.call("jlvalue_call", c(key, lapply(args, jl)))
-            # }
-            jlval <- jltrycall(key, ..., parent_envir = parent_envir)
-            jlval ## jlvalue_with_exception(match.call(), jlval)
+            jltrycall(key, ..., parent_envir = parent_envir)
         }
     }
 }
@@ -55,9 +48,9 @@ jlEnv <- function() get("jl", envir = globalenv())
     if(class(substitute(key)) != "character") {
         key <- deparse(substitute(key))
     }
-    #function(...) {jlStruct(key, ...)}
+    parent_envir <- parent.frame()
     function(...) {
-        args <- c(key, jl_rexprs(substitute(list(...)), list(...)))
+        args <- c(key, jl_args_rexprs(substitute(list(...)), parent_envir = parent_envir))
         do.call("jlStruct", args)
     }
 }

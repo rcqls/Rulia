@@ -8,9 +8,15 @@ jlpkg <- function(cmd) {
   jlrun(paste0("import Pkg;Pkg.",cmd))
 }
 
-jlusing <- function(...) {
+jlusing <- function(..., force = FALSE) {
   pkgs <- sapply(substitute(c(...))[-1], function(e) ifelse(is.character(e), e, as.character(e)))
-  jlrun(paste0("using ",paste(pkgs,collapse=", ")))
+  if(force) {
+    ## fix a weird issue with loading dll
+    ## that need to be called several time (maybe an issue with the order) 
+    for(pkg in pkgs) jlusing_force(pkg)
+  } else {
+    jlrun(paste0("using ", paste(pkgs,collapse=", ")))
+  }
 }
 
 # if package is specified the file path is relative to inst folder package
