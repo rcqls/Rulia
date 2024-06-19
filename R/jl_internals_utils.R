@@ -21,7 +21,8 @@ jlvalue_eval_rexpr <- function(rexpr, parent_envir= parent.frame()) {
             obj <- eval(rexpr, envir = parent_envir)
             jlvalue(obj)
         } else {
-            ## as a julia obj 
+            ## as a julia obj
+            obj <- deparse(rexpr)
             jlvalue(rexpr)
         }
     }

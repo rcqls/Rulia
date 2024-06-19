@@ -1,4 +1,10 @@
 ## internals
+
+.jlvalue_is_null <- function(jlval) {
+  ## if(!.jlrunning()) .jlinit()
+  is.null(.Call("Rulia_is_xptr_null", jlval,PACKAGE = "Rulia"))
+}
+
 .jlvalue2R <- function(jlval) {
     ## if(!.jlrunning()) .jlinit()
     res <- .External("Rulia_jlvalue2R", jlval, PACKAGE = "Rulia")

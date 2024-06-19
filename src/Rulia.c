@@ -902,6 +902,16 @@ SEXP Rulia_capture_preserved_ref(SEXP ans) {
   return outR;
 }
 
+SEXP Rulia_is_xptr_null(SEXP objR) {
+  void *objPtr;
+  objPtr=R_ExternalPtrAddr(objR);
+  if(objPtr==NULL) {
+          return R_NilValue;
+  } else {
+          return objR;
+  }
+}
+
 
 #include <R_ext/Rdynload.h>
 static const R_CMethodDef cMethods[] = {
@@ -941,6 +951,7 @@ static const R_CallMethodDef callMethods[] = {
   {"Rulia_VECSXP_to_jl_array_EXTPTRSXP", (DL_FUNC)&Rulia_VECSXP_to_jl_array_EXTPTRSXP,1},
   {"Rulia_show_preserved_ref", (DL_FUNC)&Rulia_show_preserved_ref,1},
   {"Rulia_capture_preserved_ref", (DL_FUNC)&Rulia_capture_preserved_ref,1},
+  {"Rulia_is_xptr_null", (DL_FUNC)&Rulia_is_xptr_null,1},
   {NULL,NULL,0}
 };
 

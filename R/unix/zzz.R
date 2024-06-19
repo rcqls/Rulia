@@ -5,10 +5,12 @@
 
 .onAttach <- function(libname, pkgname) {
   if(!.jlrunning()) .jlinit()
-  cat("Welcome to Rulia!\n")
+  cat("Welcome! Rulia has initialized julia inside R\n")
 }
 
 .onDetach <- function(libpath) {
   if(.jlrunning()) .jlexit()
+  cat("Welcome! Rulia has exited julia\n")
 }
+
 

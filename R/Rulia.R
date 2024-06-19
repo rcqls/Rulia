@@ -17,7 +17,8 @@ jl <- function(obj, ...) {
     }
   } else { ## jl+ mode
     rexpr <- substitute(obj)
-    return(jlvalue_eval_rexpr(rexpr, parent_envir = parent.frame()))
+    jlval <- jlvalue_eval_rexpr(rexpr, parent_envir = parent.frame())
+    return(jlvalue_with_code(jlval, deparse(rexpr)))
   }
 }
 
