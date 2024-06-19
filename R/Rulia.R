@@ -2,9 +2,22 @@
 ## 1) jl(`<multiline julia expression>`) redirect to jleval("<multiline julia expression>")
 ## 2) jl(<R object>) is redirected to jlvalue(<RObject>)
 
-jl <- function(obj) {
+jl <- function(obj, ...) {
+  jlvars  <- list(...)
+  if(length(jlvars) > 0) {
+    print("jlvars mode")
+    if(!is.null(names(jlvars))) {
+      indvars <- which(names(jlvars) != "")
+      jlvars <- jlvars[indvars]
+      print(names(jlvars))
+      print(as.list(sys.call())[-1L][indvars])
+    } else {
+      warning("Nothing done since variables have to be named")
+    }
+  } else {
     rexpr <- substitute(obj)
     return(jl_arg_rexpr(rexpr, parent_envir = parent.frame()))
+  }
 }
 
 jlR <- function(obj) {
