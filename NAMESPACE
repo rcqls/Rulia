@@ -58,9 +58,7 @@ S3method(toR,Tuple)
 
 S3method("names",jlEnv)
 S3method("$",jlEnv)
-S3method("$<-",jlEnv)
 S3method("print",jlEnv)
-# S3method("@",jlEnv)
 
 S3method("names",Struct)
 S3method("[",Struct)

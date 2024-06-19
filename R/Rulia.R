@@ -3,18 +3,19 @@
 ## 2) jl(<R object>) is redirected to jlvalue(<RObject>)
 
 jl <- function(obj, ...) {
-  jlvars  <- list(...)
-  if(length(jlvars) > 0) {
-    print("jlvars mode")
-    if(!is.null(names(jlvars))) {
-      indvars <- which(names(jlvars) != "")
-      jlvars <- jlvars[indvars]
-      print(names(jlvars))
-      print(as.list(sys.call())[-1L][indvars])
-    } else {
-      warning("Nothing done since variables have to be named")
+  jlvars_rexprs <- as.list(sys.call())[-1L]
+  if(length(jlvars_rexprs) == 0) {
+    return(.jlEnv())
+  } else if(!is.null(names(jlvars_rexprs))) {
+    ## jl variables mode
+    nmjlvars <- names(jlvars_rexprs)
+    indvars <- which(nmjlvars != "")
+    nmjlvars <- nmjlvars[indvars]
+    for (nmvar in nmjlvars) {
+      jlval <- jl_arg_rexpr(jlvars_rexprs[[nmvar]], parent_envir = parent.frame())
+      jlvalue_set(nmvar, jlval)
     }
-  } else {
+  } else { ## jl+ mode
     rexpr <- substitute(obj)
     return(jl_arg_rexpr(rexpr, parent_envir = parent.frame()))
   }
