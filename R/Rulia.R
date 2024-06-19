@@ -2,20 +2,14 @@
 ## 1) jl(`<multiline julia expression>`) redirect to jleval("<multiline julia expression>")
 ## 2) jl(<R object>) is redirected to jlvalue(<RObject>)
 
-jl <- function(obj, name_class = TRUE) {
+jl <- function(obj) {
     rexpr <- substitute(obj)
-    if( name_class ) {
-      return(jl_arg_rexpr(rexpr, parent_envir = parent.frame()))
-    }
-    jlvalue_function_with_exception(deparse(rexpr), jlvalue(obj))
+    return(jl_arg_rexpr(rexpr, parent_envir = parent.frame()))
 }
 
-jlR <- function(obj, name_class = TRUE) {
+jlR <- function(obj) {
     rexpr <- substitute(obj)
-    if( name_class ) {
-      return(R(jl_arg_rexpr(rexpr, parent_envir = parent.frame())))
-    }
-    R(jlvalue_function_with_exception(deparse(rexpr), jlvalue(obj)))
+    return(R(jl_arg_rexpr(rexpr, parent_envir = parent.frame())))
 }
 
 
@@ -83,24 +77,3 @@ jlfunc <- jltryfunc <- function(jlval_meth, ..., parent_envir =  parent.frame())
 
 jlcallR <- jltrycallR <- function(meth, ...) toR(jltrycall(meth, ...))
 jlfuncR <- jltryfuncR <- function(jlval_meth, ...) toR(jltryfunc(jlval_meth, ...))
-
-# apply a method call 
-jlvalue_call <- function(meth , ...) {
-    args <- list(...)
-    if (!is.character(meth)) {
-        error("No julia method specified!")
-    }
-    if (length(args) > 3) {
-      .jlvalue_call(meth, ...)
-    } else {
-      switch(length(args) + 1,
-          .jlvalue_call0(meth),
-          .jlvalue_call1(meth, ...),
-          .jlvalue_call2(meth, ...),
-          .jlvalue_call3(meth, ...),
-          "Supposed to be done..."
-      )
-    }
-}
-
-jlvalue_callR <- function(meth , ...) toR(jlvalue_call(meth, ...))

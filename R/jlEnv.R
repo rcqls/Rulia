@@ -10,51 +10,6 @@
 ## get access to globalenv()$jl inside the package 
 jlEnv <- function() get("jl", envir = globalenv())
 
-# `[.jlEnv` <- function(obj, key) {
-#     # OLD version (to remove)
-#     # key <- deparse(substitute(key))
-#     # if((substr(key,1,1) == substr(key,nchar(key),nchar(key))) && (substr(key,1,1) %in% c("'", '"'))) {
-#     #     key <- substr(key,2,nchar(key) - 1)
-#     #     function(...) {jlnew(key, ...)}
-#     # } else {
-#     #     function(...) {jlvalue_call(key, ...)}
-#     # }
-#     if(class(substitute(key)) == "character") {
-#         function(...) {jlnew(key, ...)}
-#     } else {
-#         key <- deparse(substitute(key))
-#         function(...) {jlvalue_call(key, ...)}
-#     }
-# }
-
-`[[.jlEnv` <- function(obj, key) {
-    if (class(substitute(key)) != "character") {
-        key <- deparse(substitute(key))
-    }
-    ## check if key is a generic function
-    gen = jleval(key)
-    if(is.jlexception(gen)) {
-        function(...) gen
-    } else {
-        parent_envir <- parent.frame()
-        function(...) {
-            jltrycall(key, ..., parent_envir = parent_envir)
-        }
-    }
-}
-
-## TODO: same spirit than jltrycall or at least jl_args_rexprs
-`[.jlEnv` <- function(obj, key) {
-    if(class(substitute(key)) != "character") {
-        key <- deparse(substitute(key))
-    }
-    parent_envir <- parent.frame()
-    function(...) {
-        args <- c(key, jl_args_rexprs(substitute(list(...)), parent_envir = parent_envir))
-        do.call("jlStruct", args)
-    }
-}
-
 `$.jlEnv` <- function(obj, field) {
     field <- as.character(substitute(field))
     jlvalue_get(field)

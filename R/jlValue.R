@@ -82,3 +82,25 @@ toR.jlvalue <- function(jlval) {
         }
     }
 }
+
+
+# apply a method call 
+jlvalue_call <- function(meth , ...) {
+    args <- list(...)
+    if (!is.character(meth)) {
+        error("No julia method specified!")
+    }
+    if (length(args) > 3) {
+      .jlvalue_call(meth, ...)
+    } else {
+      switch(length(args) + 1,
+          .jlvalue_call0(meth),
+          .jlvalue_call1(meth, ...),
+          .jlvalue_call2(meth, ...),
+          .jlvalue_call3(meth, ...),
+          "Supposed to be done..."
+      )
+    }
+}
+
+jlvalue_callR <- function(meth , ...) toR(jlvalue_call(meth, ...))
