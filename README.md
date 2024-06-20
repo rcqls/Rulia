@@ -3,8 +3,6 @@ Rulia: julia for R
 
 <!-- Rscript -e "rmarkdown::render('README.Rmd')";rm README.html -->
 
-# Rulia: `julia` for `R`
-
 # Getting started
 
 This is an attempt to embed the `julia` language in `R`. Actually, very
