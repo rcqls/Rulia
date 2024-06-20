@@ -221,34 +221,39 @@ jl(rand)(`2`)   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.21741360170034318
-    ##  0.5613361214778969
+    ##  0.7541216502373255
+    ##  0.8610756230441091
 
 ``` r
 jl(rand)(2L)    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.3372118302515459
-    ##  0.432969369883203
+    ##  0.43876657599871693
+    ##  0.29192852883439624
 
-In fact both these lines are user-friendy simplified version of:
+In fact both these lines are user-friendy simplified versions of what
+would be necessary to call:
 
 ``` r
 jl(rand)(jl(`2`))   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.1800286750942245
-    ##  0.9899773468869414
+    ##  0.10823715489657548
+    ##  0.15602763836132238
 
 ``` r
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.537512662322396
-    ##  0.6128670891535747
+    ##  0.93615977561867
+    ##  0.3575654123938551
+
+But what one want in `Rulia` as a first goal is:
+
+    An expression in `Rulia` only need only one call of the `jl()` function whenever many `jl()` calls would be normally necessary.
 
 How is it possible a such trick?
 
@@ -278,11 +283,8 @@ the metaprogramming provided by `R`, one only needs to provided the
 arguments of the `jlfunction` with
 
 - `R` objects implicitly converted to `jlvalue` objects  
-- `julia` expressions given between backticks are also executed
-  implicitly
-
-As a first goal, a call in `Rulia` only need only one call of `jl()`
-function whenever many `jl()` calls would be normally necessary.
+- `julia` expressions given between backticks also implicitly executed
+  (for you) in the `julia` side to finally provide `jlvalue` results
 
 ## Conversion `julia` to `R`
 
