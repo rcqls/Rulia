@@ -1,6 +1,5 @@
 Rulia: julia for R
 ================
-RCqls
 
 <!-- Rscript -e "rmarkdown::render('README.Rmd')";rm README.html -->
 
