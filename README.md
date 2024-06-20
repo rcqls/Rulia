@@ -221,16 +221,16 @@ jl(rand)(`2`)   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.7541216502373255
-    ##  0.8610756230441091
+    ##  0.8304573691757956
+    ##  0.36074634985549137
 
 ``` r
 jl(rand)(2L)    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.43876657599871693
-    ##  0.29192852883439624
+    ##  0.9055620507309137
+    ##  0.2369878642855625
 
 In fact both these lines are user-friendy simplified versions of what
 would be necessary to call:
@@ -240,22 +240,25 @@ jl(rand)(jl(`2`))   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.10823715489657548
-    ##  0.15602763836132238
+    ##  0.8935457646403547
+    ##  0.5178798009636498
 
 ``` r
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.93615977561867
-    ##  0.3575654123938551
+    ##  0.16213599880948582
+    ##  0.9190867746146514
 
 But what one want in `Rulia` as a first goal is:
 
     An expression in `Rulia` only need only one call of the `jl()` function whenever many `jl()` calls would be normally necessary.
 
-How is it possible a such trick?
+How is a such trick possible?
+
+Let us first observe the result returned of `jl()` when the argument is
+the expression of a `julia function`.
 
 ``` r
 jl(`sum`)       # the usual way

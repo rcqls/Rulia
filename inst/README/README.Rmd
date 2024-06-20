@@ -122,7 +122,9 @@ But what one want in `Rulia` as a first goal is:
 
     An expression in `Rulia` only need only one call of the `jl()` function whenever many `jl()` calls would be normally necessary.
 
-How is it possible a such trick?
+How is a such trick possible?
+
+Let us first observe the result returned of `jl()` when the argument is the expression of a `julia function`.
 
 ```{r}
 jl(`sum`)       # the usual way
