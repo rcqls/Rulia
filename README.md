@@ -74,7 +74,7 @@ R(v_jl)
 
 1.  `Rulia` package when loaded, initializes a `julia` session useable
     inside the current `R` session.
-2.  `jl()` is the only user friendly function to use in order to:
+2.  `jl()` is the **only user friendly function** to use in order to:
 
 - execute regular `julia` code inside `R`
 - convert `R` object in `julia` object
