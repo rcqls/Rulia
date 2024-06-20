@@ -32,6 +32,14 @@ In a terminal (tested on macOS M1 with julia-1.9.2:) with `julia` and
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
 ```
 
+### Comments
+
+Let us notice that theres exists alternatives `R` package like
+[`JuliaCall`](https://github.com/Non-Contradiction/JuliaCall). Notably,
+the big difference with `Rulia` is that `JuliaCall` depends on the `R`
+package `Rcpp` and the `julia` package `RCall.jl`. In other words,
+`Rulia` only depends on the C API of both `R` and `julia` languages.
+
 ## Quick live session
 
 ``` r
@@ -70,6 +78,9 @@ R(v_jl)
 
     ## [1] 1 3 2
 
+The only thing to do in order to initialize `julia` is to load the
+library `Rulia`.
+
 # How it works for the user: the `jl()` function
 
 1.  `Rulia` package when loaded, initializes a `julia` session useable
@@ -79,12 +90,12 @@ R(v_jl)
 - execute regular `julia` code inside `R`
 - convert `R` object in `julia` object
 - call `julia` function returned by `jl()` function itself
-- define `julia` variable directly inside the `julia` session
+- define `julia` variable(s) directly inside the `julia` session
 
 ## `jl()` as evaluation of `julia` expressions
 
 Thanks to the `jl()` function, `Rulia` allows us to call `julia`
-(possibly multilines) expression given with expression between backtip
+(possibly multilines) expression given with expression between backticks
 “\`” (i.e. of class `name` or type `symbol`).
 
 ``` r
@@ -133,7 +144,6 @@ A lot of `R` objects can be converted in `julia` objects by simply put
 them as argument of the `jl()` function.
 
 ``` r
-require(Rulia)
 jl(c("one","three","two"))
 ```
 
@@ -196,6 +206,88 @@ jl(list(a=c(TRUE,FALSE,TRUE), b=1L))
 
     ## @NamedTuple{a::Array, b::Int64}((Bool[1, 0, 1], 1))
 
+## `jl()` function to call `julia` function inside `R` system
+
+The main use of the `Rulia` package is to call `julia` function (in
+fact, `julia` method because of the implicit **multiple dispatching**
+provided by `julia`) inside the `R` system. The more challenging goal of
+`Rulia` is to try to provide a `R` syntax to call `julia` function which
+as most as possible close to the original `julia` syntax.
+
+Lets start with a simple example:
+
+``` r
+jl(rand)(`2`)   # julia integer
+```
+
+    ## 2-element Vector{Float64}:
+    ##  0.21741360170034318
+    ##  0.5613361214778969
+
+``` r
+jl(rand)(2L)    # implicitly converted R integer
+```
+
+    ## 2-element Vector{Float64}:
+    ##  0.3372118302515459
+    ##  0.432969369883203
+
+In fact both these lines are user-friendy simplified version of:
+
+``` r
+jl(rand)(jl(`2`))   # julia integer
+```
+
+    ## 2-element Vector{Float64}:
+    ##  0.1800286750942245
+    ##  0.9899773468869414
+
+``` r
+jl(rand)(jl(2L))    # implicitly converted R integer
+```
+
+    ## 2-element Vector{Float64}:
+    ##  0.537512662322396
+    ##  0.6128670891535747
+
+How is it possible a such trick?
+
+``` r
+jl(`sum`)       # the usual way
+```
+
+    ## sum (generic function with 10 methods)
+
+``` r
+jl(sum)         # which is equivalent to the simplified way thanks to R
+```
+
+    ## sum (generic function with 10 methods)
+
+``` r
+class(jl(sum))  # this is not directly a jlvalue R object
+```
+
+    ## [1] "typeof(sum)" "jlfunction"
+
+Let us comment what is special here. `jl(sum)` should normally returns
+an `R` object of class `jlvalue`. But since our goal is to apply the
+function, `jl(sum)` is tranformed in a `jlfunction` that can be called
+with arguments that need to be `R` objects of class `jlvalue`. Thanks to
+the metaprogramming provided by `R`, one only needs to provided the
+arguments of the `jlfunction` with
+
+- `R` objects implicitly converted to `jlvalue` objects  
+- `julia` expressions given between backticks are also executed
+  implicitly
+
+As a first goal, a call in `Rulia` only need only one call of `jl()`
+function whenever many `jl()` calls would be normally necessary.
+
+## Conversion `julia` to `R`
+
+Once
+
 ## Rulia in the statistic context
 
 - `DataFrame` (`julia` side) and `data.frame` (`R` side)
@@ -228,7 +320,34 @@ list(jltypeof(nt_jl), typeof(nt_jl), class(nt_jl))
     ## [[3]]
     ## [1] "NamedTuple" "Struct"     "jlvalue"
 
-As expected, `Rulia` offers conversion in both directions
+To compute `julia` code needs to be put between two backticks and not
+between quote or double quote (which is a regular `R` character object
+to be converted in `julia`). It is better to insist, don’t confuse the
+third line before and the first following one (which returns a simple
+`julia` object of type `String`):
+
+``` r
+jl("(a=1,b=DataFrame(a=1:3,b=2:4))") -> str_jl
+str_jl
+```
+
+    ## "(a=1,b=DataFrame(a=1:3,b=2:4))"
+
+``` r
+list(jltypeof(str_jl), typeof(str_jl), class(str_jl))
+```
+
+    ## [[1]]
+    ## String
+    ## 
+    ## [[2]]
+    ## [1] "externalptr"
+    ## 
+    ## [[3]]
+    ## [1] "String"  "jlvalue"
+
+As expected, `Rulia` offers conversion in both directions, `julia` to
+`R` and conversely `R` to `julia`
 
 ``` r
 nt_R <- R(nt_jl)
@@ -243,6 +362,8 @@ nt_R
     ## 1 1 2
     ## 2 2 3
     ## 3 3 4
+
+and conversely `R` to `julia`
 
 ``` r
 jl(nt_R)
@@ -283,6 +404,8 @@ list(jltypeof(ca_jl), typeof(ca_jl), class(ca_jl))
     ## [[3]]
     ## [1] "CategoricalArray" "AbstractArray"    "Struct"           "jlvalue"
 
+Below, the conversion `julia` to `R`
+
 ``` r
 ca_R <- R(ca_jl)
 ca_R
@@ -290,6 +413,8 @@ ca_R
 
     ## [1] titi toto titi
     ## Levels: titi toto
+
+and conversely, the conversion `R` to `julia`
 
 ``` r
 jl(ca_R)
