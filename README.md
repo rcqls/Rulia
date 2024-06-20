@@ -1,12 +1,15 @@
-Julia for R
+Rulia: julia for R
 ================
 RCqls
 
-# Julia for R
+<!-- Rscript -e "rmarkdown::render('README.Rmd')";rm README.html -->
 
-This is an attempt to embed the julia language in R. Actually, very
-basic julia types are converted to R objects. This package is also very
-experimental
+# Rulia: `julia` for `R`
+
+# Getting started
+
+This is an attempt to embed the `julia` language in `R`. Actually, very
+basic `julia` types are converted to `R` objects.
 
 ## Install
 
@@ -32,9 +35,7 @@ In a terminal (tested on macOS M1 with julia-1.9.2:) with `julia` and
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
 ```
 
-## How it works
-
-### getting started
+## Quick live session
 
 ``` r
 require(Rulia)
@@ -42,11 +43,13 @@ require(Rulia)
 
     ## Le chargement a nécessité le package : Rulia
 
+    ## Welcome! Rulia has initialized julia inside R
+
 ``` r
-jl(`1.0`)
+jl(`1`)
 ```
 
-    ## 1.0
+    ## 1
 
 ``` r
 jl(1)
@@ -70,9 +73,22 @@ R(v_jl)
 
     ## [1] 1 3 2
 
-## `jl()` function
+# How it works for the user: the `jl()` function
 
-### `jl()` as evaluation of `julia` expressions given as an one-length `R` character vector
+1.  `Rulia` package when loaded, initializes a `julia` session useable
+    inside the current `R` session.
+2.  `jl()` is the only user friendly function to use in order to:
+
+- execute regular `julia` code inside `R`
+- convert `R` object in `julia` object
+- call `julia` function returned by `jl()` function itself
+- define `julia` variable directly inside the `julia` session
+
+## `jl()` as evaluation of `julia` expressions
+
+Thanks to the `jl()` function, `Rulia` allows us to call `julia`
+(possibly multilines) expression given with expression between backtip
+“\`” (i.e. of class `name` or type `symbol`).
 
 ``` r
 jl(`[1,3,2]`)
@@ -98,13 +114,26 @@ jl(`(a=1,b=[1,3])`)
 
     ## (a = 1, b = [1, 3])
 
-All these results are `jlvalue` objects which are `R` external pointers
-wrapping `jl_value_t*` values.
+``` r
+jl(`[
+    1.0,
+    3.0,
+    2.0
+    ]`)
+```
 
-### `jl()` as `julia` converter of `R` vectors
+    ## 3-element Vector{Float64}:
+    ##  1.0
+    ##  3.0
+    ##  2.0
 
-Above, an example for conversion of a vector of double was given. Below
-one completes with vector of character, logical and integer.
+All these commands return `jlvalue` objects which are `R` external
+pointers wrapping `jl_value_t*` values.
+
+## `jl()` as `julia` converter of `R` objects
+
+A lot of `R` objects can be converted in `julia` objects by simply put
+them as argument of the `jl()` function.
 
 ``` r
 require(Rulia)
@@ -134,10 +163,7 @@ jl(c(1L,3L,2L))
     ##  3
     ##  2
 
-Notice that vector of length 1 are converted to atomic `julia` values.
-
 ``` r
-require(Rulia)
 jl(TRUE)
 ```
 
@@ -161,50 +187,21 @@ jl("1")
 
     ## "1"
 
-To get a vector of length 1 in `julia` one has
-
-``` r
-require(Rulia)
-jl("one", vector=TRUE) # or simply jl("one", TRUE)
-```
-
-    ## 1-element Vector{String}:
-    ##  "one"
-
-``` r
-jl(TRUE, vector=TRUE) # or simply jl(TRUE, TRUE)
-```
-
-    ## 1-element Vector{Bool}:
-    ##  1
-
-``` r
-jl(1L, TRUE)
-```
-
-    ## 1-element Vector{Int64}:
-    ##  1
-
-``` r
-jl(1, TRUE)
-```
-
-    ## 1-element Vector{Float64}:
-    ##  1.0
-
-Notice that there is no need to set `vector=TRUE` when `dim` is not
-`NULL`:
-
 ``` r
 jl(matrix("one"))
 ```
 
-    ## 1×1 Matrix{String}:
-    ##  "one"
+    ## "one"
 
-### Goal: conversion of `julia` structures used in statitictic to `R`
+``` r
+jl(list(a=c(TRUE,FALSE,TRUE), b=1L))
+```
 
-- `DataFrame`
+    ## @NamedTuple{a::Array, b::Int64}((Bool[1, 0, 1], 1))
+
+## Rulia in the statistic context
+
+- `DataFrame` (`julia` side) and `data.frame` (`R` side)
 
 ``` r
 require(Rulia)
@@ -222,19 +219,6 @@ nt_jl
     ##    3 │     3      4)
 
 ``` r
-R(nt_jl) # or toR(nt_jl)
-```
-
-    ## $a
-    ## [1] 1
-    ## 
-    ## $b
-    ##   a b
-    ## 1 1 2
-    ## 2 2 3
-    ## 3 3 4
-
-``` r
 list(jltypeof(nt_jl), typeof(nt_jl), class(nt_jl))
 ```
 
@@ -247,7 +231,35 @@ list(jltypeof(nt_jl), typeof(nt_jl), class(nt_jl))
     ## [[3]]
     ## [1] "NamedTuple" "Struct"     "jlvalue"
 
-- `CategoricalArray`
+As expected, `Rulia` offers conversion in both directions
+
+``` r
+nt_R <- R(nt_jl)
+nt_R
+```
+
+    ## $a
+    ## [1] 1
+    ## 
+    ## $b
+    ##   a b
+    ## 1 1 2
+    ## 2 2 3
+    ## 3 3 4
+
+``` r
+jl(nt_R)
+```
+
+    ## (a = 1, b = 3×2 DataFrame
+    ##  Row │ a      b
+    ##      │ Int64  Int64
+    ## ─────┼──────────────
+    ##    1 │     1      2
+    ##    2 │     2      3
+    ##    3 │     3      4)
+
+- `CategoricalArray` (`julia` side) and `factor` (`R` side)
 
 ``` r
 require(Rulia)
@@ -262,13 +274,6 @@ ca_jl
     ##  "titi"
 
 ``` r
-R(ca_jl)
-```
-
-    ## [1] titi toto titi
-    ## Levels: titi toto
-
-``` r
 list(jltypeof(ca_jl), typeof(ca_jl), class(ca_jl))
 ```
 
@@ -279,9 +284,28 @@ list(jltypeof(ca_jl), typeof(ca_jl), class(ca_jl))
     ## [1] "externalptr"
     ## 
     ## [[3]]
-    ## [1] "CategoricalArray" "Struct"           "jlvalue"
+    ## [1] "CategoricalArray" "AbstractArray"    "Struct"           "jlvalue"
 
-## R Finalizers
+``` r
+ca_R <- R(ca_jl)
+ca_R
+```
+
+    ## [1] titi toto titi
+    ## Levels: titi toto
+
+``` r
+jl(ca_R)
+```
+
+    ## 3-element CategoricalArray{String,1,UInt32}:
+    ##  "titi"
+    ##  "toto"
+    ##  "titi"
+
+# Rulia in low level mode
+
+# R Finalizers
 
 Following the documentation on embedding `julia`, a system of preserved
 references to `julia` values has been created. An `R` finalizer is
