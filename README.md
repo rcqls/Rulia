@@ -9,15 +9,22 @@ Getting started
 </h1>
 </summary>
 
-This is an attempt to embed the `julia` language in `R`. Actually, very
-basic `julia` types are converted to `R` objects.
+This is an attempt to embed the `julia` language in `R`.
+
+Let us notice that there already exist alternatives `R` package like
+[`JuliaCall`](https://github.com/Non-Contradiction/JuliaCall). Notably,
+the big difference between `Rulia` and `JuliaCall` is that `JuliaCall`
+depends on the `R` package `Rcpp` and the `julia` package `RCall.jl`. In
+other words, `Rulia` only depends on the C APIs of `R` and `julia`.
+There is then **no dependencies**.
 
 ## Install
 
 1.  Install Julia (all Operating System)
 
 Install [Julia](https://julialang.org/downloads/). For Windows users
-don’t forget to select `PATH` in the installer.
+don’t forget to select `PATH` in the installer. As mentionned in this
+page, prefer the `juliaup` installation one.
 
 2.  Windows user setup
 
@@ -29,20 +36,9 @@ don’t forget to select `PATH` in the installer.
 
 3.  Bash installation (all Operating Systems)
 
-In a terminal (tested on macOS M1 with julia-1.9.2:) with `julia` and
-`Rscript` binaries supposed to be in the `PATH` environment variable,
-
 ``` bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
 ```
-
-## Comments
-
-Let us notice that there exist alternatives `R` package like
-[`JuliaCall`](https://github.com/Non-Contradiction/JuliaCall). Notably,
-the big difference with `Rulia` is that `JuliaCall` depends on the `R`
-package `Rcpp` and the `julia` package `RCall.jl`. In other words,
-`Rulia` only depends on the C API of both `R` and `julia` languages.
 
 ## Quick live session
 
@@ -288,16 +284,16 @@ jl(rand)(`2`)   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.15797693455889816
-    ##  0.9530146907092226
+    ##  0.4722211525630664
+    ##  0.5834970617903893
 
 ``` r
 jl(rand)(2L)    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.9546389073431483
-    ##  0.9383937729679284
+    ##  0.9951216032323196
+    ##  0.9618318275305658
 
 In fact both these lines are user-friendy simplified versions of what
 would be necessary to call:
@@ -307,16 +303,16 @@ jl(rand)(jl(`2`))   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.9733531357355424
-    ##  0.03935997084458376
+    ##  0.7122638304754242
+    ##  0.014377767743933623
 
 ``` r
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.8616920002459665
-    ##  0.3912259061674048
+    ##  0.03672216335079226
+    ##  0.7545968932223474
 
 The challenging primary goal in `Rulia` is:
 

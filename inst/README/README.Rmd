@@ -11,15 +11,18 @@ knitr::opts_chunk$set(echo = TRUE)
 <details>
   <summary><h1>Getting started</h1></summary>
 
-This is an attempt to embed the `julia` language in `R`. Actually, very
-basic `julia` types are converted to `R` objects.
+This is an attempt to embed the `julia` language in `R`.
+
+Let us notice that there already exist alternatives `R` package like [`JuliaCall`](https://github.com/Non-Contradiction/JuliaCall).
+Notably, the big difference between `Rulia` and `JuliaCall` is that `JuliaCall` depends on the `R` package `Rcpp` and the `julia` package `RCall.jl`.
+In other words, `Rulia` only depends on the C APIs of `R` and `julia`. There is then **no dependencies**. 
 
 ## Install
 
 1.  Install Julia (all Operating System)
 
 Install [Julia](https://julialang.org/downloads/). For Windows users
-don’t forget to select `PATH` in the installer.
+don’t forget to select `PATH` in the installer. As mentionned in this page, prefer the `juliaup` installation one.
 
 2.  Windows user setup
 
@@ -31,18 +34,9 @@ don’t forget to select `PATH` in the installer.
 
 3.  Bash installation (all Operating Systems)
 
-In a terminal (tested on macOS M1 with julia-1.9.2:) with `julia` and
-`Rscript` binaries supposed to be in the `PATH` environment variable,
-
 ``` bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
 ```
-
-## Comments
-
-Let us notice that there exist alternatives `R` package like [`JuliaCall`](https://github.com/Non-Contradiction/JuliaCall).
-Notably, the big difference with `Rulia` is that `JuliaCall` depends on the `R` package `Rcpp` and the `julia` package `RCall.jl`.
-In other words, `Rulia` only depends on the C API of both `R` and `julia` languages. 
 
 ## Quick live session
 
