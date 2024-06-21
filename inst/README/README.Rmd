@@ -13,9 +13,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This is an attempt to embed the `julia` language in `R`.
 
-Let us notice that there already exist alternatives `R` package like [`JuliaCall`](https://github.com/Non-Contradiction/JuliaCall).
-Notably, the big difference between `Rulia` and `JuliaCall` is that `JuliaCall` depends on the `R` package `Rcpp` and the `julia` package `RCall.jl`.
+Let us notice that there already exist alternatives `R` packages (see [`JuliaCall`](https://github.com/Non-Contradiction/JuliaCall) README page for a complete list).
+[`JuliaCall`](https://github.com/Non-Contradiction/JuliaCall) is the main one. However, the big difference between `Rulia` and `JuliaCall` is that `JuliaCall` depends on the `R` package `Rcpp` and the `julia` package `RCall.jl`.
 In other words, `Rulia` only depends on the C APIs of `R` and `julia`. There is then **no dependencies**. 
+
+Also `Rulia` is the next step of the preliminary project called [`jl4R`](https://github.com/rcqls/jl4R) started more than 10 years ago. The author thinks that `Rulia` is a more funny name than `jl4R`. 
 
 ## Install
 

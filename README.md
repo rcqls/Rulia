@@ -11,12 +11,18 @@ Getting started
 
 This is an attempt to embed the `julia` language in `R`.
 
-Let us notice that there already exist alternatives `R` package like
-[`JuliaCall`](https://github.com/Non-Contradiction/JuliaCall). Notably,
-the big difference between `Rulia` and `JuliaCall` is that `JuliaCall`
-depends on the `R` package `Rcpp` and the `julia` package `RCall.jl`. In
-other words, `Rulia` only depends on the C APIs of `R` and `julia`.
-There is then **no dependencies**.
+Let us notice that there already exist alternatives `R` packages (see
+[`JuliaCall`](https://github.com/Non-Contradiction/JuliaCall) README
+page for a complete list).
+[`JuliaCall`](https://github.com/Non-Contradiction/JuliaCall) is the
+main one. However, the big difference between `Rulia` and `JuliaCall` is
+that `JuliaCall` depends on the `R` package `Rcpp` and the `julia`
+package `RCall.jl`. In other words, `Rulia` only depends on the C APIs
+of `R` and `julia`. There is then **no dependencies**.
+
+Also `Rulia` is the next step of the preliminary project called
+[`jl4R`](https://github.com/rcqls/jl4R) started more than 10 years ago.
+The author thinks that `Rulia` is a more funny name than `jl4R`.
 
 ## Install
 
@@ -284,16 +290,16 @@ jl(rand)(`2`)   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.4722211525630664
-    ##  0.5834970617903893
+    ##  0.9854521377072555
+    ##  0.4557858650890849
 
 ``` r
 jl(rand)(2L)    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.9951216032323196
-    ##  0.9618318275305658
+    ##  0.01011667984621245
+    ##  0.7481865669453273
 
 In fact both these lines are user-friendy simplified versions of what
 would be necessary to call:
@@ -303,16 +309,16 @@ jl(rand)(jl(`2`))   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.7122638304754242
-    ##  0.014377767743933623
+    ##  0.34734135026814195
+    ##  0.9716654893268747
 
 ``` r
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.03672216335079226
-    ##  0.7545968932223474
+    ##  0.7250160287809594
+    ##  0.0016678073547641281
 
 The challenging primary goal in `Rulia` is:
 
