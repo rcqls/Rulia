@@ -15,7 +15,7 @@ This is an attempt to embed the `julia` language in `R`.
 
 Let us notice that there already exist alternatives `R` packages (see [`JuliaCall`](https://github.com/Non-Contradiction/JuliaCall) README page for a complete list).
 [`JuliaCall`](https://github.com/Non-Contradiction/JuliaCall) is the main one. However, the big difference between `Rulia` and `JuliaCall` is that `JuliaCall` depends on the `R` package `Rcpp` and the `julia` package `RCall.jl`.
-In other words, `Rulia` only depends on the C APIs of `R` and `julia`. There is then **no dependencies**. 
+In other words, `Rulia` only depends on the C APIs of `R` and `julia`. There is then **no dependencies** (except `julia`). 
 
 Also `Rulia` is the next step of the preliminary project called [`jl4R`](https://github.com/rcqls/jl4R) started more than 10 years ago. The author thinks that `Rulia` is a more funny name than `jl4R`. 
 
@@ -173,6 +173,7 @@ jlusing(DataFrames)
 jl(`(a=1,b=DataFrame(a=1:3,b=2:4))`) -> nt_jl
 nt_jl
 list(jltypeof(nt_jl), typeof(nt_jl), class(nt_jl))
+nt_jl$b # suer-friendly access of a julia NamedTuple in the R style
 ```
 
 To compute `julia` code needs to be put between two backticks and not between quote or double quote (which is a regular `R` character object to be converted in `julia`). It is better to insist, don't confuse the third line before and the first following one (which returns a simple `julia` object of type `String`):
@@ -194,6 +195,7 @@ and conversely `R` to `julia`
 
 ```{r}
 jl(nt_R)
+jl(nt_R$b)
 ```
 
 * `CategoricalArray` (`julia` side) and `factor` (`R` side)

@@ -18,7 +18,7 @@ page for a complete list).
 main one. However, the big difference between `Rulia` and `JuliaCall` is
 that `JuliaCall` depends on the `R` package `Rcpp` and the `julia`
 package `RCall.jl`. In other words, `Rulia` only depends on the C APIs
-of `R` and `julia`. There is then **no dependencies**.
+of `R` and `julia`. There is then **no dependencies** (except `julia`).
 
 Also `Rulia` is the next step of the preliminary project called
 [`jl4R`](https://github.com/rcqls/jl4R) started more than 10 years ago.
@@ -290,16 +290,16 @@ jl(rand)(`2`)   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.6972786491938251
-    ##  0.5522385855043355
+    ##  0.7733358299916598
+    ##  0.06584614917352949
 
 ``` r
 jl(rand)(2L)    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.013676118977603569
-    ##  0.5087073999266019
+    ##  0.264779900770326
+    ##  0.5316235645467449
 
 In fact both these lines are user-friendy simplified versions of what
 would be necessary to call:
@@ -309,16 +309,16 @@ jl(rand)(jl(`2`))   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.4742341369145968
-    ##  0.6860158687547286
+    ##  0.4851185398596467
+    ##  0.15362167867885224
 
 ``` r
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.695072192031253
-    ##  0.01905122857932584
+    ##  0.1840273952557353
+    ##  0.562134839862832
 
 The challenging primary goal in `Rulia` is:
 
@@ -415,6 +415,18 @@ list(jltypeof(nt_jl), typeof(nt_jl), class(nt_jl))
     ## [[3]]
     ## [1] "NamedTuple" "Struct"     "jlvalue"
 
+``` r
+nt_jl$b # suer-friendly access of a julia NamedTuple in the R style
+```
+
+    ## 3×2 DataFrame
+    ##  Row │ a      b
+    ##      │ Int64  Int64
+    ## ─────┼──────────────
+    ##    1 │     1      2
+    ##    2 │     2      3
+    ##    3 │     3      4
+
 To compute `julia` code needs to be put between two backticks and not
 between quote or double quote (which is a regular `R` character object
 to be converted in `julia`). It is better to insist, don’t confuse the
@@ -471,6 +483,18 @@ jl(nt_R)
     ##    1 │     1      2
     ##    2 │     2      3
     ##    3 │     3      4)
+
+``` r
+jl(nt_R$b)
+```
+
+    ## 3×2 DataFrame
+    ##  Row │ a      b
+    ##      │ Int64  Int64
+    ## ─────┼──────────────
+    ##    1 │     1      2
+    ##    2 │     2      3
+    ##    3 │     3      4
 
 - `CategoricalArray` (`julia` side) and `factor` (`R` side)
 
