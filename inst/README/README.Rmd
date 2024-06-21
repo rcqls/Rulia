@@ -78,7 +78,7 @@ Then, it is pretty direct to:
 * call `julia` function returned by `jl()` function itself
 * define `julia` variable(s) directly inside the `julia` session
 
-<details><summary><h2><code>jl()</code> as evaluation of <code>julia</code> expressions</h2></summary>
+<details><summary><h2><code>jl()</code>: <code>julia</code> code evaluation</h2></summary>
 
 Thanks to the `jl()` function, `Rulia` allows us to call `julia` (possibly multilines) expression given with expression between backticks "\`" (i.e. of class `name` or type `symbol`).
 
@@ -96,7 +96,7 @@ jl(`[
 All these commands return `jlvalue` objects which are `R` external pointers
 wrapping `jl_value_t*` values.
 </details>
-<details><summary><h2><code>jl()</code> as <code>julia</code> converter of <code>R</code> objects</h2></summary>
+<details><summary><h2><code>jl()</code>: <code>julia</code> converter of <code>R</code> objects</h2></summary>
 
 A lot of `R` objects can be converted in `julia` objects by simply put them as argument of the `jl()` function.
 
@@ -112,7 +112,7 @@ jl(matrix("one"))
 jl(list(a=c(TRUE,FALSE,TRUE), b=1L))
 ```
 </details>
-<details><summary><h2><code>jl()</code> function to call <code>julia</code> function inside <code>R</code> system</h2></summary>
+<details><summary><h2><code>jl()</code>: <code>julia</code> function  call inside <code>R</code></h2></summary>
 
 The main use of the `Rulia` package is to call `julia` function (in fact, `julia` method because of the implicit **multiple dispatching** provided by `julia`) inside the `R` system. The more challenging goal of `Rulia` is to try to provide a `R` syntax to call `julia` function which as most as possible close to the original `julia` syntax.
 

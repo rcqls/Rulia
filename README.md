@@ -146,7 +146,7 @@ Then, it is pretty direct to:
 <details>
 <summary>
 <h2>
-<code>jl()</code> as evaluation of <code>julia</code> expressions
+<code>jl()</code>: <code>julia</code> code evaluation
 </h2>
 </summary>
 
@@ -197,7 +197,7 @@ pointers wrapping `jl_value_t*` values.
 <details>
 <summary>
 <h2>
-<code>jl()</code> as <code>julia</code> converter of <code>R</code>
+<code>jl()</code>: <code>julia</code> converter of <code>R</code>
 objects
 </h2>
 </summary>
@@ -272,8 +272,8 @@ jl(list(a=c(TRUE,FALSE,TRUE), b=1L))
 <details>
 <summary>
 <h2>
-<code>jl()</code> function to call <code>julia</code> function inside
-<code>R</code> system
+<code>jl()</code>: <code>julia</code> function call inside
+<code>R</code>
 </h2>
 </summary>
 
@@ -290,16 +290,16 @@ jl(rand)(`2`)   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.9854521377072555
-    ##  0.4557858650890849
+    ##  0.2225748144692261
+    ##  0.7077300655121589
 
 ``` r
 jl(rand)(2L)    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.01011667984621245
-    ##  0.7481865669453273
+    ##  0.4090518117538885
+    ##  0.6016653090113132
 
 In fact both these lines are user-friendy simplified versions of what
 would be necessary to call:
@@ -309,16 +309,16 @@ jl(rand)(jl(`2`))   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.34734135026814195
-    ##  0.9716654893268747
+    ##  0.4744752908656309
+    ##  0.2925260709627924
 
 ``` r
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.7250160287809594
-    ##  0.0016678073547641281
+    ##  0.735771407613437
+    ##  0.598167352475327
 
 The challenging primary goal in `Rulia` is:
 
