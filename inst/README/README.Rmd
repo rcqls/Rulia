@@ -64,7 +64,7 @@ The only thing to do in order to initialize `julia` is to load the library `Ruli
 </details>
 
 <details>
-<summary><h1><code>jl()</code> as user-friendly function of <code>Rulia</code></h1></summary>
+<summary><h1><code>Rulia</code> in user-friendly mode</h1></summary>
 
 1. `Rulia` package when loaded, initializes a `julia` session useable inside the current `R` session.
 1. `jl()` is the **only user friendly function** to use in order to:

@@ -103,7 +103,7 @@ library `Rulia`.
 <details>
 <summary>
 <h1>
-<code>jl()</code> as user-friendly function of <code>Rulia</code>
+<code>Rulia</code> in user-friendly mode
 </h1>
 </summary>
 
@@ -263,16 +263,16 @@ jl(rand)(`2`)   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.49084812283646106
-    ##  0.06187174023523223
+    ##  0.862360353105867
+    ##  0.9535783909688308
 
 ``` r
 jl(rand)(2L)    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.17693957661403426
-    ##  0.8423336814933772
+    ##  0.11033923691806247
+    ##  0.9525749670746582
 
 In fact both these lines are user-friendy simplified versions of what
 would be necessary to call:
@@ -282,16 +282,16 @@ jl(rand)(jl(`2`))   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.35955653801372023
-    ##  0.08429827818708713
+    ##  0.4438761584877582
+    ##  0.812071074050965
 
 ``` r
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.22222040976582058
-    ##  0.9118824610581836
+    ##  0.7443853901043739
+    ##  0.37798288974642813
 
 But what one want in `Rulia` as a first goal is:
 
