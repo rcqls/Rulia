@@ -103,7 +103,7 @@ library `Rulia`.
 <details>
 <summary>
 <h1>
-The user-friendly <code>jl()</code> function
+The user-friendly <code>jl()</code> function of <code>Rulia</code>
 </h1>
 </summary>
 
@@ -119,7 +119,7 @@ The user-friendly <code>jl()</code> function
 <details>
 <summary>
 <h2>
-`jl()` as evaluation of `julia` expressions
+<code>jl()</code> as evaluation of <code>julia</code> expressions
 </h2>
 </summary>
 
@@ -170,7 +170,8 @@ pointers wrapping `jl_value_t*` values.
 <details>
 <summary>
 <h2>
-`jl()` as `julia` converter of `R` objects
+<code>jl()</code> as <code>julia</code> converter of <code>R</code>
+objects
 </h2>
 </summary>
 
@@ -244,7 +245,8 @@ jl(list(a=c(TRUE,FALSE,TRUE), b=1L))
 <details>
 <summary>
 <h2>
-`jl()` function to call `julia` function inside `R` system
+<code>jl()</code> function to call <code>julia</code> function inside
+<code>R</code> system
 </h2>
 </summary>
 
@@ -261,16 +263,16 @@ jl(rand)(`2`)   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.052399704465593167
-    ##  0.01283774410204841
+    ##  0.39302473657148695
+    ##  0.0056851136765566634
 
 ``` r
 jl(rand)(2L)    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.6930102708330428
-    ##  0.7405952952807363
+    ##  0.032114733382758165
+    ##  0.07712345897972206
 
 In fact both these lines are user-friendy simplified versions of what
 would be necessary to call:
@@ -280,16 +282,16 @@ jl(rand)(jl(`2`))   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.43472088687396426
-    ##  0.5511851987749461
+    ##  0.1603543486245862
+    ##  0.49950224654057274
 
 ``` r
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.9151728608378431
-    ##  0.5652890646140813
+    ##  0.12090827870026999
+    ##  0.3028048700136444
 
 But what one want in `Rulia` as a first goal is:
 
@@ -335,14 +337,14 @@ arguments of the `jlfunction`.
 <details>
 <summary>
 <h2>
-Conversion `julia` to `R`
+Conversion <code>julia</code> to <code>R</code>
 </h2>
 </summary>
 </details>
 <details>
 <summary>
 <h2>
-Rulia in the statistic context
+<code>Rulia</code> in the statistic context
 </h2>
 </summary>
 
@@ -486,7 +488,7 @@ jl(ca_R)
 <details>
 <summary>
 <h1>
-Rulia in low level mode
+<code>Rulia</code> in low level mode
 </h1>
 </summary>
 TODO

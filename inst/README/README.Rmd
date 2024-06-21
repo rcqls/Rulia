@@ -64,7 +64,7 @@ The only thing to do in order to initialize `julia` is to load the library `Ruli
 </details>
 
 <details>
-<summary><h1>The user-friendly <code>jl()</code> function</h1></summary>
+<summary><h1>The user-friendly <code>jl()</code> function of <code>Rulia</code></h1></summary>
 
 1. `Rulia` package when loaded, initializes a `julia` session useable inside the current `R` session.
 1. `jl()` is the **only user friendly function** to use in order to:
@@ -74,7 +74,7 @@ The only thing to do in order to initialize `julia` is to load the library `Ruli
 * call `julia` function returned by `jl()` function itself
 * define `julia` variable(s) directly inside the `julia` session
 
-<details><summary><h2>`jl()` as evaluation of `julia` expressions</h2></summary>
+<details><summary><h2><code>jl()</code> as evaluation of <code>julia</code> expressions</h2></summary>
 
 Thanks to the `jl()` function, `Rulia` allows us to call `julia` (possibly multilines) expression given with expression between backticks "\`" (i.e. of class `name` or type `symbol`).
 
@@ -92,7 +92,7 @@ jl(`[
 All these commands return `jlvalue` objects which are `R` external pointers
 wrapping `jl_value_t*` values.
 </details>
-<details><summary><h2>`jl()` as `julia` converter of `R` objects</h2></summary>
+<details><summary><h2><code>jl()</code> as <code>julia</code> converter of <code>R</code> objects</h2></summary>
 
 A lot of `R` objects can be converted in `julia` objects by simply put them as argument of the `jl()` function.
 
@@ -108,7 +108,7 @@ jl(matrix("one"))
 jl(list(a=c(TRUE,FALSE,TRUE), b=1L))
 ```
 </details>
-<details><summary><h2>`jl()` function to call `julia` function inside `R` system</h2></summary>
+<details><summary><h2><code>jl()</code> function to call <code>julia</code> function inside <code>R</code> system</h2></summary>
 
 The main use of the `Rulia` package is to call `julia` function (in fact, `julia` method because of the implicit **multiple dispatching** provided by `julia`) inside the `R` system. The more challenging goal of `Rulia` is to try to provide a `R` syntax to call `julia` function which as most as possible close to the original `julia` syntax.
 
@@ -149,11 +149,11 @@ Thanks to the metaprogramming provided by `R`, one only needs to provide the arg
 
 The main point is that no need of `jl()` is required whe specifying arguments of the `jlfunction`.
 </details>
-<details><summary><h2>Conversion `julia` to `R`</h2></summary>
+<details><summary><h2>Conversion <code>julia</code> to <code>R</code></h2></summary>
 
  </details>
 
-<details><summary><h2>Rulia in the statistic context</h2></summary>
+<details><summary><h2><code>Rulia</code> in the statistic context</h2></summary>
 
 * `DataFrame` (`julia` side) and `data.frame` (`R` side)
 
@@ -213,7 +213,7 @@ jl(ca_R)
 
 
 <details>
-<summary><h1>Rulia in low level mode</h1></summary>
+<summary><h1><code>Rulia</code> in low level mode</h1></summary>
 TODO
 </details>
 
