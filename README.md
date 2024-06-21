@@ -68,7 +68,7 @@ jl(1)
 
 ``` r
 v_jl <- jl(c(1,3,2))
-v_jl
+v_jl        # notice the julia output format 
 ```
 
     ## 3-element Vector{Float64}:
@@ -77,27 +77,52 @@ v_jl
     ##  2.0
 
 ``` r
-R(v_jl)
+class(v_jl)
+```
+
+    ## [1] "Array"   "jlvalue"
+
+``` r
+typeof(v_jl)
+```
+
+    ## [1] "externalptr"
+
+``` r
+jltypeof(v_jl)
+```
+
+    ## Vector{Float64} (alias for Array{Float64, 1})
+
+``` r
+R(v_jl)     # here the R output format 
 ```
 
     ## [1] 1 3 2
 
 ``` r
 ## a potentially useful task is to call a julia fonction applied on an R ao object
-jl(sum)(c(1,3,2))       # the result is a julia object (here a jlvalue R object)
+jl(sum)(c(1,3,2))           # the result is a julia object (here a jlvalue R object)
 ```
 
     ## 6.0
 
 ``` r
 # and then get the result as an R object
-jl(sum)(c(1,3,2)) |> R()    
+jl(sum)(c(1,3,2)) |> R()    # corresponding in the julia side to `sum([1.0, 3.0, 2.0])`
 ```
 
     ## [1] 6
 
 The only thing to do in order to initialize `julia` is to load the
 library `Rulia`.
+
+Then, it is pretty direct to:
+
+1.  convert an `R` object to `julia` object (in fact, a `jlvalue`
+    external pointer in the `R` side)
+2.  apply a `julia` function to the `R` object
+3.  and finally convert the `julia` result to an `R` object
 
 </details>
 <details>
@@ -263,16 +288,16 @@ jl(rand)(`2`)   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.862360353105867
-    ##  0.9535783909688308
+    ##  0.15797693455889816
+    ##  0.9530146907092226
 
 ``` r
 jl(rand)(2L)    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.11033923691806247
-    ##  0.9525749670746582
+    ##  0.9546389073431483
+    ##  0.9383937729679284
 
 In fact both these lines are user-friendy simplified versions of what
 would be necessary to call:
@@ -282,20 +307,20 @@ jl(rand)(jl(`2`))   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.4438761584877582
-    ##  0.812071074050965
+    ##  0.9733531357355424
+    ##  0.03935997084458376
 
 ``` r
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.7443853901043739
-    ##  0.37798288974642813
+    ##  0.8616920002459665
+    ##  0.3912259061674048
 
-But what one want in `Rulia` as a first goal is:
+The challenging primary goal in `Rulia` is:
 
-    An expression in `Rulia` only need only one call of the `jl()` function whenever many `jl()` calls would be normally necessary.
+    An expression in `Rulia` only need a unique call of the `jl()` function (whenever many `jl()` calls would be normally necessary).
 
 How is a such trick possible?
 

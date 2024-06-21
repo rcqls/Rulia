@@ -51,16 +51,24 @@ require(Rulia)
 jl(`1`)
 jl(1)
 v_jl <- jl(c(1,3,2))
-v_jl
-R(v_jl)
+v_jl        # notice the julia output format 
+class(v_jl)
+typeof(v_jl)
+jltypeof(v_jl)
+R(v_jl)     # here the R output format 
 ## a potentially useful task is to call a julia fonction applied on an R ao object
-jl(sum)(c(1,3,2))       # the result is a julia object (here a jlvalue R object)
+jl(sum)(c(1,3,2))           # the result is a julia object (here a jlvalue R object)
 # and then get the result as an R object
-jl(sum)(c(1,3,2)) |> R()    
+jl(sum)(c(1,3,2)) |> R()    # corresponding in the julia side to `sum([1.0, 3.0, 2.0])`
 ```
 
 The only thing to do in order to initialize `julia` is to load the library `Rulia`.
 
+Then, it is pretty direct to:
+
+1. convert an `R` object to `julia` object (in fact, a `jlvalue` external pointer in the `R` side)
+1. apply a `julia` function to the `R` object
+1. and finally convert the `julia` result to an `R` object
 </details>
 
 <details>
@@ -126,9 +134,9 @@ jl(rand)(jl(`2`))   # julia integer
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
-But what one want in `Rulia` as a first goal is:
+The challenging primary goal in `Rulia` is:
 
-    An expression in `Rulia` only need only one call of the `jl()` function whenever many `jl()` calls would be normally necessary.
+    An expression in `Rulia` only need a unique call of the `jl()` function (whenever many `jl()` calls would be normally necessary).
 
 How is a such trick possible?
 
