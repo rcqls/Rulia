@@ -110,6 +110,8 @@ jl(1)
 jl("1")
 jl(matrix("one"))
 jl(list(a=c(TRUE,FALSE,TRUE), b=1L))
+jl(2 * sin(1:3))    # this is a R call
+2 * sin(1:3)
 ```
 </details>
 <details><summary><h2><code>jl()</code>: <code>julia</code> function  call inside <code>R</code></h2></summary>
@@ -187,7 +189,7 @@ jl()$b  # as explained in the next section
 ```
 </details>
 
-<details><summary><h2><code>jl()</code>: all <code>julia</code> variables</code></h2></summary>
+<details><summary><h2><code>jl()</code>: <code>julia</code> variables environment</code></h2></summary>
 
 Without any argument, `jl()` returns the list of all `julia` variables in the `Main` module.
 
@@ -195,23 +197,24 @@ Without any argument, `jl()` returns the list of all `julia` variables in the `M
 jl()
 ```
 
-It is then possible to access a specific `julia` variable 
+It is also possible to access a specific `julia` variable from the `julia` variables environment `R` object. 
 
 ```{r}
-jl()$b
-jl()$c
+jl()$b  # b variable in Main module
+jl()$c  # c does not exist and then fails
 ```
 
 </details>
 
 <details><summary><h2>Conversion <code>julia</code> to <code>R</code></h2></summary>
+
+The converse conversion of `jl()` is `R()` 
+
 ```{r}
 R(jl(rand)(2L))
 jl(rand)(2L) |> R()
 ```
  </details>
-
-
 
 <details><summary><h2><code>Rulia</code> in the statistic context</h2></summary>
 

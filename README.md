@@ -268,6 +268,21 @@ jl(list(a=c(TRUE,FALSE,TRUE), b=1L))
 
     ## @NamedTuple{a::Array, b::Int64}((Bool[1, 0, 1], 1))
 
+``` r
+jl(2 * sin(1:3))    # this is a R call
+```
+
+    ## 3-element Vector{Float64}:
+    ##  1.682941969615793
+    ##  1.8185948536513634
+    ##  0.2822400161197344
+
+``` r
+2 * sin(1:3)
+```
+
+    ## [1] 1.682942 1.818595 0.282240
+
 </details>
 <details>
 <summary>
@@ -290,16 +305,16 @@ jl(rand)(`2`)   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.19833486146052093
-    ##  0.8789261890205433
+    ##  0.6398469021590256
+    ##  0.11660952043900541
 
 ``` r
 jl(rand)(2L)    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.15109436153423683
-    ##  0.6410875948689411
+    ##  0.03238079475235012
+    ##  0.4714627479855664
 
 In fact both these lines are user-friendy simplified versions of what
 would be necessary to call:
@@ -309,16 +324,16 @@ jl(rand)(jl(`2`))   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.47638508884082253
-    ##  0.46841493887014685
+    ##  0.8763003867764072
+    ##  0.0848325126451357
 
 ``` r
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.534366450398184
-    ##  0.13445873124413632
+    ##  0.8485293592249976
+    ##  0.8690451216762523
 
 The challenging primary goal in `Rulia` is:
 
@@ -398,8 +413,8 @@ jl(a)
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.4126493987740758
-    ##  0.8658081644508461
+    ##  0.5363987896026807
+    ##  0.7341983552472895
 
 ``` r
 jl(b)
@@ -449,7 +464,7 @@ jl()$b  # as explained in the next section
 <details>
 <summary>
 <h2>
-<code>jl()</code>: all <code>julia</code> variables</code>
+<code>jl()</code>: <code>julia</code> variables environment</code>
 </h2>
 </summary>
 
@@ -462,10 +477,11 @@ jl()
 
     ## julia environment:  a, b
 
-It is then possible to access a specific `julia` variable
+It is also possible to access a specific `julia` variable from the
+`julia` variables environment `R` object.
 
 ``` r
-jl()$b
+jl()$b  # b variable in Main module
 ```
 
     ## 3-element Vector{Int64}:
@@ -474,7 +490,7 @@ jl()$b
     ##  3
 
 ``` r
-jl()$c
+jl()$c  # c does not exist and then fails
 ```
 
     ## Julia Exception: UndefVarError
@@ -487,17 +503,19 @@ Conversion <code>julia</code> to <code>R</code>
 </h2>
 </summary>
 
+The converse conversion of `jl()` is `R()`
+
 ``` r
 R(jl(rand)(2L))
 ```
 
-    ## [1] 0.06118547 0.39979530
+    ## [1] 0.6319400 0.9233622
 
 ``` r
 jl(rand)(2L) |> R()
 ```
 
-    ## [1] 0.2135733 0.7527994
+    ## [1] 0.945419450 0.001577319
 
 </details>
 <details>
