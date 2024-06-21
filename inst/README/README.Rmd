@@ -8,7 +8,8 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Getting started
+<details>
+  <summary><h1>Getting started</h1></summary>
 
 This is an attempt to embed the `julia` language in `R`. Actually, very
 basic `julia` types are converted to `R` objects.
@@ -37,9 +38,9 @@ In a terminal (tested on macOS M1 with julia-1.9.2:) with `julia` and
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
 ```
 
-### Comments
+## Comments
 
-Let us notice that theres exists alternatives `R` package like [`JuliaCall`](https://github.com/Non-Contradiction/JuliaCall).
+Let us notice that there exist alternatives `R` package like [`JuliaCall`](https://github.com/Non-Contradiction/JuliaCall).
 Notably, the big difference with `Rulia` is that `JuliaCall` depends on the `R` package `Rcpp` and the `julia` package `RCall.jl`.
 In other words, `Rulia` only depends on the C API of both `R` and `julia` languages. 
 
@@ -55,6 +56,7 @@ R(v_jl)
 ```
 
 The only thing to do in order to initialize `julia` is to load the library `Rulia`.
+</details>
 
 # How it works for the user: the `jl()` function
 
@@ -143,7 +145,7 @@ The main point is that no need of `jl()` is required whe specifying arguments of
 
 ## Conversion `julia` to `R`
 
-Once 
+ 
 
 
 ## Rulia in the statistic context

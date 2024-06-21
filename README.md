@@ -1,26 +1,13 @@
 Rulia: julia for R
 ================
 
-<details>
-  <summary>Click me</summary>
-  
-  ### Heading
-  1. Foo
-  2. Bar
-     * Baz
-     * Qux
-
-  ### Some Javascript
-  ```js
-  function logSomething(something) {
-    console.log('Something', something);
-  }
-  ```
-</details>
-
 <!-- Rscript -e "rmarkdown::render('README.Rmd')";rm README.html -->
-
-# Getting started
+<details>
+<summary>
+<h1>
+Getting started
+</h1>
+</summary>
 
 This is an attempt to embed the `julia` language in `R`. Actually, very
 basic `julia` types are converted to `R` objects.
@@ -49,9 +36,9 @@ In a terminal (tested on macOS M1 with julia-1.9.2:) with `julia` and
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
 ```
 
-### Comments
+## Comments
 
-Let us notice that theres exists alternatives `R` package like
+Let us notice that there exist alternatives `R` package like
 [`JuliaCall`](https://github.com/Non-Contradiction/JuliaCall). Notably,
 the big difference with `Rulia` is that `JuliaCall` depends on the `R`
 package `Rcpp` and the `julia` package `RCall.jl`. In other words,
@@ -97,6 +84,7 @@ R(v_jl)
 
 The only thing to do in order to initialize `julia` is to load the
 library `Rulia`.
+</details>
 
 # How it works for the user: the `jl()` function
 
@@ -238,16 +226,16 @@ jl(rand)(`2`)   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.8304573691757956
-    ##  0.36074634985549137
+    ##  0.8554513733224703
+    ##  0.3245374928079878
 
 ``` r
 jl(rand)(2L)    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.9055620507309137
-    ##  0.2369878642855625
+    ##  0.6469254354041125
+    ##  0.6919853669041307
 
 In fact both these lines are user-friendy simplified versions of what
 would be necessary to call:
@@ -257,16 +245,16 @@ jl(rand)(jl(`2`))   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.8935457646403547
-    ##  0.5178798009636498
+    ##  0.579156910428886
+    ##  0.12456861028139798
 
 ``` r
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.16213599880948582
-    ##  0.9190867746146514
+    ##  0.16819317585875682
+    ##  0.6562924675210472
 
 But what one want in `Rulia` as a first goal is:
 
@@ -274,8 +262,8 @@ But what one want in `Rulia` as a first goal is:
 
 How is a such trick possible?
 
-Let us first observe the result returned of `jl()` when the argument is
-the expression of a `julia function`.
+Let us first observe the result returned when the argument of `jl()` is
+an expression of a `julia function`.
 
 ``` r
 jl(`sum`)       # the usual way
@@ -299,16 +287,17 @@ Let us comment what is special here. `jl(sum)` should normally returns
 an `R` object of class `jlvalue`. But since our goal is to apply the
 function, `jl(sum)` is tranformed in a `jlfunction` that can be called
 with arguments that need to be `R` objects of class `jlvalue`. Thanks to
-the metaprogramming provided by `R`, one only needs to provided the
-arguments of the `jlfunction` with
+the metaprogramming provided by `R`, one only needs to provide the
+arguments of the `jlfunction` with:
 
 - `R` objects implicitly converted to `jlvalue` objects  
 - `julia` expressions given between backticks also implicitly executed
   (for you) in the `julia` side to finally provide `jlvalue` results
 
-## Conversion `julia` to `R`
+The main point is that no need of `jl()` is required whe specifying
+arguments of the `jlfunction`.
 
-Once
+## Conversion `julia` to `R`
 
 ## Rulia in the statistic context
 
