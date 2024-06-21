@@ -290,16 +290,16 @@ jl(rand)(`2`)   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.2225748144692261
-    ##  0.7077300655121589
+    ##  0.6972786491938251
+    ##  0.5522385855043355
 
 ``` r
 jl(rand)(2L)    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.4090518117538885
-    ##  0.6016653090113132
+    ##  0.013676118977603569
+    ##  0.5087073999266019
 
 In fact both these lines are user-friendy simplified versions of what
 would be necessary to call:
@@ -309,20 +309,20 @@ jl(rand)(jl(`2`))   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.4744752908656309
-    ##  0.2925260709627924
+    ##  0.4742341369145968
+    ##  0.6860158687547286
 
 ``` r
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.735771407613437
-    ##  0.598167352475327
+    ##  0.695072192031253
+    ##  0.01905122857932584
 
 The challenging primary goal in `Rulia` is:
 
-    An expression in `Rulia` only need a unique call of the `jl()` function (whenever many `jl()` calls would be normally necessary).
+    An expression in `Rulia` only need a unique `jl()` call (whenever many `jl()` calls would be normally necessary).
 
 How is a such trick possible?
 
@@ -360,6 +360,16 @@ arguments of the `jlfunction` with:
 
 The main point is that no need of `jl()` is required whe specifying
 arguments of the `jlfunction`.
+
+Notice also that the `rand` `julia` function needs an integer as
+argument so:
+
+``` r
+jl(rand)(2)    # fails (use summary R generic function to have the complete julia output)
+```
+
+    ## Julia Exception: MethodError
+
 </details>
 <details>
 <summary>

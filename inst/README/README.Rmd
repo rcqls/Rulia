@@ -132,7 +132,7 @@ jl(rand)(jl(2L))    # implicitly converted R integer
 
 The challenging primary goal in `Rulia` is:
 
-    An expression in `Rulia` only need a unique call of the `jl()` function (whenever many `jl()` calls would be normally necessary).
+    An expression in `Rulia` only need a unique `jl()` call (whenever many `jl()` calls would be normally necessary).
 
 How is a such trick possible?
 
@@ -152,6 +152,12 @@ Thanks to the metaprogramming provided by `R`, one only needs to provide the arg
 * `julia` expressions given between backticks also implicitly executed (for you) in the `julia` side to finally provide `jlvalue` results  
 
 The main point is that no need of `jl()` is required whe specifying arguments of the `jlfunction`.
+
+Notice also that the `rand` `julia` function needs an integer as argument so:
+
+```{r}
+jl(rand)(2)    # fails (use summary R generic function to have the complete julia output)
+```
 </details>
 <details><summary><h2>Conversion <code>julia</code> to <code>R</code></h2></summary>
 
