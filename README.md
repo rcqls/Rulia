@@ -82,11 +82,30 @@ R(v_jl)
 
     ## [1] 1 3 2
 
+``` r
+## a potentially useful task is to call a julia fonction applied on an R ao object
+jl(sum)(c(1,3,2))       # the result is a julia object (here a jlvalue R object)
+```
+
+    ## 6.0
+
+``` r
+# and then get the result as an R object
+jl(sum)(c(1,3,2)) |> R()    
+```
+
+    ## [1] 6
+
 The only thing to do in order to initialize `julia` is to load the
 library `Rulia`.
-</details>
 
-# How it works for the user: the `jl()` function
+</details>
+<details>
+<summary>
+<h1>
+How it works for the user: the `jl()` function
+</h1>
+</summary>
 
 1.  `Rulia` package when loaded, initializes a `julia` session useable
     inside the current `R` session.
@@ -97,7 +116,12 @@ library `Rulia`.
 - call `julia` function returned by `jl()` function itself
 - define `julia` variable(s) directly inside the `julia` session
 
-## `jl()` as evaluation of `julia` expressions
+<details>
+<summary>
+<h2>
+`jl()` as evaluation of `julia` expressions
+</h2>
+</summary>
 
 Thanks to the `jl()` function, `Rulia` allows us to call `julia`
 (possibly multilines) expression given with expression between backticks
@@ -142,8 +166,13 @@ jl(`[
 
 All these commands return `jlvalue` objects which are `R` external
 pointers wrapping `jl_value_t*` values.
-
-## `jl()` as `julia` converter of `R` objects
+</details>
+<details>
+<summary>
+<h2>
+`jl()` as `julia` converter of `R` objects
+</h2>
+</summary>
 
 A lot of `R` objects can be converted in `julia` objects by simply put
 them as argument of the `jl()` function.
@@ -211,7 +240,13 @@ jl(list(a=c(TRUE,FALSE,TRUE), b=1L))
 
     ## @NamedTuple{a::Array, b::Int64}((Bool[1, 0, 1], 1))
 
-## `jl()` function to call `julia` function inside `R` system
+</details>
+<details>
+<summary>
+<h2>
+`jl()` function to call `julia` function inside `R` system
+</h2>
+</summary>
 
 The main use of the `Rulia` package is to call `julia` function (in
 fact, `julia` method because of the implicit **multiple dispatching**
@@ -226,16 +261,16 @@ jl(rand)(`2`)   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.8554513733224703
-    ##  0.3245374928079878
+    ##  0.14993757912562122
+    ##  0.5279611898139207
 
 ``` r
 jl(rand)(2L)    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.6469254354041125
-    ##  0.6919853669041307
+    ##  0.5520516620549343
+    ##  0.8674222611067193
 
 In fact both these lines are user-friendy simplified versions of what
 would be necessary to call:
@@ -245,16 +280,16 @@ jl(rand)(jl(`2`))   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.579156910428886
-    ##  0.12456861028139798
+    ##  0.2620847273969793
+    ##  0.7322468829414349
 
 ``` r
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.16819317585875682
-    ##  0.6562924675210472
+    ##  0.10813677603337213
+    ##  0.37985358754659904
 
 But what one want in `Rulia` as a first goal is:
 
@@ -296,10 +331,20 @@ arguments of the `jlfunction` with:
 
 The main point is that no need of `jl()` is required whe specifying
 arguments of the `jlfunction`.
-
-## Conversion `julia` to `R`
-
-## Rulia in the statistic context
+</details>
+<details>
+<summary>
+<h2>
+Conversion `julia` to `R`
+</h2>
+</summary>
+</details>
+<details>
+<summary>
+<h2>
+Rulia in the statistic context
+</h2>
+</summary>
 
 - `DataFrame` (`julia` side) and `data.frame` (`R` side)
 
@@ -436,9 +481,20 @@ jl(ca_R)
     ##  "toto"
     ##  "titi"
 
-# Rulia in low level mode
-
-# R Finalizers
+</details>
+</details>
+<details>
+<summary>
+<h1>
+Rulia in low level mode
+</h1>
+TODO
+</details>
+<details>
+<summary>
+<h1>
+R Finalizers
+</h1>
 
 Following the documentation on embedding `julia`, a system of preserved
 references to `julia` values has been created. An `R` finalizer is
@@ -446,3 +502,5 @@ assiocated to each `jlvalue` object (in fact, an `R` external pointer
 wrapping some `jl_value_t*` value). Whenever the `jlvalue` is gabarged
 collected, the reference on the associated `julia` value is also
 dereferenced which is then cleaned up by the `julia` garbage collector.
+
+</details>
