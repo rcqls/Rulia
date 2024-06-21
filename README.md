@@ -290,16 +290,16 @@ jl(rand)(`2`)   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.7733358299916598
-    ##  0.06584614917352949
+    ##  0.5847241502203109
+    ##  0.8464418481143144
 
 ``` r
 jl(rand)(2L)    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.264779900770326
-    ##  0.5316235645467449
+    ##  0.7231461126291991
+    ##  0.27309380848496645
 
 In fact both these lines are user-friendy simplified versions of what
 would be necessary to call:
@@ -309,16 +309,16 @@ jl(rand)(jl(`2`))   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.4851185398596467
-    ##  0.15362167867885224
+    ##  0.5362845277895035
+    ##  0.9063090707973622
 
 ``` r
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.1840273952557353
-    ##  0.562134839862832
+    ##  0.40947297738908983
+    ##  0.5493854807359594
 
 The challenging primary goal in `Rulia` is:
 
@@ -559,11 +559,12 @@ TODO
 <h1>
 R Finalizers
 </h1>
+</summary>
 
 Following the documentation on embedding `julia`, a system of preserved
 references to `julia` values has been created. An `R` finalizer is
 assiocated to each `jlvalue` object (in fact, an `R` external pointer
-wrapping some `jl_value_t*` value). Whenever the `jlvalue` is gabarged
+wrapping some `jl_value_t*` value). Whenever the `jlvalue` is gabarge
 collected, the reference on the associated `julia` value is also
 dereferenced which is then cleaned up by the `julia` garbage collector.
 

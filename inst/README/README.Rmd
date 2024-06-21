@@ -230,12 +230,12 @@ TODO
 </details>
 
 <details>
-<summary><h1>R Finalizers</h1>
+<summary><h1>R Finalizers</h1></summary>
 
 Following the documentation on embedding `julia`, a system of preserved
 references to `julia` values has been created. An `R` finalizer is
 assiocated to each `jlvalue` object (in fact, an `R` external pointer
-wrapping some `jl_value_t*` value). Whenever the `jlvalue` is gabarged
+wrapping some `jl_value_t*` value). Whenever the `jlvalue` is gabarge
 collected, the reference on the associated `julia` value is also
 dereferenced which is then cleaned up by the `julia` garbage collector.
 
