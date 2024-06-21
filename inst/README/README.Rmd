@@ -118,11 +118,25 @@ jl(2 * sin(1:3))    # this is a R call
 
 The main use of the `Rulia` package is to call `julia` function (in fact, `julia` method because of the implicit **multiple dispatching** provided by `julia`) inside the `R` system. The more challenging goal of `Rulia` is to try to provide a `R` syntax to call `julia` function which as most as possible close to the original `julia` syntax.
 
-Lets start with a simple example:
+Let us start with a simple example.
 
 ```{r}
+## An utility function to fix the seed of Random number in julia
+
+```
+
+```{r}
+jl_set.seed(12) # to fix the seed 
 jl(rand)(`2`)   # julia integer
 jl(rand)(2L)    # implicitly converted R integer
+```
+
+Also `jl_set.seed()` is a facility function equivalent to:
+
+```{r}
+jl_set.seed
+jlusing(Random)
+jl(`Random.seed!`)(12L)
 ```
 
 In fact both these lines are user-friendy simplified versions of what would be necessary to call:

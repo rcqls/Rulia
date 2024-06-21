@@ -298,23 +298,49 @@ provided by `julia`) inside the `R` system. The more challenging goal of
 `Rulia` is to try to provide a `R` syntax to call `julia` function which
 as most as possible close to the original `julia` syntax.
 
-Lets start with a simple example:
+Let us start with a simple example.
 
 ``` r
+## An utility function to fix the seed of Random number in julia
+```
+
+``` r
+jl_set.seed(12) # to fix the seed 
 jl(rand)(`2`)   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.6398469021590256
-    ##  0.11660952043900541
+    ##  0.32018269515620323
+    ##  0.938582363311554
 
 ``` r
 jl(rand)(2L)    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.03238079475235012
-    ##  0.4714627479855664
+    ##  0.5501748910470424
+    ##  0.9475566588373514
+
+Also `jl_set.seed()` is a facility function equivalent to:
+
+``` r
+jl_set.seed
+```
+
+    ## function (n) 
+    ## {
+    ##     jlusing(Random)
+    ##     invisible(jl(`Random.seed!`)(as.integer(n)))
+    ## }
+    ## <bytecode: 0x13ba72518>
+    ## <environment: namespace:Rulia>
+
+``` r
+jlusing(Random)
+jl(`Random.seed!`)(12L)
+```
+
+    ## TaskLocalRNG()
 
 In fact both these lines are user-friendy simplified versions of what
 would be necessary to call:
@@ -324,16 +350,16 @@ jl(rand)(jl(`2`))   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.8763003867764072
-    ##  0.0848325126451357
+    ##  0.32018269515620323
+    ##  0.938582363311554
 
 ``` r
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.8485293592249976
-    ##  0.8690451216762523
+    ##  0.5501748910470424
+    ##  0.9475566588373514
 
 The challenging primary goal in `Rulia` is:
 
@@ -413,8 +439,8 @@ jl(a)
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.5363987896026807
-    ##  0.7341983552472895
+    ##  0.3890321538110373
+    ##  0.19961796743719895
 
 ``` r
 jl(b)
@@ -509,13 +535,13 @@ The converse conversion of `jl()` is `R()`
 R(jl(rand)(2L))
 ```
 
-    ## [1] 0.6319400 0.9233622
+    ## [1] 0.02964161 0.73343400
 
 ``` r
 jl(rand)(2L) |> R()
 ```
 
-    ## [1] 0.945419450 0.001577319
+    ## [1] 0.4582877 0.6246530
 
 </details>
 <details>
