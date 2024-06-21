@@ -1,5 +1,5 @@
 ---
-title: "Rulia: julia for R"
+title: "`Rulia`: `julia` for `R`"
 #author: "RCqls"
 output: github_document
 ---
@@ -230,7 +230,7 @@ TODO
 </details>
 
 <details>
-<summary><h1>R Finalizers</h1></summary>
+<summary><h1><code>R</code> Finalizers</h1></summary>
 
 Following the documentation on embedding `julia`, a system of preserved
 references to `julia` values has been created. An `R` finalizer is

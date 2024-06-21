@@ -1,4 +1,4 @@
-Rulia: julia for R
+`Rulia`: `julia` for `R`
 ================
 
 <!-- Rscript -e "rmarkdown::render('README.Rmd')";rm README.html -->
@@ -290,16 +290,16 @@ jl(rand)(`2`)   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.5847241502203109
-    ##  0.8464418481143144
+    ##  0.7745765700727102
+    ##  0.6075409800632938
 
 ``` r
 jl(rand)(2L)    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.7231461126291991
-    ##  0.27309380848496645
+    ##  0.4174541656224706
+    ##  0.34548434202350575
 
 In fact both these lines are user-friendy simplified versions of what
 would be necessary to call:
@@ -309,16 +309,16 @@ jl(rand)(jl(`2`))   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.5362845277895035
-    ##  0.9063090707973622
+    ##  0.8602843358283041
+    ##  0.2881290451397861
 
 ``` r
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.40947297738908983
-    ##  0.5493854807359594
+    ##  0.3877855787333001
+    ##  0.11333934729082185
 
 The challenging primary goal in `Rulia` is:
 
@@ -557,7 +557,7 @@ TODO
 <details>
 <summary>
 <h1>
-R Finalizers
+<code>R</code> Finalizers
 </h1>
 </summary>
 
