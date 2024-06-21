@@ -23,22 +23,36 @@ Also `Rulia` is the next step of the preliminary project called [`jl4R`](https:/
 
 1.  Install Julia (all Operating System)
 
-Install [Julia](https://julialang.org/downloads/). For Windows users
-don’t forget to select `PATH` in the installer. As mentionned in this page, prefer the `juliaup` installation one.
+Install [Julia](https://julialang.org/downloads/)
 
-2.  Windows user setup
+    1. For any Operation system (Windows, MacOS and linux), as mentionned in the download page above, prefer the `juliaup` installation one.
+    2. Alternative installation (**to avoid** if possible), you can install from an installer. 
+    For Windows users don’t forget to select `PATH` in the installer
 
-- Install [RTools](https://cran.r-project.org/bin/windows/Rtools/) and a
-  terminal with bash (for instance, [Git
-  Bash](https://gitforwindows.org/))
-- Add Rscript in the `PATH` environment variable (see for example [this
-  page](https://www.hanss.info/sebastian/post/rtools-path/))
+2.  Install `Rulia`
 
-3.  Bash installation (all Operating Systems)
+    * From binary (**Windows user only**)
+
+        1. Donwload [Rulia-0.0.1.zip](https://github.com/rcqls/Rulia/releases/download/v0.0.1/Rulia_0.0.1.zip)
+        2. Inside a terminal:
+
+    * From source
+    
+        1. Windows user setup
+
+            - Install [RTools](https://cran.r-project.org/bin/windows/Rtools/) and a
+            terminal with bash (for instance, [Git
+            Bash](https://gitforwindows.org/))
+            - Add Rscript in the `PATH` environment variable (see for example [this
+            page](https://www.hanss.info/sebastian/post/rtools-path/))
+
+        2.  Bash installation (all Operating Systems)
 
 ``` bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
 ```
+
+4. Julia package required for `Rulia` in mode statistic: `DataFrames`, `CategoricalArrays`
 
 ## Quick live session
 
@@ -292,7 +306,17 @@ jl(ca_R)
 
 
 <details>
+<summary><h1>More details on <code>jl()</code></h1></summary>
+TODO
+</details>
+
+<details>
 <summary><h1><code>Rulia</code> in low level mode</h1></summary>
+TODO
+</details>
+
+<details>
+<summary><h1><code>Rulia</code> utility functions</h1></summary>
 TODO
 </details>
 
@@ -305,5 +329,7 @@ assiocated to each `jlvalue` object (in fact, an `R` external pointer
 wrapping some `jl_value_t*` value). Whenever the `jlvalue` is gabarge
 collected, the reference on the associated `julia` value is also
 dereferenced which is then cleaned up by the `julia` garbage collector.
+
+Since the `julia` session is  not persistent when the `R` session is, what happens if a `jlvalue` object is still in the Workspace (environment return by `globalenv()` or `.GlobalEnv`).
 
 </details>

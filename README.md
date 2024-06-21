@@ -46,6 +46,9 @@ page, prefer the `juliaup` installation one.
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
 ```
 
+4.  Julia package required for `Rulia` in mode statistic: `DataFrames`,
+    `CategoricalArrays`
+
 ## Quick live session
 
 ``` r
@@ -332,7 +335,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x13ba72518>
+    ## <bytecode: 0x130a8f0f0>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -715,7 +718,23 @@ jl(ca_R)
 <details>
 <summary>
 <h1>
+More details on <code>jl()</code>
+</h1>
+</summary>
+TODO
+</details>
+<details>
+<summary>
+<h1>
 <code>Rulia</code> in low level mode
+</h1>
+</summary>
+TODO
+</details>
+<details>
+<summary>
+<h1>
+<code>Rulia</code> utility functions
 </h1>
 </summary>
 TODO
@@ -733,5 +752,9 @@ assiocated to each `jlvalue` object (in fact, an `R` external pointer
 wrapping some `jl_value_t*` value). Whenever the `jlvalue` is gabarge
 collected, the reference on the associated `julia` value is also
 dereferenced which is then cleaned up by the `julia` garbage collector.
+
+Since the `julia` session is not persistent when the `R` session is,
+what happens if a `jlvalue` object is still in the Workspace
+(environment return by `globalenv()` or `.GlobalEnv`).
 
 </details>
