@@ -80,7 +80,7 @@ Then, it is pretty direct to:
 
 <details><summary><h2><code>jl()</code>: <code>julia</code> code evaluation</h2></summary>
 
-Thanks to the `jl()` function, `Rulia` allows us to call `julia` (possibly multilines) expression given with expression between backticks "\`" (i.e. of class `name` or type `symbol`).
+Thanks to the `jl()` function, `Rulia` allows us to execute `julia` (possibly multilines) expression given with expression between backticks "\`" (i.e. of class `name` or type `symbol` in the `R` side).
 
 ```{r}
 jl(`[1,3,2]`)
@@ -158,10 +158,60 @@ Notice also that the `rand` `julia` function needs an integer as argument so:
 ```{r}
 jl(rand)(2)    # fails (use summary R generic function to have the complete julia output)
 ```
-</details>
-<details><summary><h2>Conversion <code>julia</code> to <code>R</code></h2></summary>
 
+`julia` function with keyword-arguments can be called too:
+```{r}
+jl(sum)(1:10)           # an integer
+jl(sum)(1:10, init=12)  # a double
+```
+
+</details>
+
+<details><summary><h2><code>jl()</code>: <code>julia</code> variable(s) from <code>R</code></h2></summary>
+```{r}
+jl(a=jl(rand)(2L), b=1:3)
+jl(a)
+jl(b)
+```
+
+A special conflict case may happen now if `b` is also a `R` variable.
+
+```{r}
+jl(b)
+b <- 10
+jl(b)
+## Also notice that
+jl(`b`) # Not a julia variable since jl(`b`) is equivalent to jl(b) in R
+## To access the b julia variable
+jl()$b  # as explained in the next section
+```
+</details>
+
+<details><summary><h2><code>jl()</code>: all <code>julia</code> variables</code></h2></summary>
+
+Without any argument, `jl()` returns the list of all `julia` variables in the `Main` module.
+
+```{r}
+jl()
+```
+
+It is then possible to access a specific `julia` variable 
+
+```{r}
+jl()$b
+jl()$c
+```
+
+</details>
+
+<details><summary><h2>Conversion <code>julia</code> to <code>R</code></h2></summary>
+```{r}
+R(jl(rand)(2L))
+jl(rand)(2L) |> R()
+```
  </details>
+
+
 
 <details><summary><h2><code>Rulia</code> in the statistic context</h2></summary>
 

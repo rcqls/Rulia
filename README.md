@@ -150,9 +150,9 @@ Then, it is pretty direct to:
 </h2>
 </summary>
 
-Thanks to the `jl()` function, `Rulia` allows us to call `julia`
+Thanks to the `jl()` function, `Rulia` allows us to execute `julia`
 (possibly multilines) expression given with expression between backticks
-“\`” (i.e. of class `name` or type `symbol`).
+“\`” (i.e. of class `name` or type `symbol` in the `R` side).
 
 ``` r
 jl(`[1,3,2]`)
@@ -290,16 +290,16 @@ jl(rand)(`2`)   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.7745765700727102
-    ##  0.6075409800632938
+    ##  0.348670036325463
+    ##  0.048618845268314725
 
 ``` r
 jl(rand)(2L)    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.4174541656224706
-    ##  0.34548434202350575
+    ##  0.8871827682935448
+    ##  0.9288370942217049
 
 In fact both these lines are user-friendy simplified versions of what
 would be necessary to call:
@@ -309,16 +309,16 @@ jl(rand)(jl(`2`))   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.8602843358283041
-    ##  0.2881290451397861
+    ##  0.7468978090077949
+    ##  0.9643791875543222
 
 ``` r
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.3877855787333001
-    ##  0.11333934729082185
+    ##  0.2450392919911375
+    ##  0.6610841794565018
 
 The challenging primary goal in `Rulia` is:
 
@@ -370,6 +370,115 @@ jl(rand)(2)    # fails (use summary R generic function to have the complete juli
 
     ## Julia Exception: MethodError
 
+`julia` function with keyword-arguments can be called too:
+
+``` r
+jl(sum)(1:10)           # an integer
+```
+
+    ## 55
+
+``` r
+jl(sum)(1:10, init=12)  # a double
+```
+
+    ## 67.0
+
+</details>
+<details>
+<summary>
+<h2>
+<code>jl()</code>: <code>julia</code> variable(s) from <code>R</code>
+</h2>
+</summary>
+
+``` r
+jl(a=jl(rand)(2L), b=1:3)
+jl(a)
+```
+
+    ## 2-element Vector{Float64}:
+    ##  0.24932403081043064
+    ##  0.37561635673354776
+
+``` r
+jl(b)
+```
+
+    ## 3-element Vector{Int64}:
+    ##  1
+    ##  2
+    ##  3
+
+A special conflict case may happen now if `b` is also a `R` variable.
+
+``` r
+jl(b)
+```
+
+    ## 3-element Vector{Int64}:
+    ##  1
+    ##  2
+    ##  3
+
+``` r
+b <- 10
+jl(b)
+```
+
+    ## 10.0
+
+``` r
+## Also notice that
+jl(`b`) # Not a julia variable since jl(`b`) is equivalent to jl(b) in R
+```
+
+    ## 10.0
+
+``` r
+## To access the b julia variable
+jl()$b  # as explained in the next section
+```
+
+    ## 3-element Vector{Int64}:
+    ##  1
+    ##  2
+    ##  3
+
+</details>
+<details>
+<summary>
+<h2>
+<code>jl()</code>: all <code>julia</code> variables</code>
+</h2>
+</summary>
+
+Without any argument, `jl()` returns the list of all `julia` variables
+in the `Main` module.
+
+``` r
+jl()
+```
+
+    ## julia environment:  a, b
+
+It is then possible to access a specific `julia` variable
+
+``` r
+jl()$b
+```
+
+    ## 3-element Vector{Int64}:
+    ##  1
+    ##  2
+    ##  3
+
+``` r
+jl()$c
+```
+
+    ## Julia Exception: UndefVarError
+
 </details>
 <details>
 <summary>
@@ -377,6 +486,19 @@ jl(rand)(2)    # fails (use summary R generic function to have the complete juli
 Conversion <code>julia</code> to <code>R</code>
 </h2>
 </summary>
+
+``` r
+R(jl(rand)(2L))
+```
+
+    ## [1] 0.8721546 0.1018095
+
+``` r
+jl(rand)(2L) |> R()
+```
+
+    ## [1] 0.7892696 0.6337530
+
 </details>
 <details>
 <summary>
