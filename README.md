@@ -290,16 +290,16 @@ jl(rand)(`2`)   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.348670036325463
-    ##  0.048618845268314725
+    ##  0.19833486146052093
+    ##  0.8789261890205433
 
 ``` r
 jl(rand)(2L)    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.8871827682935448
-    ##  0.9288370942217049
+    ##  0.15109436153423683
+    ##  0.6410875948689411
 
 In fact both these lines are user-friendy simplified versions of what
 would be necessary to call:
@@ -309,16 +309,16 @@ jl(rand)(jl(`2`))   # julia integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.7468978090077949
-    ##  0.9643791875543222
+    ##  0.47638508884082253
+    ##  0.46841493887014685
 
 ``` r
 jl(rand)(jl(2L))    # implicitly converted R integer
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.2450392919911375
-    ##  0.6610841794565018
+    ##  0.534366450398184
+    ##  0.13445873124413632
 
 The challenging primary goal in `Rulia` is:
 
@@ -398,8 +398,8 @@ jl(a)
 ```
 
     ## 2-element Vector{Float64}:
-    ##  0.24932403081043064
-    ##  0.37561635673354776
+    ##  0.4126493987740758
+    ##  0.8658081644508461
 
 ``` r
 jl(b)
@@ -491,13 +491,13 @@ Conversion <code>julia</code> to <code>R</code>
 R(jl(rand)(2L))
 ```
 
-    ## [1] 0.8721546 0.1018095
+    ## [1] 0.06118547 0.39979530
 
 ``` r
 jl(rand)(2L) |> R()
 ```
 
-    ## [1] 0.7892696 0.6337530
+    ## [1] 0.2135733 0.7527994
 
 </details>
 <details>
