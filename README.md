@@ -34,9 +34,9 @@ The author thinks that `Rulia` is a more funny name than `jl4R`.
         first in the `julia` download page, prefer the `juliaup`
         installation one. It offers multi-installation of different
         versions of `julia`.
-    2.  Alternative installation (**to avoid** if possible), you can
-        install from an installer. For Windows users don’t forget to
-        select `PATH` in the installer
+    2.  Alternative installation (**to avoid** if possible)is to install
+        `julia` from a binary installer to download. For Windows users
+        don’t forget to select `PATH` in the installer
 
 2.  Install `Rulia`
 
@@ -361,7 +361,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x14a256790>
+    ## <bytecode: 0x1202c9f90>
     ## <environment: namespace:Rulia>
 
 ``` r
