@@ -21,9 +21,9 @@ Also `Rulia` is the next step of the preliminary project called [`jl4R`](https:/
 
 ## Install
 
-1.  Install Julia (all Operating System)
+1.  `julia` installation (all Operating Systems)
 
-Install [Julia](https://julialang.org/downloads/)
+    Go to [Julia](https://julialang.org/downloads/)
 
     1. For any Operation system (Windows, MacOS and linux), as proposed first in the `julia` download page, prefer the `juliaup` installation one.
     It offers multi-installation of different versions of `julia`.

@@ -26,16 +26,17 @@ The author thinks that `Rulia` is a more funny name than `jl4R`.
 
 ## Install
 
-1.  Install Julia (all Operating System)
+1.  `julia` installation (all Operating Systems)
 
-Install [Julia](https://julialang.org/downloads/)
+    Go to [Julia](https://julialang.org/downloads/)
 
-1.  For any Operation system (Windows, MacOS and linux), as proposed
-    first in the `julia` download page, prefer the `juliaup`
-    installation one. It offers multi-installation of different versions
-    of `julia`. 2. Alternative installation (**to avoid** if possible),
-    you can install from an installer. For Windows users don’t forget to
-    select `PATH` in the installer
+    1.  For any Operation system (Windows, MacOS and linux), as proposed
+        first in the `julia` download page, prefer the `juliaup`
+        installation one. It offers multi-installation of different
+        versions of `julia`.
+    2.  Alternative installation (**to avoid** if possible), you can
+        install from an installer. For Windows users don’t forget to
+        select `PATH` in the installer
 
 2.  Install `Rulia`
 
@@ -360,7 +361,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x14be98390>
+    ## <bytecode: 0x14a256790>
     ## <environment: namespace:Rulia>
 
 ``` r
