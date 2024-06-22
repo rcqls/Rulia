@@ -47,8 +47,8 @@ The author thinks that `Rulia` is a more funny name than `jl4R`.
           and install it inisde R
       2.  Inside a terminal: Whether `julia` is installed with `juliaup`
           or you specified the `PATH` when launching the binary
-          installed, requiring `Rulia` inside `R` would normally just
-          work.
+          installer, loading (`library(Rulia)/require(Rulia)`) `Rulia`
+          inside `R` would normally just work.
 
     - From source (**all Operating System**)
 
@@ -361,7 +361,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x1202c9f90>
+    ## <bytecode: 0x14455b590>
     ## <environment: namespace:Rulia>
 
 ``` r
