@@ -28,26 +28,51 @@ The author thinks that `Rulia` is a more funny name than `jl4R`.
 
 1.  Install Julia (all Operating System)
 
-Install [Julia](https://julialang.org/downloads/). For Windows users
-don’t forget to select `PATH` in the installer. As mentionned in this
-page, prefer the `juliaup` installation one.
+Install [Julia](https://julialang.org/downloads/)
 
-2.  Windows user setup
+1.  For any Operation system (Windows, MacOS and linux), as proposed
+    first in the `julia` download page, prefer the `juliaup`
+    installation one. It offers multi-installation of different versions
+    of `julia`. 2. Alternative installation (**to avoid** if possible),
+    you can install from an installer. For Windows users don’t forget to
+    select `PATH` in the installer
 
-- Install [RTools](https://cran.r-project.org/bin/windows/Rtools/) and a
-  terminal with bash (for instance, [Git
-  Bash](https://gitforwindows.org/))
-- Add Rscript in the `PATH` environment variable (see for example [this
-  page](https://www.hanss.info/sebastian/post/rtools-path/))
+2.  Install `Rulia`
 
-3.  Bash installation (all Operating Systems)
+    - From binary (**Windows user only**)
+
+      1.  Donwload
+          [Rulia-0.0.1.zip](https://github.com/rcqls/Rulia/releases/download/v0.0.1/Rulia_0.0.1.zip)
+          and install it inisde R
+      2.  Inside a terminal: Whether `julia` is installed with `juliaup`
+          or you specified the `PATH` when launching the binary
+          installed, requiring `Rulia` inside `R` would normally just
+          work.
+
+    - From source (**all Operating System**)
+
+      1.  Windows user need the following setup:
+
+          - Install
+            [RTools](https://cran.r-project.org/bin/windows/Rtools/) and
+            a terminal with bash (for instance, [Git
+            Bash](https://gitforwindows.org/))
+          - Add `Rscript` in the `PATH` environment variable (see for
+            example [this
+            page](https://www.hanss.info/sebastian/post/rtools-path/))
+
+      2.  You need the `remotes` R package.
+
+      3.  Bash installation (all Operating Systems): click the `copy`
+          button to copy the following line and paste in in a `bash`
+          terminal:
 
 ``` bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
 ```
 
-4.  Julia package required for `Rulia` in mode statistic: `DataFrames`,
-    `CategoricalArrays`
+3.  Install the followiwng `julia` packages required for `Rulia` in
+    statistic mode: `DataFrames`, `CategoricalArrays`.
 
 ## Quick live session
 
@@ -335,7 +360,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x130a8f0f0>
+    ## <bytecode: 0x14be98390>
     ## <environment: namespace:Rulia>
 
 ``` r

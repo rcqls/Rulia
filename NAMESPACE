@@ -1,7 +1,3 @@
-useDynLib(Rulia, .registration = TRUE)
-
-# exportPattern("^\\jl_")
-# exportPattern("^\\jlR_")
 export(
   jl, jleval, jlrun, jlcall, jlfunc,
   R, toR, 

@@ -1,8 +1,7 @@
 .onLoad <- function(lib, pkg) {
-  ## Use local=FALSE to allow easy loading of Tcl extensions
   ## Add julia PATH in R 
   Sys.setenv(PATH=paste(system('julia -e "println(Sys.BINDIR)"',intern=TRUE),Sys.getenv("PATH"),sep=";"))
-  library.dynam("Rulia", pkg, lib) #,local=FALSE)
+  library.dynam("Rulia", pkg, lib)
 }
 
 .onAttach <- function(libname, pkgname) {
