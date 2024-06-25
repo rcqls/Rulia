@@ -319,6 +319,11 @@ TODO
 </details>
 
 <details>
+<summary><h1>Pure <code>R</code> package depending on <code>Rulia</code></h1></summary>
+TODO
+</details>
+
+<details>
 <summary><h1><code>Rulia</code> utility functions</h1></summary>
 TODO
 </details>

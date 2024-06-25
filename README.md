@@ -361,7 +361,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x14455b590>
+    ## <bytecode: 0x1263bb2a0>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -753,6 +753,14 @@ TODO
 <summary>
 <h1>
 <code>Rulia</code> in low level mode
+</h1>
+</summary>
+TODO
+</details>
+<details>
+<summary>
+<h1>
+Pure <code>R</code> package depending on <code>Rulia</code>
 </h1>
 </summary>
 TODO

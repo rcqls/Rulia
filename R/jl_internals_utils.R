@@ -55,7 +55,7 @@ rexpr2jlexpr <- function(term) {
 
 ## is a R variable
 is.variable <- function(name, envir) {
-    exists(name,envir=envir) && (regexpr("^[a-z,.][a-z,.,0-9]*", name) > 0 ) && !is.function(eval(parse(text = name), envir = envir))
+    exists(name,envir=envir) && (regexpr("^[a-z,A-Z,.][a-z,A-Z,.,0-9]*", name) > 0 ) && !is.function(eval(parse(text = name), envir = envir))
 }
 
 is.jlvariable <- function(name) {
