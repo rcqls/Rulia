@@ -33,3 +33,8 @@ jlvalue.jlfunction <- function(jlf) attr(jlf, "jlvalue")
 print.jlfunction <- function(jlf) {
     print(jlvalue(jlf))
 }
+
+# names of R variables known in parent_envir (related to is.variable)
+names.jlfunction <- function(jlf) {
+    ls(attr(jlf, "parent_envir"))
+}
