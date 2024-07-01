@@ -15,7 +15,7 @@ jl <- function(obj, ...) {
       jlval <- jlvalue_eval_rexpr(jlvars_rexprs[[nmvar]], parent_envir = parent.frame())
       jlvalue_set(nmvar, jlval)
     }
-  } else { ## jl+ mode
+  } else { ## jl mode
     rexpr <- substitute(obj)
     jlval <- jlvalue_eval_rexpr(rexpr, parent_envir = parent.frame())
     return(jlvalue_with_code(jlval, deparse(rexpr)))

@@ -80,15 +80,9 @@ jlvalue_func1 <- function(jl_meth, jlv) .jlvalue_func_call1(jl_meth, jlv)
     .jlvalue_call_(meth,jlargs,jlnargs)
 }
 
-.jlvalue_func_call <- function(jlfunc, jlargs, jlnargs) {
+.jlvalue_func_call_ <- function(jlfunc, jlargs, jlnargs) {
     ## if(!.jlrunning()) .jlinit()
     .Call("Rulia_jlvalue_func_call", jlfunc, jlargs, jlnargs, PACKAGE = "Rulia")
-}
-
-jlvalue_func <- function(jlfunc, ...) {
-    jlargs <- list(...)
-    jlnargs <- length(jlargs)
-    .jlvalue_func_call(jlfunc,jlargs,jlnargs)
 }
 
 jlvalue_finalize <- function(...) {

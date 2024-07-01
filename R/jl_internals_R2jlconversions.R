@@ -1,4 +1,4 @@
-##  These functions are internal functions that don't rely on jl+ mode
+##  These functions are internal functions that don't rely on jl mode
 
 .RNamedList2jlDataFrame <- function(df) {
     jlusing("DataFrames")

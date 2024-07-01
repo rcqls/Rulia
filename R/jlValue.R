@@ -33,7 +33,7 @@ jlvalue_eval <- function(expr) {
     .jlvalue_eval_with_class(expr)
 }
 
-## 2) jl mode: test on length of obj and jlexception 
+## 2) jleval mode: test on length of obj and jlexception 
 jleval <- function(obj, ...) {
     if (length(obj) == 1 && is.character(obj)) {
         jlval <- .jlvalue_eval_with_class(obj)
@@ -44,7 +44,7 @@ jleval <- function(obj, ...) {
     }
 }
 
-## 3) jl+ mode: see jl() function
+## 3) jl mode: see jl() function
 ################################################
 
 jlvalue_invisible <- function(jlval) {
@@ -65,7 +65,7 @@ jlvalue.jlvalue <- function(jlval, ...) {
 ## used to evaluate jl(as.name("<julia expresssion>"))
 jlvalue.name <- function(name) jleval(deparse(name))
 
-is.jlvalue <- function(obj) inherits(obj,"jlvalue")
+is.jlvalue <- function(obj) inherits(obj,"jlvalue") && !.jlvalue_is_null(obj)
 
 print.jlvalue <- function(jlval, ...) {
     if(.jlvalue_is_null(jlval)) {
@@ -117,3 +117,11 @@ jlvalue_call <- function(meth , ...) {
 }
 
 jlvalue_callR <- function(meth , ...) toR(jlvalue_call(meth, ...))
+
+jlvalue_func <- function(jlfunc, ...) {
+    jlargs <- list(...)
+    jlnargs <- length(jlargs)
+    .jlvalue_func_call_(jlfunc,jlargs,jlnargs)
+}
+
+jlvalue_funcR <- function(jlfunc , ...) toR(jlvalue_func(jlfunc, ...))

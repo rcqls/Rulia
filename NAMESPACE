@@ -5,7 +5,7 @@ export(
   ## unsafe function (closest to julia C API)
   jlvalue_eval,
   jlvalue, is.jlvalue,
-  jlvalue_call, jlvalue_callR,
+  jlvalue_call, jlvalue_callR,jlvalue_func, jlvalue_funcR,
   jlfunction, is.jlfunction,
   jlvalue_set, jlvalue_get,
   ## User sugar

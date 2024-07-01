@@ -319,7 +319,7 @@ TODO
 </details>
 
 <details>
-<summary><h1>Pure <code>R</code> package depending on <code>Rulia</code></h1></summary>
+<summary><h1>Pure <code>R</code> package made with <code>Rulia</code></h1></summary>
 TODO
 </details>
 
