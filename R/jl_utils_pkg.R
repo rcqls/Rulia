@@ -54,3 +54,15 @@ jlpkgisinstalled <- function(pkg) {
   jlcode = paste0("using TOML;d = TOML.parsefile(Base.active_project());haskey(d[\"deps\"], \"", pkg,"\")")
   jlvalue_eval(jlcode)
 }
+
+jlpkgcheckinstalled <- function() {
+  if(!R(jlpkgisinstalled(DataFrames))) {
+    cat("DataFrames.jl required! Install it from the julia side\n")
+  }
+  if(!R(jlpkgisinstalled(CategoricalArrays))) {
+    cat("CategoricalArrays.jl required! Install it from the julia side\n")
+  }
+  if(!R(jlpkgisinstalled(RCall))) {
+    cat("RCall.jl not required but used for UnsafeArray! Install it from the julia side\n")
+  }
+}

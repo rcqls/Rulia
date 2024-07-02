@@ -6,6 +6,7 @@
 .onAttach <- function(libname, pkgname) {
   if(!.jlrunning()) .jlinit()
   cat("Welcome! Rulia has initialized julia inside R\n")
+  jlpkgcheckinstalled()
 }
 
 .onDetach <- function(libpath) {

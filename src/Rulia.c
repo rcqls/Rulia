@@ -912,6 +912,14 @@ SEXP Rulia_is_xptr_null(SEXP objR) {
   }
 }
 
+// SEXP Rulia_jlvalue_Rvector(SEXP vectR) {
+//   jl_value_t *res=NULL;
+//   SEXP resR;
+//   res = jl_box_voidpointer(vectR);
+//   resR=(SEXP)jlvalue(res);
+//   return resR;
+// }
+
 
 #include <R_ext/Rdynload.h>
 static const R_CMethodDef cMethods[] = {
