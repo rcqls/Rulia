@@ -10,6 +10,11 @@ jlpkg <- function(cmd) {
 
 jlusing <- function(..., force = FALSE) {
   pkgs <- sapply(substitute(c(...))[-1], function(e) ifelse(is.character(e), e, as.character(e)))
+  for(pkg in pkgs) {
+    if(!jlpkgisinstalled_(pkg)) {
+      stop(paste0("Package ", pkg, " not installed in the julia side! Install it: jlpkgadd(",pkg,")"))
+    }
+  }
   if(force) {
     ## fix a weird issue with loading dll
     ## that need to be called several time (maybe an issue with the order) 
@@ -50,31 +55,39 @@ jlusing_force <- function(pkg, n = 10) {
   if( n >= 0) invisible(NULL) else res
 }
 
+jlpkgadd_ <- function(pkg) {
+  jlrun(paste0("import Pkg;Pkg.add(\"", pkg, "\")"))
+}
+
 jlpkgadd <- function(..., url = NULL) {
     if (!is.null(url)) {
         jlrun(paste0("import Pkg;Pkg.add(url=\"", url, "\")"))
     } else {
         pkgs <- sapply(substitute(c(...))[-1], function(e) ifelse(is.character(e), e, as.character(e)))
-        for (pkg in pkgs) jlrun(paste0("import Pkg;Pkg.add(\"", pkg, "\")"))
+        for (pkg in pkgs) jlpkgadd_(pkg)
     }
+}
+
+jlpkgisinstalled_ <- function(pkg) {
+  jlcode = paste0("using TOML;d = TOML.parsefile(Base.active_project());haskey(d[\"deps\"], \"", pkg,"\")")
+  R(jlvalue_eval(jlcode))
 }
 
 jlpkgisinstalled <- function(pkg) {
   if (class(substitute(pkg)) != "character") {
     pkg <- deparse(substitute(pkg))
   }
-  jlcode = paste0("using TOML;d = TOML.parsefile(Base.active_project());haskey(d[\"deps\"], \"", pkg,"\")")
-  jlvalue_eval(jlcode)
+  jlpkgisinstalled_(pkg)
 }
 
 jlpkgcheckinstalled <- function() {
-  if(!R(jlpkgisinstalled(DataFrames))) {
+  if(!jlpkgisinstalled(DataFrames)) {
     cat("DataFrames.jl required! Install it from the julia side\n")
   }
-  if(!R(jlpkgisinstalled(CategoricalArrays))) {
+  if(!jlpkgisinstalled(CategoricalArrays)) {
     cat("CategoricalArrays.jl required! Install it from the julia side\n")
   }
-  if(!R(jlpkgisinstalled(RCall))) {
+  if(!jlpkgisinstalled(RCall)) {
     cat("RCall.jl not required but used for UnsafeArray! Install it from the julia side\n")
   }
 }
