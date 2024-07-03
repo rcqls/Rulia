@@ -9,7 +9,7 @@ export(
   jlfunction, is.jlfunction,
   jlvalue_set, jlvalue_get,
   ## User sugar
-  jlusing, jlpkg,
+  jlusing, jlpkg, jlinclude,
   jlpkgisinstalled, jlpkgadd, 
   is.Struct,
   jltypeof, jlstring,

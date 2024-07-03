@@ -21,7 +21,19 @@ jlusing <- function(..., force = FALSE) {
 
 # if package is specified the file path is relative to inst folder package
 jlinclude <- function(jlfile, package="") {
-  if(package != "") jlfile <- system.file(jlfile, package=package)
+  if(package == "") {
+    jlfile <- substitute(jlfile)
+    if(!is.character(jlfile) && is.call(jlfile) && jlfile[[1]] == as.name("::") && length(jlfile) == 3) {
+      package <- deparse(jlfile[[2]])
+      jlfile <- paste0(deparse(jlfile[[3]]),".jl")
+    } else {
+      warning("Argument badly formed!")
+      jlfile <- "" 
+    }
+  } 
+  if(package != "") {
+    jlfile <- system.file(file.path("julia", jlfile), package=package)
+  }
   if(jlfile != "") {
     cmd <-  paste0('include("',jlfile,'")')
     jlrun(cmd)
