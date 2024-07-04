@@ -1,5 +1,5 @@
 module Rulia
-
+import TOML
 export jltrycall, funcfind
 
 function display_buffer(res)
@@ -33,6 +33,15 @@ function jltryfunc(f, args, kwargs)
     catch e
         e #showerror(stdout,e)
     end;
+end
+
+function findpkg(pkg)
+    d = TOML.parsefile(Base.active_project())
+    if(!isempty(d)) 
+        haskey(d["deps"], pkg) 
+    else 
+        false 
+    end
 end
 
 end

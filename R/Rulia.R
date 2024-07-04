@@ -90,5 +90,5 @@ jlfunc <- jltryfunc <- function(jlval_meth, ..., parent_envir =  parent.frame())
   jlvalue_function_with_exception(jlval, match.call(), parent_envir)
 }
 
-jlcallR <- jltrycallR <- function(meth, ...) toR(jltrycall(meth, ...))
-jlfuncR <- jltryfuncR <- function(jlval_meth, ...) toR(jltryfunc(jlval_meth, ...))
+jlcallR <- jltrycallR <- function(meth, ...,  parent_envir =  parent.frame()) toR(jltrycall(meth, ...,  parent_envir =  parent.frame()))
+jlfuncR <- jltryfuncR <- function(jlval_meth, ...,  parent_envir =  parent.frame()) toR(jltryfunc(jlval_meth, ...,  parent_envir =  parent.frame()))

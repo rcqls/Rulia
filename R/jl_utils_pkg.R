@@ -69,8 +69,9 @@ jlpkgadd <- function(..., url = NULL) {
 }
 
 jlpkgisinstalled_ <- function(pkg) {
-  jlcode = paste0("using TOML;d = TOML.parsefile(Base.active_project());if(!isempty(d)) haskey(d[\"deps\"], \"", pkg,"\") else false end")
-  R(jlvalue_eval(jlcode))
+  # jlcode = paste0("using TOML;d = TOML.parsefile(Base.active_project());if(!isempty(d)) haskey(d[\"deps\"], \"", pkg,"\") else false end")
+  # R(jlvalue_eval(jlcode))
+  jlcallR("Rulia.findpkg",pkg)
 }
 
 jlpkgisinstalled <- function(pkg) {
