@@ -341,3 +341,36 @@ dereferenced which is then cleaned up by the `julia` garbage collector.
 Since the `julia` session is  not persistent when the `R` session is, what happens if a `jlvalue` object is still in the Workspace (environment return by `globalenv()` or `.GlobalEnv`).
 
 </details>
+
+<details>
+<summary><h1>Benchmark <code>Rcpp</code> vs <code>Rulia</code></h1></summary>
+```{r load, include=FALSE}
+require(microbenchmark)
+load("../microbenchmark/RcppVsRulia.RData")
+```
+
+```{r}
+mbs[["n=1000"]]
+```
+
+```{r}
+mbs[["n=10000"]]
+```
+
+```{r}
+mbs[["n=1e+05"]]
+```
+
+```{r}
+mbs[["n=1e+06"]]
+```
+
+```{r}
+mbs[["n=1e+07"]]
+```
+
+```{r}
+mbs[["n=1e+08"]]
+```
+
+</details>
