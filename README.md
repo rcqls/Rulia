@@ -361,7 +361,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x13b15a758>
+    ## <bytecode: 0x11963d668>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -798,6 +798,72 @@ what happens if a `jlvalue` object is still in the Workspace
 Benchmark <code>Rcpp</code> vs <code>Rulia</code>
 </h1>
 </summary>
+
+``` r
+summary_mbs <- round(sapply(1:6, function(i) sapply(1:28, function(k) mean((mbs[[i]][mbs[[i]]$expr == levels(mbs[[i]]$expr)[3],]$time)) / mean((mbs[[i]][mbs[[i]]$expr == levels(mbs[[i]]$expr)[k],]$time)))),2)
+rownames(summary_mbs) <- levels(mbs[[1]]$expr)
+colnames(summary_mbs)<- names(mbs)
+summary_mbs
+```
+
+    ##                                   n=1000 n=10000 n=1e+05 n=1e+06 n=1e+07
+    ## sum(x)                             19.01   14.92   15.16   15.14   15.22
+    ## sumC(x)                             3.80   15.72   19.66   20.29   20.39
+    ## sumR(x)                             1.00    1.00    1.00    1.00    1.00
+    ## R(sumJL(x))                         0.05    0.29    1.03    1.05    1.25
+    ## R(sumJL(x_jl))                      0.05    0.34    3.39   21.50   74.84
+    ## R(sumJL(jl_x))                      0.03    0.34    2.80   20.51   76.25
+    ## R(sumJL(R(x)))                      0.02    0.16    1.73   12.22   59.46
+    ## R(sumJLCall(x_jl))                  0.03    0.28    2.51   17.80   71.94
+    ## R(sumJLCall(jl_x))                  0.04    0.21    2.78   19.90   72.51
+    ## R(sumJLCall(R(x)))                  0.02    0.13    1.49   11.54   54.39
+    ## R(sumJLFuncClosure(x_jl))           0.05    0.34    3.34   22.84   67.48
+    ## R(sumJLFuncClosure(jl_x))           0.05    0.36    2.32   23.13   76.74
+    ## R(sumJLFuncClosure(R(x)))           0.02    0.15    1.55   11.91   58.20
+    ## R(sumJLValueCall(x_jl))             3.35   17.61   73.28   93.90  109.95
+    ## R(sumJLValueCall(jl_x))             3.20   17.90   69.91   93.01  111.84
+    ## R(sumJLValueCall(R(x)))             0.03    0.28    2.91   19.11   72.87
+    ## R(sumJLValueFunc(x_jl))             0.55    5.66   39.51   80.97  106.49
+    ## R(sumJLValueFunc(jl_x))             0.87    5.62   39.52   82.74  109.29
+    ## R(sumJLValueFunc(R(x)))             0.04    0.28    2.82   17.75   71.03
+    ## R(sumJLValueFuncClosure(x_jl))      2.78   17.37   70.46   92.00  111.66
+    ## R(sumJLValueFuncClosure(jl_x))      3.17   17.12   71.58   28.56  110.51
+    ## R(sumJLValueFuncClosure(R(x)))      0.04    0.24    3.06   18.19   73.34
+    ## R(sommeJLValueFuncClosure(x_jl))    2.88   10.07   18.52   19.95   20.27
+    ## R(sommeJLValueFuncClosure(jl_x))    2.86   10.18   18.48   19.82   20.26
+    ## R(sommeJLValueFuncClosure(R(x)))    0.04    0.27    2.74    8.57   18.43
+    ## R(somme2JLValueFuncClosure(x_jl))   2.83    9.85   18.48   19.98   20.27
+    ## R(somme2JLValueFuncClosure(jl_x))   2.85   10.15   18.47   19.95   20.23
+    ## R(somme2JLValueFuncClosure(R(x)))   0.04    0.25    2.49   10.80   18.41
+    ##                                   n=1e+08
+    ## sum(x)                              15.05
+    ## sumC(x)                             19.91
+    ## sumR(x)                              1.00
+    ## R(sumJL(x))                          1.24
+    ## R(sumJL(x_jl))                      86.13
+    ## R(sumJL(jl_x))                     101.99
+    ## R(sumJL(R(x)))                     101.37
+    ## R(sumJLCall(x_jl))                  93.53
+    ## R(sumJLCall(jl_x))                 103.72
+    ## R(sumJLCall(R(x)))                  90.42
+    ## R(sumJLFuncClosure(x_jl))           85.33
+    ## R(sumJLFuncClosure(jl_x))          102.64
+    ## R(sumJLFuncClosure(R(x)))           98.52
+    ## R(sumJLValueCall(x_jl))             79.50
+    ## R(sumJLValueCall(jl_x))            102.58
+    ## R(sumJLValueCall(R(x)))             98.06
+    ## R(sumJLValueFunc(x_jl))             94.37
+    ## R(sumJLValueFunc(jl_x))            111.09
+    ## R(sumJLValueFunc(R(x)))            100.23
+    ## R(sumJLValueFuncClosure(x_jl))     101.00
+    ## R(sumJLValueFuncClosure(jl_x))     106.44
+    ## R(sumJLValueFuncClosure(R(x)))     105.20
+    ## R(sommeJLValueFuncClosure(x_jl))    19.92
+    ## R(sommeJLValueFuncClosure(jl_x))    20.08
+    ## R(sommeJLValueFuncClosure(R(x)))    19.99
+    ## R(somme2JLValueFuncClosure(x_jl))   19.83
+    ## R(somme2JLValueFuncClosure(jl_x))   19.82
+    ## R(somme2JLValueFuncClosure(R(x)))   19.74
 
 ``` r
 mbs[["n=1000"]]
