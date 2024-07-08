@@ -367,7 +367,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x14d9c4150>
+    ## <bytecode: 0x11ad2dd58>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -560,7 +560,7 @@ jl()$c  # c does not exist and then fails
 <details>
 <summary>
 <h2>
-Conversion <code>julia</code> to <code>R</code>
+<code>R()</code>: <code>R</code> converter of <code>julia</code> objects
 </h2>
 </summary>
 
@@ -756,7 +756,14 @@ jl(ca_R)
 
 Conversion of `R` object to `julia` system can be magically avoided
 thanks to `RCall.jl`. After installing `RCall.jl` and loading
-`jlinclude(Rulia::RCallPtr)`, one can have access to this feature.
+`jlinclude(Rulia::RCallPtr)`, one can have access to this feature. `R()`
+which is usually used for conversion of `julia` object to `R` object is
+here exceptionnaly used as a “wrapper” of `R` vector into a `jlvalue`
+object pointing to a `julia` of type `Array` and `R` class `UnsafeArray`
+(since derived from the `unsafe_array()` `julia` function introduced by
+`RCall.jl`) sharing the same memory of the original `R` vector. This
+feature as illustrated below can be applied to `R` vector of type
+`double`, `integer`, `double` but not `character`.
 
 ``` r
 jlinclude(Rulia::RCallPtr)
@@ -764,7 +771,7 @@ zz <- runif(3)
 zz
 ```
 
-    ## [1] 0.02170611 0.85977492 0.49048842
+    ## [1] 0.7048112 0.9626176 0.8366695
 
 ``` r
 Rzz <- R(zz) # this is a jlvalue object wrapping zz
@@ -772,9 +779,9 @@ Rzz
 ```
 
     ## 3-element Vector{Float64}:
-    ##  0.021706105209887028
-    ##  0.8597749210894108
-    ##  0.49048842350021005
+    ##  0.7048111835028976
+    ##  0.9626176136080176
+    ##  0.8366694613359869
 
 ``` r
 class(Rzz)
@@ -795,15 +802,15 @@ Rzz
 
     ## 3-element Vector{Float64}:
     ##  2.0
-    ##  0.8597749210894108
-    ##  0.49048842350021005
+    ##  0.9626176136080176
+    ##  0.8366694613359869
 
 ``` r
 ## and magically
 zz
 ```
 
-    ## [1] 2.0000000 0.8597749 0.4904884
+    ## [1] 2.0000000 0.9626176 0.8366695
 
 `Rzz` is the viewed in the `julia` side as a true `Vector{Float64}`
 pointing exactly to address of the `zz` vector.  
