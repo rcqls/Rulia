@@ -76,7 +76,7 @@ jlcall <- jltrycall <- function(meth, ..., parent_envir =  parent.frame()) {
   jlvalue_function_with_exception(jlval, match.call(), parent_envir)
 }
 
-jlfunc <- jltryfunc <- function(jlval_meth, ..., parent_envir =  parent.frame()) {
+jltryfunc <- function(jlval_meth, ..., parent_envir =  parent.frame()) {
   args <- jlvalue_eval_rexprs(substitute(list(...)), parent_envir)
   ## TO DEBUG: print(list(jltcargs=args, call=match.call(), s = substitute(list(...)),env=ls(parent_envir)))
   nmargs <- names(args)
@@ -90,5 +90,9 @@ jlfunc <- jltryfunc <- function(jlval_meth, ..., parent_envir =  parent.frame())
   jlvalue_function_with_exception(jlval, match.call(), parent_envir)
 }
 
+## this is a slight difference with jltryfunc that allows a call in jleval mode: jlfunc(jleval("sum"), c(1,3,2))
+## jltryfunc(jleval("sum"), c(1,3,2)) would fail since jleval("sum") is a R function
+jlfunc <- function(jlval_meth, ..., parent_envir =  parent.frame()) jltryfunc(jlvalue(jlval_meth), ..., parent_envir = parent_envir)
+
 jlcallR <- jltrycallR <- function(meth, ...,  parent_envir =  parent.frame()) toR(jltrycall(meth, ...,  parent_envir =  parent.frame()))
-jlfuncR <- jltryfuncR <- function(jlval_meth, ...,  parent_envir =  parent.frame()) toR(jltryfunc(jlval_meth, ...,  parent_envir =  parent.frame()))
+jlfuncR <- jltryfuncR <- function(jlval_meth, ...,  parent_envir =  parent.frame()) toR(jlfunc(jlval_meth, ...,  parent_envir =  parent.frame()))

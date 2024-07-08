@@ -8,6 +8,10 @@ the creation of `R` package for “wrapping” `julia` package. It can also
 be viewed as a tool similar to `Rcpp` but using the `julia` language
 instead of `C++`.
 
+Also, you can visit to [Rencontres R 2024
+(Vannes)](https://cqls.dyndoc.fr/talk/Rulia) to have a presentation of
+the `Rulia` package.
+
 <details>
 <summary>
 <h1>
@@ -367,7 +371,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x11ad2dd58>
+    ## <bytecode: 0x12fb21ca8>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -771,7 +775,7 @@ zz <- runif(3)
 zz
 ```
 
-    ## [1] 0.7048112 0.9626176 0.8366695
+    ## [1] 0.3493039 0.3598258 0.2165136
 
 ``` r
 Rzz <- R(zz) # this is a jlvalue object wrapping zz
@@ -779,9 +783,9 @@ Rzz
 ```
 
     ## 3-element Vector{Float64}:
-    ##  0.7048111835028976
-    ##  0.9626176136080176
-    ##  0.8366694613359869
+    ##  0.34930387046188116
+    ##  0.3598258418496698
+    ##  0.216513576451689
 
 ``` r
 class(Rzz)
@@ -802,19 +806,19 @@ Rzz
 
     ## 3-element Vector{Float64}:
     ##  2.0
-    ##  0.9626176136080176
-    ##  0.8366694613359869
+    ##  0.3598258418496698
+    ##  0.216513576451689
 
 ``` r
 ## and magically
 zz
 ```
 
-    ## [1] 2.0000000 0.9626176 0.8366695
+    ## [1] 2.0000000 0.3598258 0.2165136
 
 `Rzz` is the viewed in the `julia` side as a true `Vector{Float64}`
 pointing exactly to address of the `zz` vector.  
-Modifying `Rzz` directly modify `zz`.
+Modifying `Rzz` directly modifies `zz`.
 </details>
 <details>
 <summary>
@@ -830,7 +834,282 @@ TODO
 <code>Rulia</code> in low level mode
 </h1>
 </summary>
-TODO
+<details>
+<summary>
+<h2>
+safe <code>jleval</code> mode
+</h2>
+</summary>
+
+In `Rulia`, `jl` mode offers a way to call a **safe** low level mode
+called `jleval` mode that relies mainly to three main functions:
+
+- `jlvalue()` to convert `R` object to `jlvalue` wrapper of a `julia`
+  object (as already seen previously)
+- `jleval()` to evaluate a `julia` expression as its character argument
+- `jlcall()` to call function by its name given as a character and safe
+  since protected by a try/catch \`\`
+
+In fact, `jl` mode uses the metaprogramming and lazziness offered by `R`
+to avoid the use of quote in order to write `julia` code as expressed in
+the foolowing example.
+
+``` r
+jleval("[1,3,4]")   # jl(`[1,2,3]`)
+```
+
+    ## 3-element Vector{Int64}:
+    ##  1
+    ##  3
+    ##  4
+
+``` r
+jleval("VERSION")   # jl(VERSION)
+```
+
+    ## v"1.10.4"
+
+``` r
+jleval("            
+f(x,y) = x + y
+(f(2,3), f(1.0,3))
+")
+```
+
+    ## (5, 4.0)
+
+``` r
+## jlvalue() is faster than jl() here
+jlvalue(TRUE)       # jl(TRUE)
+```
+
+    ## true
+
+``` r
+jlvalue(1L)         # jl(1L)
+```
+
+    ## 1
+
+``` r
+jlvalue(1)          # jl(1)
+```
+
+    ## 1.0
+
+``` r
+jlvalue("1.0")      # jl("1.0") 
+```
+
+    ## "1.0"
+
+``` r
+jlvalue(c(TRUE, 1L, 1, "1.0"))      # jl(c(TRUE, 1L, 1, "1.0"))
+```
+
+    ## 4-element Vector{String}:
+    ##  "TRUE"
+    ##  "1"
+    ##  "1"
+    ##  "1.0"
+
+``` r
+jlvalue(list(TRUE, 1L, 1, "1.0"))   # jl(list(TRUE, 1L, 1, "1.0"))
+```
+
+    ## (true, 1, 1.0, "1.0")
+
+``` r
+jleval('a =[true, 1, 1.0, "1.0"]')  # jl(`a =[true, 1, 1.0, "1.0"]`)
+```
+
+    ## 4-element Vector{Any}:
+    ##  true
+    ##     1
+    ##     1.0
+    ##      "1.0"
+
+``` r
+jleval('a')                         # jl(a)
+```
+
+    ## 4-element Vector{Any}:
+    ##  true
+    ##     1
+    ##     1.0
+    ##      "1.0"
+
+``` r
+jleval('b = (true, 1, 1.0, "1.0")') # jl(`b = (true, 1, 1.0, "1.0")`)
+```
+
+    ## (true, 1, 1.0, "1.0")
+
+``` r
+jleval('b')                         # jl(b)
+```
+
+    ## (true, 1, 1.0, "1.0")
+
+``` r
+## error below don't crash
+jleval('b = (true, 1, 1.0, "1.0"')  # jl(`b = (true, 1, 1.0, "1.0"`)
+```
+
+    ## Julia Exception: Base.Meta.ParseError
+
+``` r
+jleval("sum")                       # jl(sum)
+```
+
+    ## sum (generic function with 17 methods)
+
+``` r
+jleval("typeof(sum)")               # jl(typeof)(sum)
+```
+
+    ## typeof(sum) (singleton type of function sum, subtype of Function)
+
+``` r
+jlcall("sum", jleval("[1,3,2]"))    # jl(sum)(`[1,3,2]`)
+```
+
+    ## 6
+
+``` r
+jlcall("sum", c(1, 3, 2), init = 4) # jl(sum)(c(1,3,2), init=4)
+```
+
+    ## 10.0
+
+``` r
+jlcall("isa", jleval("sum"), jleval("Function"))    # jl(isa)(sum, Function)
+```
+
+    ## true
+
+``` r
+jlfunc(jleval("sum"), c(1,3,2), init = 4)           # in fact it is what jl(isa) does
+```
+
+    ## 10.0
+
+``` r
+jleval("sum isa Function")                          # jl(`sum isa Function`)
+```
+
+    ## true
+
+The bad part of this safe low level mode is the performance issue.
+Indeed, these functions are not the most efficient since they are not as
+closed as the `julia C API`. An unsafe low level mode, called
+`jlvalue_eval` mode, naturally exists in `Rulia` that express the
+closest as possible the `julia C API`.
+</details>
+<details>
+<summary>
+<h2>
+unsafe <code>jlvalue_eval</code> mode
+</h2>
+</summary>
+
+As expressed before, this mode is **unsafe** and the user should be sure
+that the `julia` expression is correct. One can think of using this mode
+in some development package where efficiency really matters.
+
+`jleval()` and `jlcall()` functions are then replaced by
+`jlvalue_eval()` and `jlvalue_call()` functions respectively.
+
+``` r
+jlvalue_eval("[1,3,4]")
+```
+
+    ## 3-element Vector{Int64}:
+    ##  1
+    ##  3
+    ##  4
+
+``` r
+jlvalue_eval("VERSION")
+```
+
+    ## v"1.10.4"
+
+``` r
+jlvalue_eval("
+f(x,y) = x + y
+(f(2,3), f(1.0,3))
+")
+```
+
+    ## (5, 4.0)
+
+``` r
+jlvalue_eval('a =[true, 1, 1.0, "1.0"]')
+```
+
+    ## 4-element Vector{Any}:
+    ##  true
+    ##     1
+    ##     1.0
+    ##      "1.0"
+
+``` r
+jlvalue_eval('a')
+```
+
+    ## 4-element Vector{Any}:
+    ##  true
+    ##     1
+    ##     1.0
+    ##      "1.0"
+
+``` r
+jlvalue_eval('b = (true, 1, 1.0, "1.0")')
+```
+
+    ## (true, 1, 1.0, "1.0")
+
+``` r
+jlvalue_eval('b')
+```
+
+    ## (true, 1, 1.0, "1.0")
+
+``` r
+## error below would crash badly
+# jlvalue_eval('b = (true, 1, 1.0, "1.0"')
+
+jlvalue_eval("sum")
+```
+
+    ## sum (generic function with 17 methods)
+
+``` r
+jlvalue_eval("typeof(sum)")
+```
+
+    ## typeof(sum) (singleton type of function sum, subtype of Function)
+
+``` r
+jlvalue_call("sum",jlvalue_eval("[1,3,2]"))
+```
+
+    ## 6
+
+``` r
+jlvalue_func(jlvalue_eval("sum"),jlvalue_eval("[1,3,2]"))
+```
+
+    ## 6
+
+``` r
+## Notice that this is not possible: jlvalue_call("sum", jlvalue([1,3,2]), init=4)")
+```
+
+Also, in this mode
+
+</details>
 </details>
 <details>
 <summary>
