@@ -2,6 +2,12 @@
 ================
 
 <!-- Rscript -e "rmarkdown::render('README.Rmd')";rm README.html -->
+
+`Rulia` is an attempt to provide an `R` package in order to facilitate
+the creation of `R` package for “wrapping” `julia` package. It can also
+be viewed as a tool similar to `Rcpp` but using the `julia` language
+instead of `C++`.
+
 <details>
 <summary>
 <h1>
@@ -361,7 +367,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x12b0bd240>
+    ## <bytecode: 0x14d9c4150>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -740,6 +746,68 @@ jl(ca_R)
     ##  "titi"
 
 </details>
+</details>
+<details>
+<summary>
+<h1>
+<code>UnsafeArray</code> thanks to <code>RCall.jl</code>
+</h1>
+</summary>
+
+Conversion of `R` object to `julia` system can be magically avoided
+thanks to `RCall.jl`. After installing `RCall.jl` and loading
+`jlinclude(Rulia::RCallPtr)`, one can have access to this feature.
+
+``` r
+jlinclude(Rulia::RCallPtr)
+zz <- runif(3)
+zz
+```
+
+    ## [1] 0.02170611 0.85977492 0.49048842
+
+``` r
+Rzz <- R(zz) # this is a jlvalue object wrapping zz
+Rzz
+```
+
+    ## 3-element Vector{Float64}:
+    ##  0.021706105209887028
+    ##  0.8597749210894108
+    ##  0.49048842350021005
+
+``` r
+class(Rzz)
+```
+
+    ## [1] "UnsafeArray" "Array"       "jlvalue"
+
+``` r
+jl(typeof)(Rzz)
+```
+
+    ## Vector{Float64} (alias for Array{Float64, 1})
+
+``` r
+Rzz[1] <- 2
+Rzz
+```
+
+    ## 3-element Vector{Float64}:
+    ##  2.0
+    ##  0.8597749210894108
+    ##  0.49048842350021005
+
+``` r
+## and magically
+zz
+```
+
+    ## [1] 2.0000000 0.8597749 0.4904884
+
+`Rzz` is the viewed in the `julia` side as a true `Vector{Float64}`
+pointing exactly to address of the `zz` vector.  
+Modifying `Rzz` directly modify `zz`.
 </details>
 <details>
 <summary>

@@ -8,6 +8,8 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+`Rulia` is an attempt to provide an `R` package in order to facilitate the creation of `R` package for "wrapping" `julia` package. It can also be viewed as a tool similar to `Rcpp` but using the `julia` language instead of `C++`. 
+
 <details>
   <summary><h1>Getting started</h1></summary>
 
@@ -307,6 +309,27 @@ jl(ca_R)
 </details>
 </details>
 
+
+<details>
+<summary><h1><code>UnsafeArray</code> thanks to <code>RCall.jl</code></h1></summary>
+Conversion of `R` object to `julia` system can be magically avoided thanks to `RCall.jl`. After installing `RCall.jl` and loading `jlinclude(Rulia::RCallPtr)`, one can have access to this feature.
+```{r}
+jlinclude(Rulia::RCallPtr)
+zz <- runif(3)
+zz
+Rzz <- R(zz) # this is a jlvalue object wrapping zz
+Rzz
+class(Rzz)
+jl(typeof)(Rzz)
+Rzz[1] <- 2
+Rzz
+## and magically
+zz
+```
+
+`Rzz` is the viewed in the `julia` side as a true `Vector{Float64}` pointing exactly to address of the `zz` vector.  
+Modifying `Rzz` directly modify `zz`.
+</details>
 
 <details>
 <summary><h1>More details on <code>jl()</code></h1></summary>
