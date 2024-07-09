@@ -57,7 +57,8 @@ S3method(toR,Tuple)
 S3method(toR,integer)
 S3method(toR,double)
 S3method(toR,logical)
-S3method(toR,character)
+S3method(toR,complex)
+S3method(toR,factor)
 
 S3method("names",jlEnv)
 S3method("$",jlEnv)
@@ -97,7 +98,6 @@ S3method("summary", jlexceptions)
 
 S3method("[",UnsafeArray)
 S3method("[<-",UnsafeArray)
-
 
 # S3method(print,jlvector)
 # S3method("[<-",jlvector)
