@@ -35,3 +35,11 @@ toR.factor  <-function(obj, envir = globalenv()) {
 #     jlval
 # }
 
+toR.data.frame  <-function(obj, envir = globalenv()) {
+    symb <- deparse(substitute(obj))
+    #jlval <- jlcall("RCall.unsafe_array",jlcall("getfield", jlcall("reval", jlsymbol(symb)), jlsymbol("p")))
+    jlval <- jlcall("RCallPtr.reval_unprotected_dataframe", jlsymbol(symb))
+    class(jlval) <- c("UnsafeDataFrame", class(jlval))
+    jlval
+}
+
