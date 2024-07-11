@@ -1,5 +1,15 @@
-## To use UnsafeArray: call inisde R
-## jlinclude("RCallPtr.jl",package="Rulia")
+## To use UnsafeArray: call inside R
+## jlinclude(Rulia::RCall)
+
+toR.RObject <- function(obj) {
+    jl(`setindex!`)(RCall.Const.GlobalEnv, obj, ".Last.value")
+    .Last.value
+}
+
+toR.Ptr <- function(obj) {
+    jl(`setindex!`)(RCall.Const.GlobalEnv, obj, ".Last.value")
+    .Last.value
+}
 
 toR.double <- toR.integer <- toR.logical <- toR.complex <-function(obj, envir = globalenv()) {
     symb <- deparse(substitute(obj))

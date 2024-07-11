@@ -371,7 +371,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x12fb21ca8>
+    ## <bytecode: 0x13f83c320>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -760,7 +760,7 @@ jl(ca_R)
 
 Conversion of `R` object to `julia` system can be magically avoided
 thanks to `RCall.jl`. After installing `RCall.jl` and loading
-`jlinclude(Rulia::RCallPtr)`, one can have access to this feature. `R()`
+`jlinclude(Rulia::RCall)`, one can have access to this feature. `R()`
 which is usually used for conversion of `julia` object to `R` object is
 here exceptionnaly used as a “wrapper” of `R` vector into a `jlvalue`
 object pointing to a `julia` of type `Array` and `R` class `UnsafeArray`
@@ -770,12 +770,12 @@ feature as illustrated below can be applied to `R` vector of type
 `double`, `integer`, `double` but not `character`.
 
 ``` r
-jlinclude(Rulia::RCallPtr)
+jlinclude(Rulia::RCall)
 zz <- runif(3)
 zz
 ```
 
-    ## [1] 0.3493039 0.3598258 0.2165136
+    ## [1] 0.7067619 0.1211226 0.7918464
 
 ``` r
 Rzz <- R(zz) # this is a jlvalue object wrapping zz
@@ -783,9 +783,9 @@ Rzz
 ```
 
     ## 3-element Vector{Float64}:
-    ##  0.34930387046188116
-    ##  0.3598258418496698
-    ##  0.216513576451689
+    ##  0.7067619452718645
+    ##  0.12112260446883738
+    ##  0.7918463717214763
 
 ``` r
 class(Rzz)
@@ -806,15 +806,15 @@ Rzz
 
     ## 3-element Vector{Float64}:
     ##  2.0
-    ##  0.3598258418496698
-    ##  0.216513576451689
+    ##  0.12112260446883738
+    ##  0.7918463717214763
 
 ``` r
 ## and magically
 zz
 ```
 
-    ## [1] 2.0000000 0.3598258 0.2165136
+    ## [1] 2.0000000 0.1211226 0.7918464
 
 `Rzz` is the viewed in the `julia` side as a true `Vector{Float64}`
 pointing exactly to address of the `zz` vector.  

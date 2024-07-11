@@ -317,12 +317,12 @@ jl(ca_R)
 <details>
 <summary><h1><code>UnsafeArray</code> thanks to <code>RCall.jl</code></h1></summary>
 Conversion of `R` object to `julia` system can be magically avoided thanks to `RCall.jl`. 
-After installing `RCall.jl` and loading `jlinclude(Rulia::RCallPtr)`, one can have access to this feature.
+After installing `RCall.jl` and loading `jlinclude(Rulia::RCall)`, one can have access to this feature.
 `R()` which is usually used for conversion of `julia` object to `R` object is here exceptionnaly used as a "wrapper" of `R` vector into a `jlvalue` object pointing to a `julia` of type `Array` and `R` class `UnsafeArray` (since derived from the `unsafe_array()` `julia` function introduced by `RCall.jl`) sharing the same memory of the original `R` vector.
 This feature as illustrated below can be applied to `R` vector of type `double`, `integer`, `double` but not `character`.
 
 ```{r}
-jlinclude(Rulia::RCallPtr)
+jlinclude(Rulia::RCall)
 zz <- runif(3)
 zz
 Rzz <- R(zz) # this is a jlvalue object wrapping zz

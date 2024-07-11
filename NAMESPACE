@@ -60,6 +60,8 @@ S3method(toR,logical)
 S3method(toR,complex)
 S3method(toR,factor)
 S3method(toR,data.frame)
+S3method(toR,RObject)
+S3method(toR,Ptr)
 
 S3method("names",jlEnv)
 S3method("$",jlEnv)
