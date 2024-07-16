@@ -319,7 +319,7 @@ jl(ca_R)
 Conversion of `R` object to `julia` system can be magically avoided thanks to `RCall.jl`. 
 After installing `RCall.jl` and loading `jlinclude(Rulia::RCall)`, one can have access to this feature.
 `R()` which is usually used for conversion of `julia` object to `R` object is here exceptionnaly used as a "wrapper" of `R` vector into a `jlvalue` object pointing to a `julia` of type `Array` and `R` class `UnsafeArray` (since derived from the `unsafe_array()` `julia` function introduced by `RCall.jl`) sharing the same memory of the original `R` vector.
-This feature as illustrated below can be applied to `R` vector of type `double`, `integer`, `double` but not `character`.
+This feature as illustrated below can be applied to `R` vector of type `double`, `integer`, `complex` but not `character`. Notice that `logical` vector is considered in `julia` as a `Vector{Int32}` since it is the natural representation of `logical` in `R`.
 
 ```{r}
 jlinclude(Rulia::RCall)
@@ -331,12 +331,45 @@ class(Rzz)
 jl(typeof)(Rzz)
 Rzz[1] <- 2
 Rzz
-## and magically
+## and magically (no conversion)
 zz
 ```
 
 `Rzz` is the viewed in the `julia` side as a true `Vector{Float64}` pointing exactly to address of the `zz` vector.  
 Modifying `Rzz` directly modifies `zz`.
+
+These features also apply for `factor` (the `levels` part being copied in the `julia` side) and for `data.frame` (containing exclusively variables accepting this "wrapping" mode).
+
+```{r}
+jlinclude(Rulia::RCall)
+fa <- factor(c("toto", "titi", "toto"))
+fa
+Rfa <- R(fa) # this is a jlvalue object wrapping fa
+Rfa
+class(Rfa)
+jl(typeof)(Rfa)
+Rfa[1] <- "titi"
+Rfa
+## and magically (no conversion)
+fa
+```
+
+The main use of this feature is rarely to define `Rzz` and `Rfa` but to directly use `R(zz)` and `R(fa)` as argument(s) of a `julia` function.  
+
+```{r}
+jl(`
+function f(x)
+    x .= x .+ 2 
+end
+`)
+ 
+jl(f)(R(zz))
+## and the magic part
+zz
+```
+
+Important to notice that no change of dimension has to be done in the `julia` side. The `julia` wrapper can only read or update value(s).
+
 </details>
 
 <details>
@@ -409,7 +442,7 @@ f(x,y) = x + y
 (f(2,3), f(1.0,3))
 ")
 
-jlvalue_eval('a =[true, 1, 1.0, "1.0"]')
+jlvalue_eval('a = [true, 1, 1.0, "1.0"]')
 jlvalue_eval('a')
 jlvalue_eval('b = (true, 1, 1.0, "1.0")')
 jlvalue_eval('b')

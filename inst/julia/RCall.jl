@@ -15,6 +15,9 @@ function unsafe_categorical(s::Ptr{IntSxp})
     levels = RCall.rcopy(Array{String}, RCall.getattrib(s,RCall.Const.LevelsSymbol))
     pool = CategoricalPool{String, Int32}(levels, RCall.isOrdered(s))
     d = length(RCall.getattrib(s,RCall.Const.DimSymbol))
+    if d==0
+        d = 1
+    end
     CategoricalArray{String, d}(refs, pool)
 end
 

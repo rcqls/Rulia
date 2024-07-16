@@ -371,7 +371,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x13f83c320>
+    ## <bytecode: 0x124a367b0>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -767,7 +767,9 @@ object pointing to a `julia` of type `Array` and `R` class `UnsafeArray`
 (since derived from the `unsafe_array()` `julia` function introduced by
 `RCall.jl`) sharing the same memory of the original `R` vector. This
 feature as illustrated below can be applied to `R` vector of type
-`double`, `integer`, `double` but not `character`.
+`double`, `integer`, `complex` but not `character`. Notice that
+`logical` vector is considered in `julia` as a `Vector{Int32}` since it
+is the natural representation of `logical` in `R`.
 
 ``` r
 jlinclude(Rulia::RCall)
@@ -775,7 +777,7 @@ zz <- runif(3)
 zz
 ```
 
-    ## [1] 0.7067619 0.1211226 0.7918464
+    ## [1] 0.1811532 0.9403991 0.1423605
 
 ``` r
 Rzz <- R(zz) # this is a jlvalue object wrapping zz
@@ -783,9 +785,9 @@ Rzz
 ```
 
     ## 3-element Vector{Float64}:
-    ##  0.7067619452718645
-    ##  0.12112260446883738
-    ##  0.7918463717214763
+    ##  0.18115319311618805
+    ##  0.9403990821447223
+    ##  0.14236049889586866
 
 ``` r
 class(Rzz)
@@ -806,19 +808,106 @@ Rzz
 
     ## 3-element Vector{Float64}:
     ##  2.0
-    ##  0.12112260446883738
-    ##  0.7918463717214763
+    ##  0.9403990821447223
+    ##  0.14236049889586866
 
 ``` r
-## and magically
+## and magically (no conversion)
 zz
 ```
 
-    ## [1] 2.0000000 0.1211226 0.7918464
+    ## [1] 2.0000000 0.9403991 0.1423605
 
 `Rzz` is the viewed in the `julia` side as a true `Vector{Float64}`
 pointing exactly to address of the `zz` vector.  
 Modifying `Rzz` directly modifies `zz`.
+
+These features also apply for `factor` (the `levels` part being copied
+in the `julia` side) and for `data.frame` (containing exclusively
+variables accepting this “wrapping” mode).
+
+``` r
+jlinclude(Rulia::RCall)
+fa <- factor(c("toto", "titi", "toto"))
+fa
+```
+
+    ## [1] toto titi toto
+    ## Levels: titi toto
+
+``` r
+Rfa <- R(fa) # this is a jlvalue object wrapping fa
+Rfa
+```
+
+    ## 3-element CategoricalArray{String,1,Int32}:
+    ##  "toto"
+    ##  "titi"
+    ##  "toto"
+
+``` r
+class(Rfa)
+```
+
+    ## [1] "UnsafeCategoricalArray" "UnsafeArray"            "CategoricalArray"      
+    ## [4] "jlvalue"
+
+``` r
+jl(typeof)(Rfa)
+```
+
+    ## CategoricalVector{String, Int32, String, CategoricalValue{String, Int32}, Union{}} (alias for CategoricalArray{String, 1, Int32, String, CategoricalValue{String, Int32}, Union{}})
+
+``` r
+Rfa[1] <- "titi"
+Rfa
+```
+
+    ## 3-element CategoricalArray{String,1,Int32}:
+    ##  "titi"
+    ##  "titi"
+    ##  "toto"
+
+``` r
+## and magically (no conversion)
+fa
+```
+
+    ## [1] titi titi toto
+    ## Levels: titi toto
+
+The main use of this feature is rarely to define `Rzz` and `Rfa` but to
+directly use `R(zz)` and `R(fa)` as argument(s) of a `julia` function.
+
+``` r
+jl(`
+function f(x)
+    x .= x .+ 2 
+end
+`)
+```
+
+    ## f (generic function with 1 method)
+
+``` r
+jl(f)(R(zz))
+```
+
+    ## 3-element Vector{Float64}:
+    ##  4.0
+    ##  2.9403990821447223
+    ##  2.1423604988958687
+
+``` r
+## and the magic part
+zz
+```
+
+    ## [1] 4.000000 2.940399 2.142360
+
+Important to notice that no change of dimension has to be done in the
+`julia` side. The `julia` wrapper can only read or update value(s).
+
 </details>
 <details>
 <summary>
@@ -1045,7 +1134,7 @@ f(x,y) = x + y
     ## (5, 4.0)
 
 ``` r
-jlvalue_eval('a =[true, 1, 1.0, "1.0"]')
+jlvalue_eval('a = [true, 1, 1.0, "1.0"]')
 ```
 
     ## 4-element Vector{Any}:
