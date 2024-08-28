@@ -9,7 +9,7 @@ be viewed as a tool similar to `Rcpp` but using the `julia` language
 instead of `C++`.
 
 Also, you can visit to [Rencontres R 2024
-(Vannes)](https://cqls.dyndoc.fr/talk/Rulia) to have a presentation of
+(Vannes)](https://cqls.dyndoc.fr/Rulia/talk) to have a presentation of
 the `Rulia` package.
 
 <details>
@@ -371,7 +371,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x124a367b0>
+    ## <bytecode: 0x117828c58>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -777,7 +777,7 @@ zz <- runif(3)
 zz
 ```
 
-    ## [1] 0.1811532 0.9403991 0.1423605
+    ## [1] 0.1612589 0.4354230 0.8864403
 
 ``` r
 Rzz <- R(zz) # this is a jlvalue object wrapping zz
@@ -785,9 +785,9 @@ Rzz
 ```
 
     ## 3-element Vector{Float64}:
-    ##  0.18115319311618805
-    ##  0.9403990821447223
-    ##  0.14236049889586866
+    ##  0.16125892288982868
+    ##  0.4354230279568583
+    ##  0.8864402682520449
 
 ``` r
 class(Rzz)
@@ -808,15 +808,15 @@ Rzz
 
     ## 3-element Vector{Float64}:
     ##  2.0
-    ##  0.9403990821447223
-    ##  0.14236049889586866
+    ##  0.4354230279568583
+    ##  0.8864402682520449
 
 ``` r
 ## and magically (no conversion)
 zz
 ```
 
-    ## [1] 2.0000000 0.9403991 0.1423605
+    ## [1] 2.0000000 0.4354230 0.8864403
 
 `Rzz` is the viewed in the `julia` side as a true `Vector{Float64}`
 pointing exactly to address of the `zz` vector.  
@@ -895,15 +895,15 @@ jl(f)(R(zz))
 
     ## 3-element Vector{Float64}:
     ##  4.0
-    ##  2.9403990821447223
-    ##  2.1423604988958687
+    ##  2.4354230279568583
+    ##  2.886440268252045
 
 ``` r
 ## and the magic part
 zz
 ```
 
-    ## [1] 4.000000 2.940399 2.142360
+    ## [1] 4.000000 2.435423 2.886440
 
 Important to notice that no change of dimension has to be done in the
 `julia` side. The `julia` wrapper can only read or update value(s).
