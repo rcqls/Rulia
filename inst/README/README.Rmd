@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 `Rulia` is an attempt to provide an `R` package in order to facilitate the creation of `R` package for "wrapping" `julia` package. It can also be viewed as a tool similar to `Rcpp` but using the `julia` language instead of `C++`. 
 
-Also, you can visit to [Rencontres R 2024 (Vannes)](https://cqls.dyndoc.fr/talk/Rulia) to have a presentation of the `Rulia` package.
+Also, you can visit to [Rencontres R 2024 (Vannes)](https://cqls.dyndoc.fr/Rulia/talk) to have a presentation of the `Rulia` package.
 
 <details>
   <summary><h1>Getting started</h1></summary>
