@@ -13,7 +13,7 @@ jlvalue.double <- jlvalue.integer <- jlvalue.logical <- jlvalue.character <-func
             for(d in dim(obj)) {
                 jlvalue_call("push!", args, jl(as.integer(d)))
             }
-            jlvalue_func1(splatreshape, args)
+            jltryfunc(splatreshape, args)
         }
     }
 }

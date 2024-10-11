@@ -128,6 +128,17 @@ int Rulia_isa(jl_value_t *jlv, char* typ) {
   return res;
 }
 
+int Rulia_subtype(jl_value_t *jlv, char* typ) {
+  jl_value_t *jl_typ=NULL;
+  int res;
+
+  JL_GC_PUSH1(&jl_typ);
+  jl_typ = jl_eval_string(typ);
+  res = jl_subtype(jlv,jl_typ);
+  JL_GC_POP();
+  return res;
+}
+
 //Maybe try to use cpp stuff to get the output inside julia system (ccall,cgen and cgutils)
 //-| TODO: after adding in the jlapi.c jl_is_<C_type> functions replace the strcmp!
 SEXP jl_value_to_SEXP(jl_value_t *res) {
@@ -136,6 +147,10 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
   SEXP nmsR;
   SEXPTYPE aryTyR;
   jl_value_t *tmp;
+  double* xDataD;
+  int* xDataL;
+  u_int8_t* xDataB;
+  jl_value_t** xData;
   jl_function_t *func, *len, *func2, *collect;
   char *resTy, *aryTy, *aryTy2;
 
@@ -296,8 +311,12 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
       for(i=0;i<d;i++) {
         //BEFORE 0.3: SET_ELEMENT(resR,i,jl_value_to_SEXP(jl_tupleref(res,i)));
         //printf("i=%zu/%zu\n",i,d);
-        SET_STRING_ELT(nmsR,i,mkChar(jl_symbol_name((jl_sym_t *)jl_arrayref((jl_array_t *)keys,i))));
-        SET_ELEMENT(resR,i,jl_value_to_SEXP(jl_arrayref((jl_array_t *)vals,i)));
+        // SET_STRING_ELT(nmsR,i,mkChar(jl_symbol_name((jl_sym_t *)jl_arrayref((jl_array_t *)keys,i))));
+        // SET_ELEMENT(resR,i,jl_value_to_SEXP(jl_arrayref((jl_array_t *)vals,i)));
+        xData = jl_array_data(keys, jl_value_t*);
+        SET_STRING_ELT(nmsR,i,mkChar(jl_symbol_name((jl_sym_t *)xData[i])));
+        xData = jl_array_data(vals, jl_value_t*);
+        SET_ELEMENT(resR,i,jl_value_to_SEXP(xData[i]));
       }
       setAttrib(resR, R_NamesSymbol, nmsR);
       UNPROTECT(1);
@@ -322,41 +341,56 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
       else if(strcmp(aryTy,"Float64")==0 || strcmp(aryTy,"Float32")==0) aryTyR=REALSXP;
       else aryTyR=VECSXP;
       //if(nd==1) {//Vector
-        d = 1; for(int dim=0; dim < nd; dim++) d *= (int)jl_array_size(res, dim); //jl_array_size is defined in jlapi.c, weirdly jl_array_dim does not work here!
+        // OLD CODE: d = 1; for(int dim=0; dim < nd; dim++) d *= (int)jl_array_size(res, dim); //jl_array_size is defined in jlapi.c, weirdly jl_array_dim does not work here!
+        d = 1; for(int dim=0; dim < nd; dim++) {
+          // Rprintf("dim[%d] = %d\n", dim ,(int)jl_array_dim(res, dim));
+          d *= (int)jl_array_dim(res, dim); //jl_array_size is defined in jlapi.c, weirdly jl_array_dim does not work here!
+        }
         // Rprintf("array_dim[1]=%d\n",(int)d);
         PROTECT(resR=allocVector(aryTyR,d));
         if(nd > 1) { //nmsR corresponds here to R_DimSymbol attribute
           PROTECT(nmsR = allocVector(INTSXP, nd));
           for(int dim=0; dim < nd; dim++) {
-            INTEGER(nmsR)[dim] = (int)jl_array_size(res, dim);
+            // INTEGER(nmsR)[dim] = (int)jl_array_size(res, dim);
+            INTEGER(nmsR)[dim] = (int)jl_array_dim(res, dim);
           }
         }
         for(i=0;i<d;i++) {
           switch(aryTyR) {
             case STRSXP:
-              SET_STRING_ELT(resR,i,mkChar(jl_string_ptr(jl_arrayref((jl_array_t *)res,i))));
+              // SET_STRING_ELT(resR,i,mkChar(jl_string_ptr(jl_arrayref((jl_array_t *)res,i))));
+              xData = jl_array_data(res, jl_value_t*);
+              SET_STRING_ELT(resR,i,mkChar(jl_string_ptr(xData[i])));
               break;
             case INTSXP:
-              INTEGER(resR)[i]=jl_unbox_long(jl_arrayref((jl_array_t *)res,i));
+              xDataL = (int*)jl_array_data(res, int);
+              //xData = jl_array_data(res, jl_value_t*);
+              //INTEGER(resR)[i]=xDataL[i]; 
+              // INTEGER(resR)[i]= jl_unbox_long(xData[i]);
+              INTEGER_POINTER(resR)[i]=xDataL[i];
               break;
             case LGLSXP:
-              LOGICAL(resR)[i]=(jl_unbox_bool(jl_arrayref((jl_array_t *)res,i)) ? TRUE : FALSE);
+              xDataB = (u_int8_t*)jl_array_data(res, u_int8_t);
+              LOGICAL(resR)[i]=(xDataB[i] ? TRUE : FALSE);// (jl_unbox_bool(xDataB[i]) ? TRUE : FALSE);
               break;
             case REALSXP:
-              REAL(resR)[i]=jl_unbox_float64(jl_arrayref((jl_array_t *)res,i));
+              xDataD = (double*)jl_array_data(res, double);
+              REAL(resR)[i]=xDataD[i];// jl_unbox_float64(xDataD[i]);
               break;
             case CPLXSXP:
-              tmp=(jl_value_t*)jl_get_field(jl_arrayref((jl_array_t *)res,i), "re");
+              xData = jl_array_data(res, jl_value_t*);
+              tmp=(jl_value_t*)jl_get_field(xData[i], "re");
               if(strcmp(jl_typeof_str(tmp),"Float64")==0) {
                 COMPLEX(resR)[i].r=jl_unbox_float64(tmp);
-                COMPLEX(resR)[i].i=jl_unbox_float64(jl_get_field(jl_arrayref((jl_array_t *)res,i), "im"));
+                COMPLEX(resR)[i].i=jl_unbox_float64(jl_get_field(xData[i], "im"));
               } else if(strcmp(jl_typeof_str(tmp),"Int64")==0) {
                 COMPLEX(resR)[i].r=jl_unbox_long(tmp);
-                COMPLEX(resR)[i].i=jl_unbox_long(jl_get_field(jl_arrayref((jl_array_t *)res,i), "im"));
+                COMPLEX(resR)[i].i=jl_unbox_long(jl_get_field(xData[i], "im"));
               }
               break;
             case VECSXP:
-              SET_ELEMENT(resR,i,jl_value_to_SEXP(jl_arrayref((jl_array_t *)res,i)));
+              xData = jl_array_data(res, jl_value_t*);
+              SET_ELEMENT(resR,i,jl_value_to_SEXP(xData[i]));
           }
         }
         if(nd > 1) {
@@ -398,7 +432,7 @@ jl_value_t* jl_eval2jl(SEXP args) {
     return (jl_value_t *)jl_exception_occurred(); //jl_eval_string("nothing");
   }
   JL_GC_PUSH1(&res);
-  jl_set_global(jl_main_module, jl_symbol("Rulia_ANSWER"),res);
+  //jl_set_global(jl_main_module, jl_symbol("Rulia_ANSWER"),res);
   JL_GC_POP();
   return res;
 }
@@ -450,6 +484,10 @@ jl_value_t* Vector_SEXP_to_jl_array(SEXP ans) {
   jl_datatype_t *datatype;
   jl_value_t *array_type, *elt;
   jl_array_t *x=NULL;
+  double* xDataD;
+  int64_t* xDataL;
+  u_int8_t* xDataB;
+  jl_value_t** xData;
   int i;
 
   n=length(ans);
@@ -459,7 +497,7 @@ jl_value_t* Vector_SEXP_to_jl_array(SEXP ans) {
     datatype = jl_float64_type;
     break;
   case INTSXP:
-    datatype = jl_int64_type;
+    datatype = jl_int64_type; // even if R is int32
     break;
   case LGLSXP:
     datatype = jl_bool_type;
@@ -473,37 +511,64 @@ jl_value_t* Vector_SEXP_to_jl_array(SEXP ans) {
   array_type = jl_apply_array_type( (jl_value_t*)datatype, 1 );
   x          = jl_alloc_array_1d(array_type , n);
 
-
+  xData = (jl_value_t**)jl_array_data(x, jl_value_t*);
   switch(TYPEOF(ans)) {
   case REALSXP:
-    // xData = (double*)jl_array_data(x);
-    // for(size_t i=0; i<jl_array_len(x); i++) ((double*)xData)[i] = jl_box_float64(REAL(ans)[i]);
-    for(i=0;i<n;i++) {
-      elt=jl_box_float64(REAL(ans)[i]);
-      jl_arrayset((jl_array_t*)x,elt,i);
-      jl_gc_wb(x, elt);
+    // OLD CODE:
+    // for(i=0;i<n;i++) {
+    //   elt=jl_box_float64(REAL(ans)[i]);
+    //   jl_arrayset((jl_array_t*)x,elt,i);
+    //   jl_gc_wb(x, elt);
+    // }
+    // NEW CODE:
+    xDataD = (double*)jl_array_data(x, double);
+    for(size_t i=0; i<n; i++) {
+      xDataD[i] = REAL(ans)[i];
+      // jl_gc_wb(x, elt);
     }
     break;
   case INTSXP:
-    // xData = (int*)jl_array_data(x);
-    // for(size_t i=0; i<jl_array_len(x); i++) ((int*)xData)[i] = jl_box_long(INTEGER(ans)[i]);
-    for(i=0;i<n;i++) {
-      elt=jl_box_long(INTEGER(ans)[i]);
-      jl_arrayset((jl_array_t*)x,elt,i);
-      jl_gc_wb(x, elt);
+    // OLD CODE:
+    // for(i=0;i<n;i++) {
+    //   elt=jl_box_long(INTEGER(ans)[i]);
+    //   jl_arrayset((jl_array_t*)x,elt,i);
+    //   jl_gc_wb(x, elt);
+    // }
+    // NEW CODE:
+    xDataL = (int64_t*)jl_array_data(x, int64_t);
+    for(size_t i=0; i<n; i++) {
+      // elt=jl_box_long(INTEGER(ans)[i]);
+      xDataL[i] = (int64_t)(INTEGER(ans)[i]);
+      // jl_gc_wb(x, elt);
     }
     break;
   case LGLSXP:
-    for(i=0;i<n;i++) {
-      elt=jl_box_bool((INTEGER(ans)[i] ? 1 : 0));
-      jl_arrayset((jl_array_t*)x,elt,i);
-      jl_gc_wb(x, elt);
+    // OLD CODE:
+    // for(i=0;i<n;i++) {
+    //   elt=jl_box_bool((INTEGER(ans)[i] ? 1 : 0));
+    //   jl_arrayset((jl_array_t*)x,elt,i);
+    //   jl_gc_wb(x, elt);
+    // }
+    // NEW CODE:
+    xDataB = (u_int8_t*)jl_array_data(x, u_int8_t);
+    for(size_t i=0; i<n; i++) {
+      // elt=jl_box_bool((INTEGER(ans)[i] ? 1 : 0));
+      xDataB[i] = (u_int8_t)(INTEGER(ans)[i] ? 1 : 0);
+      // jl_gc_wb(x, elt);
     }
     break;
   case STRSXP:
-    for(i=0;i<n;i++) {
+    // OLD CODE:
+    // for(i=0;i<n;i++) {
+    //   elt=jl_cstr_to_string((char*)CHAR(STRING_ELT(ans,i)));
+    //   jl_arrayset((jl_array_t*)x,elt,i);
+    //   jl_gc_wb(x, elt);
+    // }
+    // NEW CODE:
+    // xDataS = (jl_value_t**)jl_array_data(x);
+    for(size_t i=0; i<n; i++) {
       elt=jl_cstr_to_string((char*)CHAR(STRING_ELT(ans,i)));
-      jl_arrayset((jl_array_t*)x,elt,i);
+      xData[i] = elt;
       jl_gc_wb(x, elt);
     }
     break;
@@ -540,12 +605,12 @@ SEXP Rulia_jl_symbol(SEXP ans) {
 
 /********/
 
-SEXP Rulia_get_ans(void) {
-  jl_value_t *res;
+// SEXP Rulia_get_ans(void) {
+//   jl_value_t *res;
 
-  res=jl_get_global(jl_main_module, jl_symbol("Rulia_ANSWER"));
-  return jl_value_to_SEXP(res);
-}
+//   res=jl_get_global(jl_main_module, jl_symbol("Rulia_ANSWER"));
+//   return jl_value_to_SEXP(res);
+// }
 
 SEXP Rulia_set_global_variable(SEXP args) {
   char *varName;
@@ -778,11 +843,13 @@ SEXP Rulia_jlvalue_func_call(SEXP jl_func, SEXP jl_args, SEXP jl_nargs) {
   jl_function_t *func;
   SEXP resR;
 
-  // printf("type %d\n", TYPEOF(jl_args));
+  // 
+  printf("type %d\n", TYPEOF(jl_args));
   if(TYPEOF(jl_args) != VECSXP) {
     return R_NilValue;
   }
-  // printf("meth=%s\n",meth);
+  // 
+  printf("func call begin \n");
   nargs=INTEGER(jl_nargs)[0];
   JL_GC_PUSHARGS(args, nargs);
   for(int i=0;i < nargs;i++) {
@@ -790,8 +857,12 @@ SEXP Rulia_jlvalue_func_call(SEXP jl_func, SEXP jl_args, SEXP jl_nargs) {
   }
   func = (jl_function_t*)(get_preserved_jlvalue_from_R_ExternalPtrAddr(jl_func));
   res = jl_call(func, args, nargs);
+  printf("func call inter\n");
   resR=(SEXP)jlvalue(res);
+  printf("func call inter2\n");
   JL_GC_POP();
+  printf("func call inter3\n");
+  printf("func call end\n");
   return resR;
 }
 
@@ -951,7 +1022,7 @@ static const R_ExternalMethodDef externalMethods[] = {
 
 static const R_CallMethodDef callMethods[] = {
   {"Rulia_running",(DL_FUNC) &Rulia_running,0},
-  {"Rulia_get_ans",(DL_FUNC) &Rulia_get_ans,0},
+  // {"Rulia_get_ans",(DL_FUNC) &Rulia_get_ans,0},
   {"Rulia_jlvalue_call",(DL_FUNC) &Rulia_jlvalue_call,3},
   {"Rulia_jlvalue_func_call",(DL_FUNC) &Rulia_jlvalue_func_call,3},
   {"Rulia_jlvalue_new_struct",(DL_FUNC) &Rulia_jlvalue_new_struct,3},
