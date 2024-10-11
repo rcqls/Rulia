@@ -1,5 +1,5 @@
 test_that("data.frame works", {
-  expect_jlequal(jl(data.frame(a=1:2, b=c(TRUE,FALSE))), "2×2 DataFrame\n Row │ a      b\n     │ Int32  Bool\n─────┼──────────────\n   1 │     1   true\n   2 │     2  false")
+  expect_jlequal(jl(data.frame(a=1:2, b=c(TRUE,FALSE))), "2×2 DataFrame\n Row │ a      b\n     │ Int64  Bool\n─────┼──────────────\n   1 │     1   true\n   2 │     2  false")
 })
 
 test_that("factor works", {

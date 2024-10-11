@@ -151,7 +151,7 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
   int* xDataL;
   u_int8_t* xDataB;
   jl_value_t** xData;
-  jl_function_t *func, *len, *func2, *collect;
+  jl_function_t *func, *len, *func2, *collect, *convInt32, *convFloat64;
   char *resTy, *aryTy, *aryTy2;
 
   if(res!=NULL) { //=> get a result
@@ -177,24 +177,35 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
       return resR;
     }
     else
-    if(strcmp(resTy,"Float64")==0)
-    //if(jl_is_float64(res))
-    {
+    // if(strcmp(resTy,"Float64")==0)
+    // //if(jl_is_float64(res))
+    // {
+    //   PROTECT(resR=NEW_NUMERIC(1));
+    //   NUMERIC_POINTER(resR)[0]=jl_unbox_float64(res);
+    //   UNPROTECT(1);
+    //   return resR;
+    // }
+    // else
+    // if(strcmp(resTy,"Float32")==0)
+    // //if(jl_is_float64(res))
+    // {
+
+    //   PROTECT(resR=NEW_NUMERIC(1));
+    //   NUMERIC_POINTER(resR)[0]=jl_unbox_float32(res);
+    //   UNPROTECT(1);
+    //   return resR;
+    // }
+    if(Rulia_isa(res,"Number")) {
+      if(strcmp(resTy,"Float64") != 0) {
+        // printf("Needs to be converted\n");
+        convFloat64 = (jl_function_t*)jl_eval_string("Base.Fix1(convert,Float64)");
+        res = jl_call1(convFloat64, res);
+      }
       PROTECT(resR=NEW_NUMERIC(1));
       NUMERIC_POINTER(resR)[0]=jl_unbox_float64(res);
       UNPROTECT(1);
       return resR;
-    }
-    else
-    if(strcmp(resTy,"Float32")==0)
-    //if(jl_is_float64(res))
-    {
-
-      PROTECT(resR=NEW_NUMERIC(1));
-      NUMERIC_POINTER(resR)[0]=jl_unbox_float32(res);
-      UNPROTECT(1);
-      return resR;
-    }
+    } 
     else
     if(strcmp(resTy,"DataType")==0)
     //if(jl_is_bool(res))
@@ -335,10 +346,12 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
       //Rprintf("type elt=%s,%s\n",aryTy,(char*)jl_typeof_str(jl_array_eltype(res)));
       if(strcmp(aryTy2,"DataType")!=0) return R_NilValue;
       if(strcmp(aryTy,"String")==0) aryTyR=STRSXP;
-      else if(strcmp(aryTy,"Int64")==0 || strcmp(aryTy,"Int32")==0) aryTyR=INTSXP;
-      else if(strcmp(aryTy,"Bool")==0) aryTyR=LGLSXP;
       else if(strcmp(aryTy,"Complex")==0) aryTyR=CPLXSXP;
-      else if(strcmp(aryTy,"Float64")==0 || strcmp(aryTy,"Float32")==0) aryTyR=REALSXP;
+      else if(strcmp(aryTy,"Bool")==0) aryTyR=LGLSXP;
+      // else if(strcmp(aryTy,"Int64")==0 || strcmp(aryTy,"Int32")==0) aryTyR=INTSXP;
+      else if(Rulia_subtype(jl_array_eltype(res),"Integer")) aryTyR=INTSXP;
+      // else if(strcmp(aryTy,"Float64")==0 || strcmp(aryTy,"Float32")==0) aryTyR=REALSXP;
+      else if(Rulia_subtype(jl_array_eltype(res),"Number")) aryTyR=REALSXP;
       else aryTyR=VECSXP;
       //if(nd==1) {//Vector
         // OLD CODE: d = 1; for(int dim=0; dim < nd; dim++) d *= (int)jl_array_size(res, dim); //jl_array_size is defined in jlapi.c, weirdly jl_array_dim does not work here!
@@ -363,6 +376,11 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
               SET_STRING_ELT(resR,i,mkChar(jl_string_ptr(xData[i])));
               break;
             case INTSXP:
+              if(strcmp(aryTy,"Int32") != 0) {
+                // printf("Needs to be converted\n");
+                convInt32 = (jl_function_t*)jl_eval_string("Base.Fix1(broadcast,Base.Fix1(convert,Int32))");
+                res = jl_call1(convInt32, res);
+              }
               xDataL = (int*)jl_array_data(res, int);
               //xData = jl_array_data(res, jl_value_t*);
               //INTEGER(resR)[i]=xDataL[i]; 
@@ -374,6 +392,11 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
               LOGICAL(resR)[i]=(xDataB[i] ? TRUE : FALSE);// (jl_unbox_bool(xDataB[i]) ? TRUE : FALSE);
               break;
             case REALSXP:
+              if(strcmp(aryTy,"Float64") != 0) {
+                // printf("Needs to be converted\n");
+                convFloat64 = (jl_function_t*)jl_eval_string("Base.Fix1(broadcast,Base.Fix1(convert,Float64))");
+                res = jl_call1(convFloat64, res);
+              }
               xDataD = (double*)jl_array_data(res, double);
               REAL(resR)[i]=xDataD[i];// jl_unbox_float64(xDataD[i]);
               break;
