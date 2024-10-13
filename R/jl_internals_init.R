@@ -43,7 +43,7 @@
 #   return(res)
 # }
 
-# .jlans <- function() {
-#   ## if(!.jlrunning()) .jlinit()
-#   .Call("Rulia_get_ans", PACKAGE = "Rulia")
-# }
+.jlans <- function() {
+  ## if(!.jlrunning()) .jlinit()
+  .Call("Rulia_get_ans", PACKAGE = "Rulia")
+}

@@ -82,6 +82,7 @@ SEXP Rulia_init(SEXP args)
 #ifdef preserved
     jl_init_preserved_refs();
 #endif
+  jl_eval_string("global Rulia_ANSWER");
   }
   return R_NilValue;
 }
@@ -455,7 +456,7 @@ jl_value_t* jl_eval2jl(SEXP args) {
     return (jl_value_t *)jl_exception_occurred(); //jl_eval_string("nothing");
   }
   JL_GC_PUSH1(&res);
-  //jl_set_global(jl_main_module, jl_symbol("Rulia_ANSWER"),res);
+  jl_set_global(jl_main_module, jl_symbol("Rulia_ANSWER"),res);
   JL_GC_POP();
   return res;
 }
@@ -628,12 +629,12 @@ SEXP Rulia_jl_symbol(SEXP ans) {
 
 /********/
 
-// SEXP Rulia_get_ans(void) {
-//   jl_value_t *res;
+SEXP Rulia_get_ans(void) {
+  jl_value_t *res;
 
-//   res=jl_get_global(jl_main_module, jl_symbol("Rulia_ANSWER"));
-//   return jl_value_to_SEXP(res);
-// }
+  res=jl_get_global(jl_main_module, jl_symbol("Rulia_ANSWER"));
+  return jl_value_to_SEXP(res);
+}
 
 SEXP Rulia_set_global_variable(SEXP args) {
   char *varName;
@@ -1043,7 +1044,7 @@ static const R_ExternalMethodDef externalMethods[] = {
 
 static const R_CallMethodDef callMethods[] = {
   {"Rulia_running",(DL_FUNC) &Rulia_running,0},
-  // {"Rulia_get_ans",(DL_FUNC) &Rulia_get_ans,0},
+  {"Rulia_get_ans",(DL_FUNC) &Rulia_get_ans,0},
   {"Rulia_jlvalue_call",(DL_FUNC) &Rulia_jlvalue_call,3},
   {"Rulia_jlvalue_func_call",(DL_FUNC) &Rulia_jlvalue_func_call,3},
   {"Rulia_jlvalue_new_struct",(DL_FUNC) &Rulia_jlvalue_new_struct,3},
