@@ -866,13 +866,11 @@ SEXP Rulia_jlvalue_func_call(SEXP jl_func, SEXP jl_args, SEXP jl_nargs) {
   jl_function_t *func;
   SEXP resR;
 
-  // 
-  printf("type %d\n", TYPEOF(jl_args));
+  // printf("type %d\n", TYPEOF(jl_args));
   if(TYPEOF(jl_args) != VECSXP) {
     return R_NilValue;
   }
-  // 
-  printf("func call begin \n");
+  // printf("func call begin \n");
   nargs=INTEGER(jl_nargs)[0];
   JL_GC_PUSHARGS(args, nargs);
   for(int i=0;i < nargs;i++) {
@@ -880,12 +878,12 @@ SEXP Rulia_jlvalue_func_call(SEXP jl_func, SEXP jl_args, SEXP jl_nargs) {
   }
   func = (jl_function_t*)(get_preserved_jlvalue_from_R_ExternalPtrAddr(jl_func));
   res = jl_call(func, args, nargs);
-  printf("func call inter\n");
+  // printf("func call inter\n");
   resR=(SEXP)jlvalue(res);
-  printf("func call inter2\n");
+  // printf("func call inter2\n");
   JL_GC_POP();
-  printf("func call inter3\n");
-  printf("func call end\n");
+  // printf("func call inter3\n");
+  // printf("func call end\n");
   return resR;
 }
 

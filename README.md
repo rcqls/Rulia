@@ -371,7 +371,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x117828c58>
+    ## <bytecode: 0x1538dbaa0>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -777,7 +777,7 @@ zz <- runif(3)
 zz
 ```
 
-    ## [1] 0.1612589 0.4354230 0.8864403
+    ## [1] 0.6203161 0.6287835 0.5547783
 
 ``` r
 Rzz <- R(zz) # this is a jlvalue object wrapping zz
@@ -785,9 +785,9 @@ Rzz
 ```
 
     ## 3-element Vector{Float64}:
-    ##  0.16125892288982868
-    ##  0.4354230279568583
-    ##  0.8864402682520449
+    ##  0.6203161363955587
+    ##  0.6287834744434804
+    ##  0.5547783318907022
 
 ``` r
 class(Rzz)
@@ -808,15 +808,15 @@ Rzz
 
     ## 3-element Vector{Float64}:
     ##  2.0
-    ##  0.4354230279568583
-    ##  0.8864402682520449
+    ##  0.6287834744434804
+    ##  0.5547783318907022
 
 ``` r
 ## and magically (no conversion)
 zz
 ```
 
-    ## [1] 2.0000000 0.4354230 0.8864403
+    ## [1] 2.0000000 0.6287835 0.5547783
 
 `Rzz` is the viewed in the `julia` side as a true `Vector{Float64}`
 pointing exactly to address of the `zz` vector.  
@@ -895,15 +895,15 @@ jl(f)(R(zz))
 
     ## 3-element Vector{Float64}:
     ##  4.0
-    ##  2.4354230279568583
-    ##  2.886440268252045
+    ##  2.6287834744434804
+    ##  2.5547783318907022
 
 ``` r
 ## and the magic part
 zz
 ```
 
-    ## [1] 4.000000 2.435423 2.886440
+    ## [1] 4.000000 2.628783 2.554778
 
 Important to notice that no change of dimension has to be done in the
 `julia` side. The `julia` wrapper can only read or update value(s).
@@ -956,7 +956,7 @@ jleval("[1,3,4]")   # jl(`[1,2,3]`)
 jleval("VERSION")   # jl(VERSION)
 ```
 
-    ## v"1.10.4"
+    ## v"1.11.0"
 
 ``` r
 jleval("            
@@ -1051,7 +1051,7 @@ jleval('b = (true, 1, 1.0, "1.0"')  # jl(`b = (true, 1, 1.0, "1.0"`)
 jleval("sum")                       # jl(sum)
 ```
 
-    ## sum (generic function with 17 methods)
+    ## sum (generic function with 15 methods)
 
 ``` r
 jleval("typeof(sum)")               # jl(typeof)(sum)
@@ -1122,7 +1122,7 @@ jlvalue_eval("[1,3,4]")
 jlvalue_eval("VERSION")
 ```
 
-    ## v"1.10.4"
+    ## v"1.11.0"
 
 ``` r
 jlvalue_eval("
@@ -1172,7 +1172,7 @@ jlvalue_eval('b')
 jlvalue_eval("sum")
 ```
 
-    ## sum (generic function with 17 methods)
+    ## sum (generic function with 15 methods)
 
 ``` r
 jlvalue_eval("typeof(sum)")

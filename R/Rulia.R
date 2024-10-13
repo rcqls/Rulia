@@ -56,6 +56,7 @@ jlvalue_get <- function(var) {
 jlvalue_set <- function(var, value, vector = FALSE) {
   ## if (!.jlrunning()) .jlinit()
   jlval <- jlvalue(value)
+  jlrun(paste("global", var))
   .External("Rulia_set_global_variable", var, jlval, PACKAGE = "Rulia")
   return(invisible())
 }
