@@ -317,14 +317,14 @@ jl(ca_R)
 <summary><h1><code>UnsafeArray</code> thanks to <code>RCall.jl</code></h1></summary>
 Conversion of `R` object to `julia` system can be magically avoided thanks to `RCall.jl`. 
 After installing `RCall.jl` and loading `jlinclude(Rulia::RCall)`, one can have access to this feature.
-`R()` which is usually used for conversion of `julia` object to `R` object is here exceptionnaly used as a "wrapper" of `R` vector into a `jlvalue` object pointing to a `julia` of type `Array` and `R` class `UnsafeArray` (since derived from the `unsafe_array()` `julia` function introduced by `RCall.jl`) sharing the same memory of the original `R` vector.
+`R()` which is usually used for conversion of `julia` object to `R` object is here exceptionnally used as a "wrapper" of `R` vector into a `jlvalue` object pointing to a `julia` of type `Array` and `R` class `UnsafeArray` (since derived from the `unsafe_array()` `julia` function introduced by `RCall.jl`) sharing the same memory of the original `R` vector.
 This feature as illustrated below can be applied to `R` vector of type `double`, `integer`, `complex` but not `character`. Notice that `logical` vector is considered in `julia` as a `Vector{Int32}` since it is the natural representation of `logical` in `R`.
 
 ```{r}
 jlinclude(Rulia::RCall)
 zz <- runif(3)
 zz
-Rzz <- R(zz) # this is a jlvalue object wrapping zz
+Rzz <- R(zz) # jlvalue object wrapping the R object zz
 Rzz
 class(Rzz)
 jl(typeof)(Rzz)
@@ -334,7 +334,7 @@ Rzz
 zz
 ```
 
-`Rzz` is the viewed in the `julia` side as a true `Vector{Float64}` pointing exactly to address of the `zz` vector.  
+`Rzz` is viewed in the `julia` side as a true `Vector{Float64}` pointing exactly to address of `zz` which is an `R` vector.  
 Modifying `Rzz` directly modifies `zz`.
 
 These features also apply for `factor` (the `levels` part being copied in the `julia` side) and for `data.frame` (containing exclusively variables accepting this "wrapping" mode).

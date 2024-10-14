@@ -372,7 +372,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x1476fe638>
+    ## <bytecode: 0x131460c38>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -763,7 +763,7 @@ Conversion of `R` object to `julia` system can be magically avoided
 thanks to `RCall.jl`. After installing `RCall.jl` and loading
 `jlinclude(Rulia::RCall)`, one can have access to this feature. `R()`
 which is usually used for conversion of `julia` object to `R` object is
-here exceptionnaly used as a “wrapper” of `R` vector into a `jlvalue`
+here exceptionnally used as a “wrapper” of `R` vector into a `jlvalue`
 object pointing to a `julia` of type `Array` and `R` class `UnsafeArray`
 (since derived from the `unsafe_array()` `julia` function introduced by
 `RCall.jl`) sharing the same memory of the original `R` vector. This
@@ -778,17 +778,17 @@ zz <- runif(3)
 zz
 ```
 
-    ## [1] 0.4677504 0.2288278 0.9922182
+    ## [1] 0.5348754 0.3005513 0.6592778
 
 ``` r
-Rzz <- R(zz) # this is a jlvalue object wrapping zz
+Rzz <- R(zz) # jlvalue object wrapping the R object zz
 Rzz
 ```
 
     ## 3-element Vector{Float64}:
-    ##  0.46775036002509296
-    ##  0.228827812243253
-    ##  0.9922181759029627
+    ##  0.5348753938451409
+    ##  0.3005512598901987
+    ##  0.6592778430785984
 
 ``` r
 class(Rzz)
@@ -809,18 +809,18 @@ Rzz
 
     ## 3-element Vector{Float64}:
     ##  2.0
-    ##  0.228827812243253
-    ##  0.9922181759029627
+    ##  0.3005512598901987
+    ##  0.6592778430785984
 
 ``` r
 ## and magically (no conversion)
 zz
 ```
 
-    ## [1] 2.0000000 0.2288278 0.9922182
+    ## [1] 2.0000000 0.3005513 0.6592778
 
-`Rzz` is the viewed in the `julia` side as a true `Vector{Float64}`
-pointing exactly to address of the `zz` vector.  
+`Rzz` is viewed in the `julia` side as a true `Vector{Float64}` pointing
+exactly to address of `zz` which is an `R` vector.  
 Modifying `Rzz` directly modifies `zz`.
 
 These features also apply for `factor` (the `levels` part being copied
@@ -896,15 +896,15 @@ jl(f)(R(zz))
 
     ## 3-element Vector{Float64}:
     ##  4.0
-    ##  2.228827812243253
-    ##  2.9922181759029627
+    ##  2.3005512598901987
+    ##  2.6592778430785984
 
 ``` r
 ## and the magic part
 zz
 ```
 
-    ## [1] 4.000000 2.228828 2.992218
+    ## [1] 4.000000 2.300551 2.659278
 
 Important to notice that no change of dimension has to be done in the
 `julia` side. The `julia` wrapper can only read or update value(s).
