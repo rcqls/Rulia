@@ -8,7 +8,7 @@ the creation of `R` package for “wrapping” `julia` package. It can also
 be viewed as a tool similar to `Rcpp` but using the `julia` language
 instead of `C++`.
 
-Also, you can visit to [Rencontres R 2024
+Also, you can visit [Rencontres R 2024
 (Vannes)](https://cqls.dyndoc.fr/Rulia/talk) to have a presentation of
 the `Rulia` package.
 
@@ -32,7 +32,7 @@ of `R` and `julia`. There is then **no dependencies** (except `julia`).
 
 Also `Rulia` is the next step of the preliminary project called
 [`jl4R`](https://github.com/rcqls/jl4R) started more than 10 years ago.
-The author thinks that `Rulia` is a more funny name than `jl4R`.
+The author thinks that `Rulia` is a funnier name than `jl4R`.
 
 ## Install
 
@@ -49,16 +49,6 @@ The author thinks that `Rulia` is a more funny name than `jl4R`.
         don’t forget to select `PATH` in the installer
 
 2.  Install `Rulia`
-
-    - From binary (**Windows user only**)
-
-      1.  Donwload
-          [Rulia-0.0.1.zip](https://github.com/rcqls/Rulia/releases/download/v0.0.1/Rulia_0.0.1.zip)
-          and install it inisde R
-      2.  Inside a terminal: Whether `julia` is installed with `juliaup`
-          or you specified the `PATH` when launching the binary
-          installer, loading (`library(Rulia)/require(Rulia)`) `Rulia`
-          inside `R` would normally just work.
 
     - From source (**all Operating System**)
 
@@ -78,9 +68,20 @@ The author thinks that `Rulia` is a more funny name than `jl4R`.
           button to copy the following line and paste in in a `bash`
           terminal:
 
-``` bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
-```
+      ``` bash
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
+      ```
+
+    - From binary (**Windows user only**)
+
+      0.  **NB**: this method can be obsolete if the release is too old
+      1.  Donwload
+          [Rulia-0.0.1.zip](https://github.com/rcqls/Rulia/releases/download/v0.1.0/Rulia_0.1.0.zip)
+          and install it inisde R
+      2.  Inside a terminal: Whether `julia` is installed with `juliaup`
+          or you specified the `PATH` when launching the binary
+          installer, loading (`library(Rulia)/require(Rulia)`) `Rulia`
+          inside `R` would normally just work.
 
 3.  Install the followiwng `julia` packages required for `Rulia` in
     statistic mode: `DataFrames`, `CategoricalArrays`.
@@ -371,7 +372,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x121222ae0>
+    ## <bytecode: 0x1476fe638>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -777,7 +778,7 @@ zz <- runif(3)
 zz
 ```
 
-    ## [1] 0.2062841 0.5310241 0.8530341
+    ## [1] 0.4677504 0.2288278 0.9922182
 
 ``` r
 Rzz <- R(zz) # this is a jlvalue object wrapping zz
@@ -785,9 +786,9 @@ Rzz
 ```
 
     ## 3-element Vector{Float64}:
-    ##  0.20628410810604692
-    ##  0.5310241114348173
-    ##  0.8530340511351824
+    ##  0.46775036002509296
+    ##  0.228827812243253
+    ##  0.9922181759029627
 
 ``` r
 class(Rzz)
@@ -808,15 +809,15 @@ Rzz
 
     ## 3-element Vector{Float64}:
     ##  2.0
-    ##  0.5310241114348173
-    ##  0.8530340511351824
+    ##  0.228827812243253
+    ##  0.9922181759029627
 
 ``` r
 ## and magically (no conversion)
 zz
 ```
 
-    ## [1] 2.0000000 0.5310241 0.8530341
+    ## [1] 2.0000000 0.2288278 0.9922182
 
 `Rzz` is the viewed in the `julia` side as a true `Vector{Float64}`
 pointing exactly to address of the `zz` vector.  
@@ -895,15 +896,15 @@ jl(f)(R(zz))
 
     ## 3-element Vector{Float64}:
     ##  4.0
-    ##  2.5310241114348173
-    ##  2.8530340511351824
+    ##  2.228827812243253
+    ##  2.9922181759029627
 
 ``` r
 ## and the magic part
 zz
 ```
 
-    ## [1] 4.000000 2.531024 2.853034
+    ## [1] 4.000000 2.228828 2.992218
 
 Important to notice that no change of dimension has to be done in the
 `julia` side. The `julia` wrapper can only read or update value(s).
