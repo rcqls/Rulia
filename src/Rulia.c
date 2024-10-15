@@ -150,7 +150,7 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
   jl_value_t *tmp;
   double* xDataD;
   int* xDataL;
-  u_int8_t* xDataB;
+  uint8_t* xDataB;
   jl_value_t** xData;
   jl_function_t *func, *len, *func2, *collect, *convInt32, *convFloat64;
   char *resTy, *aryTy, *aryTy2;
@@ -389,7 +389,7 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
               INTEGER_POINTER(resR)[i]=xDataL[i];
               break;
             case LGLSXP:
-              xDataB = (u_int8_t*)jl_array_data(res, u_int8_t);
+              xDataB = (uint8_t*)jl_array_data(res, uint8_t);
               LOGICAL(resR)[i]=(xDataB[i] ? TRUE : FALSE);// (jl_unbox_bool(xDataB[i]) ? TRUE : FALSE);
               break;
             case REALSXP:
@@ -510,7 +510,7 @@ jl_value_t* Vector_SEXP_to_jl_array(SEXP ans) {
   jl_array_t *x=NULL;
   double* xDataD;
   int64_t* xDataL;
-  u_int8_t* xDataB;
+  uint8_t* xDataB;
   jl_value_t** xData;
   int i;
 
@@ -574,10 +574,10 @@ jl_value_t* Vector_SEXP_to_jl_array(SEXP ans) {
     //   jl_gc_wb(x, elt);
     // }
     // NEW CODE:
-    xDataB = (u_int8_t*)jl_array_data(x, u_int8_t);
+    xDataB = (uint8_t*)jl_array_data(x, uint8_t);
     for(size_t i=0; i<n; i++) {
       // elt=jl_box_bool((INTEGER(ans)[i] ? 1 : 0));
-      xDataB[i] = (u_int8_t)(INTEGER(ans)[i] ? 1 : 0);
+      xDataB[i] = (uint8_t)(INTEGER(ans)[i] ? 1 : 0);
       // jl_gc_wb(x, elt);
     }
     break;
