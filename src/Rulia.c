@@ -16,7 +16,7 @@
 
 // JULIA_DEFINE_FAST_TLS => ISSUE on docker linux relocation R_X86_64_TPOFF32 against `jl_pgcstack_localexec'
 static int Rulia_julia_running=0;
-static jl_module_t* jl_R_module;
+//static jl_module_t* jl_R_module;
 SEXP jlvalue(jl_value_t* jlvalue);
 
 #ifdef preserved
@@ -512,7 +512,7 @@ jl_value_t* Vector_SEXP_to_jl_array(SEXP ans) {
   int64_t* xDataL;
   uint8_t* xDataB;
   jl_value_t** xData;
-  int i;
+  // int i;
 
   n=length(ans);
   // printf("typeof %d, isArray %d\n",TYPEOF(ans), isArray(ans));
