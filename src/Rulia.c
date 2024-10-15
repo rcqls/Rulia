@@ -106,7 +106,7 @@ SEXP Rulia_running(void) {
 }
 
 SEXP jl_value_type(jl_value_t *res) {
-  char *resTy,*aryTy;
+  char *resTy; //,*aryTy;
   SEXP resR;
 
   if(res!=NULL) { //=> get a result
@@ -446,7 +446,7 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
 jl_value_t* jl_eval2jl(SEXP args) {
   char *cmdString;
   jl_value_t *res;
-  SEXP resR;
+  //SEXP resR;
 
   cmdString=(char*)CHAR(STRING_ELT(CADR(args),0));
   // printf("exec: %s\n",cmdString);
