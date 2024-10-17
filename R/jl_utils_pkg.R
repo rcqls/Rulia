@@ -83,13 +83,13 @@ jlpkgisinstalled <- function(pkg) {
 }
 
 jlpkgcheckinstalled <- function() {
-  if(!jlpkgisinstalled(DataFrames)) {
+  if(!jlpkgisinstalled("DataFrames")) {
     cat("DataFrames.jl required! Install it from the julia side\n")
   }
-  if(!jlpkgisinstalled(CategoricalArrays)) {
+  if(!jlpkgisinstalled("CategoricalArrays")) {
     cat("CategoricalArrays.jl required! Install it from the julia side\n")
   }
-  if(!jlpkgisinstalled(RCall)) {
+  if(!jlpkgisinstalled("RCall")) {
     cat("RCall.jl not required but used for UnsafeArray! Install it from the julia side\n")
   }
 }
