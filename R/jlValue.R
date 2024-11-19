@@ -75,7 +75,7 @@ print.jlvalue <- function(jlval, ...) {
         }
         cat("\n")
     } else {
-        if (interactive()) {
+        if (interactive() && !any(search() %in% "tools:rstudio")) {
             invisible(jlvalue_show_display(jlval))
         } else {
             cat(jlvalue_capture_display(jlval))
