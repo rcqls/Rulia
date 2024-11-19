@@ -13,10 +13,14 @@ Also, you can visit [Rencontres R 2024
 the `Rulia` package.
 
 <details>
+
 <summary>
+
 <h1>
+
 Getting started
 </h1>
+
 </summary>
 
 This is an attempt to embed the `julia` language in `R`.
@@ -48,7 +52,26 @@ The author thinks that `Rulia` is a funnier name than `jl4R`.
         `julia` from a binary installer to download. For Windows users
         don’t forget to select `PATH` in the installer
 
+2.  In the `julia` console, install `DataFrames.jl`,
+    `CategoricalArrays.jl`:
+
+``` bash
+# julia mode package (type `]`) and then: add DataFrames, CategoricalArrays
+# Optionnally, try to install later RCall.jl which is not mandatory for using Rulia
+```
+
 2.  Install `Rulia`
+
+    - From binary (**Windows user only**)
+
+      0.  **NB**: this method can be obsolete if the release is too old
+      1.  Donwload
+          [Rulia_0.1.0.zip](https://github.com/rcqls/Rulia/releases/download/v0.1.0/Rulia_0.1.0.zip)
+          and install it inside R
+      2.  Inside a terminal: Whether `julia` is installed with `juliaup`
+          or you specified the `PATH` when launching the binary
+          installer, loading (`library(Rulia)/require(Rulia)`) `Rulia`
+          inside `R` would normally just work.
 
     - From source (**all Operating System**)
 
@@ -71,17 +94,6 @@ The author thinks that `Rulia` is a funnier name than `jl4R`.
       ``` bash
       /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
       ```
-
-    - From binary (**Windows user only**)
-
-      0.  **NB**: this method can be obsolete if the release is too old
-      1.  Donwload
-          [Rulia-0.0.1.zip](https://github.com/rcqls/Rulia/releases/download/v0.1.0/Rulia_0.1.0.zip)
-          and install it inisde R
-      2.  Inside a terminal: Whether `julia` is installed with `juliaup`
-          or you specified the `PATH` when launching the binary
-          installer, loading (`library(Rulia)/require(Rulia)`) `Rulia`
-          inside `R` would normally just work.
 
 3.  Install the followiwng `julia` packages required for `Rulia` in
     statistic mode: `DataFrames`, `CategoricalArrays`.
@@ -167,11 +179,16 @@ Then, it is pretty direct to:
 3.  and finally convert the `julia` result to an `R` object
 
 </details>
+
 <details>
+
 <summary>
+
 <h1>
+
 <code>Rulia</code> in user-friendly mode
 </h1>
+
 </summary>
 
 1.  `Rulia` package when loaded, initializes a `julia` session useable
@@ -184,10 +201,14 @@ Then, it is pretty direct to:
 - define `julia` variable(s) directly inside the `julia` session
 
 <details>
+
 <summary>
+
 <h2>
+
 <code>jl()</code>: <code>julia</code> code evaluation
 </h2>
+
 </summary>
 
 Thanks to the `jl()` function, `Rulia` allows us to execute `julia`
@@ -234,12 +255,17 @@ jl(`[
 All these commands return `jlvalue` objects which are `R` external
 pointers wrapping `jl_value_t*` values.
 </details>
+
 <details>
+
 <summary>
+
 <h2>
+
 <code>jl()</code>: <code>julia</code> converter of <code>R</code>
 objects
 </h2>
+
 </summary>
 
 A lot of `R` objects can be converted in `julia` objects by simply put
@@ -324,12 +350,17 @@ jl(2 * sin(1:3))    # this is a R call
     ## [1] 1.682942 1.818595 0.282240
 
 </details>
+
 <details>
+
 <summary>
+
 <h2>
+
 <code>jl()</code>: <code>julia</code> function call inside
 <code>R</code>
 </h2>
+
 </summary>
 
 The main use of the `Rulia` package is to call `julia` function (in
@@ -372,7 +403,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x131460c38>
+    ## <bytecode: 0x1580c8c38>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -466,11 +497,16 @@ jl(sum)(1:10, init=12)  # a double
     ## 67.0
 
 </details>
+
 <details>
+
 <summary>
+
 <h2>
+
 <code>jl()</code>: <code>julia</code> variable(s) from <code>R</code>
 </h2>
+
 </summary>
 
 ``` r
@@ -527,11 +563,16 @@ jl()$b  # as explained in the next section
     ##  3
 
 </details>
+
 <details>
+
 <summary>
+
 <h2>
+
 <code>jl()</code>: <code>julia</code> variables environment</code>
 </h2>
+
 </summary>
 
 Without any argument, `jl()` returns the list of all `julia` variables
@@ -562,11 +603,16 @@ jl()$c  # c does not exist and then fails
     ## Julia Exception: UndefVarError
 
 </details>
+
 <details>
+
 <summary>
+
 <h2>
+
 <code>R()</code>: <code>R</code> converter of <code>julia</code> objects
 </h2>
+
 </summary>
 
 The converse conversion of `jl()` is `R()`
@@ -584,11 +630,16 @@ jl(rand)(2L) |> R()
     ## [1] 0.4582877 0.6246530
 
 </details>
+
 <details>
+
 <summary>
+
 <h2>
+
 <code>Rulia</code> in the statistic context
 </h2>
+
 </summary>
 
 - `DataFrame` (`julia` side) and `data.frame` (`R` side)
@@ -751,12 +802,18 @@ jl(ca_R)
     ##  "titi"
 
 </details>
+
 </details>
+
 <details>
+
 <summary>
+
 <h1>
+
 <code>UnsafeArray</code> thanks to <code>RCall.jl</code>
 </h1>
+
 </summary>
 
 Conversion of `R` object to `julia` system can be magically avoided
@@ -778,7 +835,7 @@ zz <- runif(3)
 zz
 ```
 
-    ## [1] 0.5348754 0.3005513 0.6592778
+    ## [1] 0.8646550 0.4380348 0.8771513
 
 ``` r
 Rzz <- R(zz) # jlvalue object wrapping the R object zz
@@ -786,9 +843,9 @@ Rzz
 ```
 
     ## 3-element Vector{Float64}:
-    ##  0.5348753938451409
-    ##  0.3005512598901987
-    ##  0.6592778430785984
+    ##  0.8646550043486059
+    ##  0.4380347589030862
+    ##  0.8771512703970075
 
 ``` r
 class(Rzz)
@@ -809,15 +866,15 @@ Rzz
 
     ## 3-element Vector{Float64}:
     ##  2.0
-    ##  0.3005512598901987
-    ##  0.6592778430785984
+    ##  0.4380347589030862
+    ##  0.8771512703970075
 
 ``` r
 ## and magically (no conversion)
 zz
 ```
 
-    ## [1] 2.0000000 0.3005513 0.6592778
+    ## [1] 2.0000000 0.4380348 0.8771513
 
 `Rzz` is viewed in the `julia` side as a true `Vector{Float64}` pointing
 exactly to address of `zz` which is an `R` vector.  
@@ -896,39 +953,55 @@ jl(f)(R(zz))
 
     ## 3-element Vector{Float64}:
     ##  4.0
-    ##  2.3005512598901987
-    ##  2.6592778430785984
+    ##  2.438034758903086
+    ##  2.8771512703970075
 
 ``` r
 ## and the magic part
 zz
 ```
 
-    ## [1] 4.000000 2.300551 2.659278
+    ## [1] 4.000000 2.438035 2.877151
 
 Important to notice that no change of dimension has to be done in the
 `julia` side. The `julia` wrapper can only read or update value(s).
 
 </details>
+
 <details>
+
 <summary>
+
 <h1>
+
 More details on <code>jl()</code>
 </h1>
+
 </summary>
+
 TODO
 </details>
+
 <details>
+
 <summary>
+
 <h1>
+
 <code>Rulia</code> in low level mode
 </h1>
+
 </summary>
+
 <details>
+
 <summary>
+
 <h2>
+
 safe <code>jleval</code> mode
 </h2>
+
 </summary>
 
 In `Rulia`, `jl` mode offers a way to call a **safe** low level mode
@@ -957,7 +1030,7 @@ jleval("[1,3,4]")   # jl(`[1,2,3]`)
 jleval("VERSION")   # jl(VERSION)
 ```
 
-    ## v"1.11.0"
+    ## v"1.11.1"
 
 ``` r
 jleval("            
@@ -1096,11 +1169,16 @@ closed as the `julia C API`. An unsafe low level mode, called
 `jlvalue_eval` mode, naturally exists in `Rulia` that express the
 closest as possible the `julia C API`.
 </details>
+
 <details>
+
 <summary>
+
 <h2>
+
 unsafe <code>jlvalue_eval</code> mode
 </h2>
+
 </summary>
 
 As expressed before, this mode is **unsafe** and the user should be sure
@@ -1123,7 +1201,7 @@ jlvalue_eval("[1,3,4]")
 jlvalue_eval("VERSION")
 ```
 
-    ## v"1.11.0"
+    ## v"1.11.1"
 
 ``` r
 jlvalue_eval("
@@ -1200,28 +1278,46 @@ jlvalue_func(jlvalue_eval("sum"),jlvalue_eval("[1,3,2]"))
 Also, in this mode
 
 </details>
+
 </details>
+
 <details>
+
 <summary>
+
 <h1>
+
 Pure <code>R</code> package made with <code>Rulia</code>
 </h1>
+
 </summary>
+
 TODO
 </details>
+
 <details>
+
 <summary>
+
 <h1>
+
 <code>Rulia</code> utility functions
 </h1>
+
 </summary>
+
 TODO
 </details>
+
 <details>
+
 <summary>
+
 <h1>
+
 <code>R</code> Finalizers
 </h1>
+
 </summary>
 
 Following the documentation on embedding `julia`, a system of preserved
@@ -1236,11 +1332,16 @@ what happens if a `jlvalue` object is still in the Workspace
 (environment return by `globalenv()` or `.GlobalEnv`).
 
 </details>
+
 <details>
+
 <summary>
+
 <h1>
+
 Benchmark <code>Rcpp</code> vs <code>Rulia</code>
 </h1>
+
 </summary>
 
 ``` r
