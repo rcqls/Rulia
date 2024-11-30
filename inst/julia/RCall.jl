@@ -35,7 +35,7 @@ function unsafe_dataframe(s::Ptr{VecSxp};
     if normalizenames
         vnames = [Symbol(replace(string(v), '.' => '_')) for v in vnames]
     end
-    DataFrame([RCall.isFactor(s) ? unsafe_factor(c) : RCall.unsafe_array(c)   for c in s], vnames, copycols=false)
+    DataFrame([RCall.isFactor(s) ? unsafe_categorical(c) : RCall.unsafe_array(c)   for c in s], vnames, copycols=false)
 end
 
 reval_unprotected_dataframe(str::T, env=RCall.Const.GlobalEnv) where T <: Union{AbstractString, Symbol} = unsafe_dataframe(RCall.reval_p(RCall.rparse_p(str), sexp(env)))

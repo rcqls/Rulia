@@ -12,7 +12,7 @@ jlvalue.default <- function(expr, ...) {
 jlvalue_function_with_exception <- function(jlval, code, parent_envir=parent.frame()) {
     if(is.jlexception(jlval)) {
         jlexception(code, jlval)
-    } else if (is.jlfunction(jlval)) {
+    } else if(is.jlfunction(jlval)) {
         jlfunction(jlval, parent_envir)
     } else {
         jlval
@@ -91,7 +91,11 @@ toR.jlvalue <- function(jlval) {
         if (is.list(res) && any(sapply(res,is.jlvalue))) {
             sapply(res, toR)
         } else {
-            if (is.list(res)) simplify2array(res) else res
+            if (is.list(res)) {
+                simplify2array(res) 
+            } else {
+                res
+            }
         }
     }
 }

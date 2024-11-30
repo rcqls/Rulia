@@ -90,7 +90,7 @@ SEXP Rulia_init(SEXP args)
 void Rulia_exit()
 {
   if(Rulia_julia_running) {
-    jl_atexit_hook(0);
+    jl_atexit_hook(0); //jl_exit(0);
     Rulia_julia_running = 0;
     printf("julia stopped!!!\n");
   }
@@ -369,6 +369,19 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
             INTEGER(nmsR)[dim] = (int)jl_array_dim(res, dim);
           }
         }
+        if(aryTyR == INTSXP && strcmp(aryTy,"Int32") != 0) {
+          // printf("Needs to be converted\n");
+          convInt32 = (jl_function_t*)jl_eval_string("Base.Fix1(broadcast,Base.Fix1(convert,Int32))");
+          // printf("to convert Int32\n");
+          res = jl_call1(convInt32, res);
+          // printf("converted Int32\n");
+        } else if(aryTyR == REALSXP && strcmp(aryTy,"Float64") != 0) {
+          // printf("Needs to be converted Float64\n");
+          convFloat64 = (jl_function_t*)jl_eval_string("Base.Fix1(broadcast,Base.Fix1(convert,Float64))");
+          // printf("to convert Float64\n");
+          res = jl_call1(convFloat64, res);
+          // printf("converted Float64\n");
+        }
         for(i=0;i<d;i++) {
           switch(aryTyR) {
             case STRSXP:
@@ -377,11 +390,6 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
               SET_STRING_ELT(resR,i,mkChar(jl_string_ptr(xData[i])));
               break;
             case INTSXP:
-              if(strcmp(aryTy,"Int32") != 0) {
-                // printf("Needs to be converted\n");
-                convInt32 = (jl_function_t*)jl_eval_string("Base.Fix1(broadcast,Base.Fix1(convert,Int32))");
-                res = jl_call1(convInt32, res);
-              }
               xDataL = (int*)jl_array_data(res, int);
               //xData = jl_array_data(res, jl_value_t*);
               //INTEGER(resR)[i]=xDataL[i]; 
@@ -393,11 +401,6 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
               LOGICAL(resR)[i]=(xDataB[i] ? TRUE : FALSE);// (jl_unbox_bool(xDataB[i]) ? TRUE : FALSE);
               break;
             case REALSXP:
-              if(strcmp(aryTy,"Float64") != 0) {
-                // printf("Needs to be converted\n");
-                convFloat64 = (jl_function_t*)jl_eval_string("Base.Fix1(broadcast,Base.Fix1(convert,Float64))");
-                res = jl_call1(convFloat64, res);
-              }
               xDataD = (double*)jl_array_data(res, double);
               REAL(resR)[i]=xDataD[i];// jl_unbox_float64(xDataD[i]);
               break;
@@ -950,8 +953,11 @@ SEXP Rulia_jlvalue2R(SEXP args) {
   SEXP resR;
 
   JL_GC_PUSH1(&jlv);
+  // printf("Rulia_jlvalue2R start\n");
   jlv=(jl_value_t*)get_preserved_jlvalue_from_R_ExternalPtrAddr(CADR(args));
+  // printf("Rulia_jlvalue2R start2\n");
   resR = jl_value_to_SEXP(jlv);
+  // printf("Rulia_jlvalue2R end\n");
   JL_GC_POP();
   return resR;
 }
