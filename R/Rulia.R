@@ -5,7 +5,7 @@
 jl <- function(obj, ...) {
   jlvars_rexprs <- as.list(sys.call())[-1L]
   if(length(jlvars_rexprs) == 0) {
-    return(.jlEnv())
+    return(.jlenv())
   } else if(!is.null(names(jlvars_rexprs))) {
     ## jl variables mode
     nmjlvars <- names(jlvars_rexprs)

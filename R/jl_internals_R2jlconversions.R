@@ -32,12 +32,12 @@
 }
 
 .RNamedList2jlNamedTuple <- function(obj) {
-    if(length(obj)==0) return(jlTuple())
+    if (length(obj) == 0) return(jlTuple())
     vars <- list()
     types <- c()
     for (nm in names(obj)) {
         vars[[nm]] <- jlvalue(obj[[nm]])
-        types <- c(types, R(jlvalue_typeof(vars[[nm]])))
+        types <- c(types, jlcallR("string", jlvalue_typeof(vars[[nm]]))) ## OLD: R(jlvalue_typeof(vars[[nm]])))
     }
     jlstruct <- paste0("@NamedTuple{", paste(names(obj), "::", types, collapse=",", sep=""), "}") 
     args <- c(jlstruct, unname(vars))

@@ -332,7 +332,7 @@ jl(matrix("one"))
 jl(list(a=c(TRUE,FALSE,TRUE), b=1L))
 ```
 
-    ## @NamedTuple{a::Array, b::Int64}((Bool[1, 0, 1], 1))
+    ## (a = Bool[1, 0, 1], b = 1)
 
 ``` r
 jl(2 * sin(1:3))    # this is a R call
@@ -403,7 +403,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x1580c8c38>
+    ## <bytecode: 0x104107ae8>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -835,7 +835,7 @@ zz <- runif(3)
 zz
 ```
 
-    ## [1] 0.8646550 0.4380348 0.8771513
+    ## [1] 0.6203704 0.1816036 0.9108768
 
 ``` r
 Rzz <- R(zz) # jlvalue object wrapping the R object zz
@@ -843,9 +843,9 @@ Rzz
 ```
 
     ## 3-element Vector{Float64}:
-    ##  0.8646550043486059
-    ##  0.4380347589030862
-    ##  0.8771512703970075
+    ##  0.6203703687060624
+    ##  0.18160362681373954
+    ##  0.9108768133446574
 
 ``` r
 class(Rzz)
@@ -866,15 +866,15 @@ Rzz
 
     ## 3-element Vector{Float64}:
     ##  2.0
-    ##  0.4380347589030862
-    ##  0.8771512703970075
+    ##  0.18160362681373954
+    ##  0.9108768133446574
 
 ``` r
 ## and magically (no conversion)
 zz
 ```
 
-    ## [1] 2.0000000 0.4380348 0.8771513
+    ## [1] 2.0000000 0.1816036 0.9108768
 
 `Rzz` is viewed in the `julia` side as a true `Vector{Float64}` pointing
 exactly to address of `zz` which is an `R` vector.  
@@ -953,15 +953,15 @@ jl(f)(R(zz))
 
     ## 3-element Vector{Float64}:
     ##  4.0
-    ##  2.438034758903086
-    ##  2.8771512703970075
+    ##  2.1816036268137395
+    ##  2.9108768133446574
 
 ``` r
 ## and the magic part
 zz
 ```
 
-    ## [1] 4.000000 2.438035 2.877151
+    ## [1] 4.000000 2.181604 2.910877
 
 Important to notice that no change of dimension has to be done in the
 `julia` side. The `julia` wrapper can only read or update value(s).
@@ -1030,7 +1030,7 @@ jleval("[1,3,4]")   # jl(`[1,2,3]`)
 jleval("VERSION")   # jl(VERSION)
 ```
 
-    ## v"1.11.1"
+    ## v"1.11.5"
 
 ``` r
 jleval("            
@@ -1201,7 +1201,7 @@ jlvalue_eval("[1,3,4]")
 jlvalue_eval("VERSION")
 ```
 
-    ## v"1.11.1"
+    ## v"1.11.5"
 
 ``` r
 jlvalue_eval("

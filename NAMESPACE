@@ -63,9 +63,9 @@ S3method(toR,data.frame)
 S3method(toR,RObject)
 S3method(toR,Ptr)
 
-S3method("names",jlEnv)
-S3method("$",jlEnv)
-S3method("print",jlEnv)
+S3method("names",jlenv)
+S3method("$",jlenv)
+S3method("print",jlenv)
 
 S3method("names",Struct)
 S3method("[",Struct)

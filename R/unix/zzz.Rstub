@@ -1,2 +1,0 @@
-.First.lib <- function(lib, pkg) 
-    stop("Ruby support is not available on this system")

@@ -84,7 +84,7 @@ print.jlvalue <- function(jlval, ...) {
 }
 
 toR.jlvalue <- function(jlval) {
-    res <- .jlvalue2R(jlval)
+    res <- .jlvalue2r(jlval)
     if (typeof(res) == "externalptr") {
         res
     } else {
