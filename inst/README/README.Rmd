@@ -68,7 +68,7 @@ Also `Rulia` is the next step of the preliminary project called [`jl4R`](https:/
             export JULIA_DIR=$(julia -e "p=joinpath(splitpath(Sys.BINDIR)[1:end-1]);print(Sys.iswindows() ? replace(p, Base.Filesystem.path_separator => '/') : p)")
             Rscript -e 'remotes::install_github("rcqls/Rulia",force=TRUE,build=FALSE)'
             ```
-            3. **Rulia source from git**
+            3. **Rulia source from git**<br/>
             Click the `copy` button to copy the following lines and paste it in a `bash` terminal:
             ```bash
             # cd <RootDir_Rulia> (where <RootDir_Rulia> is the root directory of Rulia source)

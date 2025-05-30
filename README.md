@@ -105,8 +105,9 @@ The author thinks that `Rulia` is a funnier name than `jl4R`.
           Rscript -e 'remotes::install_github("rcqls/Rulia",force=TRUE,build=FALSE)'
           ```
 
-          3.  **Rulia source from git** Click the `copy` button to copy
-              the following lines and paste it in a `bash` terminal:
+          3.  **Rulia source from git**<br/> Click the `copy` button to
+              copy the following lines and paste it in a `bash`
+              terminal:
 
           ``` bash
           # cd <RootDir_Rulia> (where <RootDir_Rulia> is the root directory of Rulia source)
@@ -423,7 +424,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x142a47040>
+    ## <bytecode: 0x12f6fa840>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -855,7 +856,7 @@ zz <- runif(3)
 zz
 ```
 
-    ## [1] 0.7559940 0.5997165 0.6898027
+    ## [1] 0.8501877 0.8292870 0.5537952
 
 ``` r
 Rzz <- R(zz) # jlvalue object wrapping the R object zz
@@ -863,9 +864,9 @@ Rzz
 ```
 
     ## 3-element Vector{Float64}:
-    ##  0.755993960890919
-    ##  0.5997164752334356
-    ##  0.6898027407005429
+    ##  0.8501877135131508
+    ##  0.8292869853321463
+    ##  0.5537952221930027
 
 ``` r
 class(Rzz)
@@ -886,15 +887,15 @@ Rzz
 
     ## 3-element Vector{Float64}:
     ##  2.0
-    ##  0.5997164752334356
-    ##  0.6898027407005429
+    ##  0.8292869853321463
+    ##  0.5537952221930027
 
 ``` r
 ## and magically (no conversion)
 zz
 ```
 
-    ## [1] 2.0000000 0.5997165 0.6898027
+    ## [1] 2.0000000 0.8292870 0.5537952
 
 `Rzz` is viewed in the `julia` side as a true `Vector{Float64}` pointing
 exactly to address of `zz` which is an `R` vector.  
@@ -973,15 +974,15 @@ jl(f)(R(zz))
 
     ## 3-element Vector{Float64}:
     ##  4.0
-    ##  2.5997164752334356
-    ##  2.689802740700543
+    ##  2.8292869853321463
+    ##  2.5537952221930027
 
 ``` r
 ## and the magic part
 zz
 ```
 
-    ## [1] 4.000000 2.599716 2.689803
+    ## [1] 4.000000 2.829287 2.553795
 
 Important to notice that no change of dimension has to be done in the
 `julia` side. The `julia` wrapper can only read or update value(s).
