@@ -58,11 +58,24 @@ Also `Rulia` is the next step of the preliminary project called [`jl4R`](https:/
             - Add `Rscript` in the `PATH` environment variable (see for example [this
             page](https://www.hanss.info/sebastian/post/rtools-path/))
         2.  You need the `remotes` R package. 
-        3.  Bash installation (all Operating Systems): click the `copy` button to copy the following line and paste in in a `bash` terminal:
-    ```bash
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
-    ```
-
+        3.  Bash installation (all Operating Systems): choose one of these options
+            1. Click the `copy` button to copy the following line and paste it in a `bash` terminal:
+            ```bash
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
+            ```
+            2. Click the `copy` button to copy the following lines and paste it in a `bash` terminal:
+            ```bash
+            export JULIA_DIR=$(julia -e "p=joinpath(splitpath(Sys.BINDIR)[1:end-1]);print(Sys.iswindows() ? replace(p, Base.Filesystem.path_separator => '/') : p)")
+            Rscript -e 'remotes::install_github("rcqls/Rulia",force=TRUE,build=FALSE)'
+            ```
+            3. **Rulia source from git**
+            Click the `copy` button to copy the following lines and paste it in a `bash` terminal:
+            ```bash
+            # cd <RootDir_Rulia> (where <RootDir_Rulia> is the root directory of Rulia source)
+            git clone https://github.com/rcqls/Rulia
+            export JULIA_DIR=$(julia -e "p=joinpath(splitpath(Sys.BINDIR)[1:end-1]);print(Sys.iswindows() ? replace(p, Base.Filesystem.path_separator => '/') : p)")
+            R CMD INSTALL Rulia
+            ```
 3. Install the followiwng `julia` packages required for `Rulia` in statistic mode: `DataFrames`, `CategoricalArrays`.
 
 ## Quick live session

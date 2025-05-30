@@ -87,13 +87,33 @@ The author thinks that `Rulia` is a funnier name than `jl4R`.
 
       2.  You need the `remotes` R package.
 
-      3.  Bash installation (all Operating Systems): click the `copy`
-          button to copy the following line and paste in in a `bash`
-          terminal:
+      3.  Bash installation (all Operating Systems): choose one of these
+          options
 
-      ``` bash
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
-      ```
+          1.  Click the `copy` button to copy the following line and
+              paste it in a `bash` terminal:
+
+          ``` bash
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
+          ```
+
+          2.  Click the `copy` button to copy the following lines and
+              paste it in a `bash` terminal:
+
+          ``` bash
+          export JULIA_DIR=$(julia -e "p=joinpath(splitpath(Sys.BINDIR)[1:end-1]);print(Sys.iswindows() ? replace(p, Base.Filesystem.path_separator => '/') : p)")
+          Rscript -e 'remotes::install_github("rcqls/Rulia",force=TRUE,build=FALSE)'
+          ```
+
+          3.  **Rulia source from git** Click the `copy` button to copy
+              the following lines and paste it in a `bash` terminal:
+
+          ``` bash
+          # cd <RootDir_Rulia> (where <RootDir_Rulia> is the root directory of Rulia source)
+          git clone https://github.com/rcqls/Rulia
+          export JULIA_DIR=$(julia -e "p=joinpath(splitpath(Sys.BINDIR)[1:end-1]);print(Sys.iswindows() ? replace(p, Base.Filesystem.path_separator => '/') : p)")
+          R CMD INSTALL Rulia
+          ```
 
 3.  Install the followiwng `julia` packages required for `Rulia` in
     statistic mode: `DataFrames`, `CategoricalArrays`.
@@ -403,7 +423,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x104107ae8>
+    ## <bytecode: 0x142a47040>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -835,7 +855,7 @@ zz <- runif(3)
 zz
 ```
 
-    ## [1] 0.6203704 0.1816036 0.9108768
+    ## [1] 0.7559940 0.5997165 0.6898027
 
 ``` r
 Rzz <- R(zz) # jlvalue object wrapping the R object zz
@@ -843,9 +863,9 @@ Rzz
 ```
 
     ## 3-element Vector{Float64}:
-    ##  0.6203703687060624
-    ##  0.18160362681373954
-    ##  0.9108768133446574
+    ##  0.755993960890919
+    ##  0.5997164752334356
+    ##  0.6898027407005429
 
 ``` r
 class(Rzz)
@@ -866,15 +886,15 @@ Rzz
 
     ## 3-element Vector{Float64}:
     ##  2.0
-    ##  0.18160362681373954
-    ##  0.9108768133446574
+    ##  0.5997164752334356
+    ##  0.6898027407005429
 
 ``` r
 ## and magically (no conversion)
 zz
 ```
 
-    ## [1] 2.0000000 0.1816036 0.9108768
+    ## [1] 2.0000000 0.5997165 0.6898027
 
 `Rzz` is viewed in the `julia` side as a true `Vector{Float64}` pointing
 exactly to address of `zz` which is an `R` vector.  
@@ -953,15 +973,15 @@ jl(f)(R(zz))
 
     ## 3-element Vector{Float64}:
     ##  4.0
-    ##  2.1816036268137395
-    ##  2.9108768133446574
+    ##  2.5997164752334356
+    ##  2.689802740700543
 
 ``` r
 ## and the magic part
 zz
 ```
 
-    ## [1] 4.000000 2.181604 2.910877
+    ## [1] 4.000000 2.599716 2.689803
 
 Important to notice that no change of dimension has to be done in the
 `julia` side. The `julia` wrapper can only read or update value(s).
