@@ -98,8 +98,8 @@ The author thinks that `Rulia` is a funnier name than `jl4R`.
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
           ```
 
-          2.  \*\*\*\*remote install\*\* with `remotes` R package and
-              `Rscript` required
+          2.  **remote install** with `remotes` R package and `Rscript`
+              required
 
           Click the `copy` button to copy the following lines and paste
           it in a `bash` terminal:
@@ -438,7 +438,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x139e5b120>
+    ## <bytecode: 0x15befab20>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -870,7 +870,7 @@ zz <- runif(3)
 zz
 ```
 
-    ## [1] 0.94759391 0.48586350 0.07970672
+    ## [1] 0.91949244 0.81397502 0.05712346
 
 ``` r
 Rzz <- R(zz) # jlvalue object wrapping the R object zz
@@ -878,9 +878,9 @@ Rzz
 ```
 
     ## 3-element Vector{Float64}:
-    ##  0.9475939120166004
-    ##  0.48586349794641137
-    ##  0.07970672496594489
+    ##  0.9194924407638609
+    ##  0.8139750179834664
+    ##  0.057123455218970776
 
 ``` r
 class(Rzz)
@@ -901,15 +901,15 @@ Rzz
 
     ## 3-element Vector{Float64}:
     ##  2.0
-    ##  0.48586349794641137
-    ##  0.07970672496594489
+    ##  0.8139750179834664
+    ##  0.057123455218970776
 
 ``` r
 ## and magically (no conversion)
 zz
 ```
 
-    ## [1] 2.00000000 0.48586350 0.07970672
+    ## [1] 2.00000000 0.81397502 0.05712346
 
 `Rzz` is viewed in the `julia` side as a true `Vector{Float64}` pointing
 exactly to address of `zz` which is an `R` vector.  
@@ -988,15 +988,15 @@ jl(f)(R(zz))
 
     ## 3-element Vector{Float64}:
     ##  4.0
-    ##  2.4858634979464114
-    ##  2.079706724965945
+    ##  2.8139750179834664
+    ##  2.0571234552189708
 
 ``` r
 ## and the magic part
 zz
 ```
 
-    ## [1] 4.000000 2.485863 2.079707
+    ## [1] 4.000000 2.813975 2.057123
 
 Important to notice that no change of dimension has to be done in the
 `julia` side. The `julia` wrapper can only read or update value(s).

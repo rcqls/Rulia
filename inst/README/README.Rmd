@@ -64,7 +64,7 @@ Also `Rulia` is the next step of the preliminary project called [`jl4R`](https:/
             ```bash
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
             ```
-            2. ****remote install** with `remotes` R package and `Rscript` required
+            2. **remote install** with `remotes` R package and `Rscript` required
             
             Click the `copy` button to copy the following lines and paste it in a `bash` terminal:
             ```bash
