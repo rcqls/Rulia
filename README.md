@@ -121,7 +121,9 @@ The author thinks that `Rulia` is a funnier name than `jl4R`.
           R CMD INSTALL Rulia
           ```
 
-          To update next time without cloning Rulia repo
+          To update next time without cloning Rulia repo, click the
+          `copy` button to copy the following lines and paste it in a
+          `bash` terminal:
 
           ``` bash
           # cd <RuliaRootDir>/Rulia
@@ -438,7 +440,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x15befab20>
+    ## <bytecode: 0x1169c4758>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -870,7 +872,7 @@ zz <- runif(3)
 zz
 ```
 
-    ## [1] 0.91949244 0.81397502 0.05712346
+    ## [1] 0.10602857 0.03332155 0.62960190
 
 ``` r
 Rzz <- R(zz) # jlvalue object wrapping the R object zz
@@ -878,9 +880,9 @@ Rzz
 ```
 
     ## 3-element Vector{Float64}:
-    ##  0.9194924407638609
-    ##  0.8139750179834664
-    ##  0.057123455218970776
+    ##  0.10602857102639973
+    ##  0.03332154522649944
+    ##  0.6296018958091736
 
 ``` r
 class(Rzz)
@@ -901,15 +903,15 @@ Rzz
 
     ## 3-element Vector{Float64}:
     ##  2.0
-    ##  0.8139750179834664
-    ##  0.057123455218970776
+    ##  0.03332154522649944
+    ##  0.6296018958091736
 
 ``` r
 ## and magically (no conversion)
 zz
 ```
 
-    ## [1] 2.00000000 0.81397502 0.05712346
+    ## [1] 2.00000000 0.03332155 0.62960190
 
 `Rzz` is viewed in the `julia` side as a true `Vector{Float64}` pointing
 exactly to address of `zz` which is an `R` vector.  
@@ -988,15 +990,15 @@ jl(f)(R(zz))
 
     ## 3-element Vector{Float64}:
     ##  4.0
-    ##  2.8139750179834664
-    ##  2.0571234552189708
+    ##  2.0333215452264994
+    ##  2.6296018958091736
 
 ``` r
 ## and the magic part
 zz
 ```
 
-    ## [1] 4.000000 2.813975 2.057123
+    ## [1] 4.000000 2.033322 2.629602
 
 Important to notice that no change of dimension has to be done in the
 `julia` side. The `julia` wrapper can only read or update value(s).

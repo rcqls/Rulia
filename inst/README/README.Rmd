@@ -80,7 +80,8 @@ Also `Rulia` is the next step of the preliminary project called [`jl4R`](https:/
             export JULIA_DIR=$(julia -e "p=joinpath(splitpath(Sys.BINDIR)[1:end-1]);print(Sys.iswindows() ? replace(p, Base.Filesystem.path_separator => '/') : p)")
             R CMD INSTALL Rulia
             ```
-            To update next time without cloning Rulia repo 
+            To update next time without cloning Rulia repo, click the `copy` button to copy the following lines and paste
+          it in a `bash` terminal: 
             ```bash
             # cd <RuliaRootDir>/Rulia
             git pull
