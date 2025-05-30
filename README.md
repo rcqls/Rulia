@@ -438,7 +438,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x12bc7ad20>
+    ## <bytecode: 0x139e5b120>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -870,7 +870,7 @@ zz <- runif(3)
 zz
 ```
 
-    ## [1] 0.7770572 0.1474458 0.3921337
+    ## [1] 0.94759391 0.48586350 0.07970672
 
 ``` r
 Rzz <- R(zz) # jlvalue object wrapping the R object zz
@@ -878,9 +878,9 @@ Rzz
 ```
 
     ## 3-element Vector{Float64}:
-    ##  0.7770572281442583
-    ##  0.1474457650911063
-    ##  0.39213374513201416
+    ##  0.9475939120166004
+    ##  0.48586349794641137
+    ##  0.07970672496594489
 
 ``` r
 class(Rzz)
@@ -901,15 +901,15 @@ Rzz
 
     ## 3-element Vector{Float64}:
     ##  2.0
-    ##  0.1474457650911063
-    ##  0.39213374513201416
+    ##  0.48586349794641137
+    ##  0.07970672496594489
 
 ``` r
 ## and magically (no conversion)
 zz
 ```
 
-    ## [1] 2.0000000 0.1474458 0.3921337
+    ## [1] 2.00000000 0.48586350 0.07970672
 
 `Rzz` is viewed in the `julia` side as a true `Vector{Float64}` pointing
 exactly to address of `zz` which is an `R` vector.  
@@ -988,15 +988,15 @@ jl(f)(R(zz))
 
     ## 3-element Vector{Float64}:
     ##  4.0
-    ##  2.1474457650911063
-    ##  2.392133745132014
+    ##  2.4858634979464114
+    ##  2.079706724965945
 
 ``` r
 ## and the magic part
 zz
 ```
 
-    ## [1] 4.000000 2.147446 2.392134
+    ## [1] 4.000000 2.485863 2.079707
 
 Important to notice that no change of dimension has to be done in the
 `julia` side. The `julia` wrapper can only read or update value(s).
