@@ -85,35 +85,49 @@ The author thinks that `Rulia` is a funnier name than `jl4R`.
             example [this
             page](https://www.hanss.info/sebastian/post/rtools-path/))
 
-      2.  You need the `remotes` R package.
-
-      3.  Bash installation (all Operating Systems): choose one of these
+      2.  Bash installation (all Operating Systems): choose one of these
           options
 
-          1.  Click the `copy` button to copy the following line and
-              paste it in a `bash` terminal:
+          1.  **remote install** with `remotes` R package and `curl`
+              required
+
+          Click the `copy` button to copy the following line and paste
+          it in a `bash` terminal:
 
           ``` bash
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/Rulia/HEAD/inst/install.sh)"
           ```
 
-          2.  Click the `copy` button to copy the following lines and
-              paste it in a `bash` terminal:
+          2.  \*\*\*\*remote install\*\* with `remotes` R package and
+              `Rscript` required
+
+          Click the `copy` button to copy the following lines and paste
+          it in a `bash` terminal:
 
           ``` bash
           export JULIA_DIR=$(julia -e "p=joinpath(splitpath(Sys.BINDIR)[1:end-1]);print(Sys.iswindows() ? replace(p, Base.Filesystem.path_separator => '/') : p)")
           Rscript -e 'remotes::install_github("rcqls/Rulia",force=TRUE,build=FALSE)'
           ```
 
-          3.  **Rulia source from git**<br/> Click the `copy` button to
-              copy the following lines and paste it in a `bash`
-              terminal:
+          3.  **copy of Rulia source from git** (`git` required)
+
+          Click the `copy` button to copy the following lines and paste
+          it in a `bash` terminal:
 
           ``` bash
-          # cd <RootDir_Rulia> (where <RootDir_Rulia> is the root directory of Rulia source)
+          # cd <RuliaRootDir> (where <RuliaRootDir> is the root directory of your choice where Rulia source will be copied)
           git clone https://github.com/rcqls/Rulia
           export JULIA_DIR=$(julia -e "p=joinpath(splitpath(Sys.BINDIR)[1:end-1]);print(Sys.iswindows() ? replace(p, Base.Filesystem.path_separator => '/') : p)")
           R CMD INSTALL Rulia
+          ```
+
+          To update next time without cloning Rulia repo
+
+          ``` bash
+          # cd <RuliaRootDir>/Rulia
+          git pull
+          export JULIA_DIR=$(julia -e "p=joinpath(splitpath(Sys.BINDIR)[1:end-1]);print(Sys.iswindows() ? replace(p, Base.Filesystem.path_separator => '/') : p)")
+          R CMD INSTALL .
           ```
 
 3.  Install the followiwng `julia` packages required for `Rulia` in
@@ -424,7 +438,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x12f6fa840>
+    ## <bytecode: 0x12bc7ad20>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -856,7 +870,7 @@ zz <- runif(3)
 zz
 ```
 
-    ## [1] 0.8501877 0.8292870 0.5537952
+    ## [1] 0.7770572 0.1474458 0.3921337
 
 ``` r
 Rzz <- R(zz) # jlvalue object wrapping the R object zz
@@ -864,9 +878,9 @@ Rzz
 ```
 
     ## 3-element Vector{Float64}:
-    ##  0.8501877135131508
-    ##  0.8292869853321463
-    ##  0.5537952221930027
+    ##  0.7770572281442583
+    ##  0.1474457650911063
+    ##  0.39213374513201416
 
 ``` r
 class(Rzz)
@@ -887,15 +901,15 @@ Rzz
 
     ## 3-element Vector{Float64}:
     ##  2.0
-    ##  0.8292869853321463
-    ##  0.5537952221930027
+    ##  0.1474457650911063
+    ##  0.39213374513201416
 
 ``` r
 ## and magically (no conversion)
 zz
 ```
 
-    ## [1] 2.0000000 0.8292870 0.5537952
+    ## [1] 2.0000000 0.1474458 0.3921337
 
 `Rzz` is viewed in the `julia` side as a true `Vector{Float64}` pointing
 exactly to address of `zz` which is an `R` vector.  
@@ -974,15 +988,15 @@ jl(f)(R(zz))
 
     ## 3-element Vector{Float64}:
     ##  4.0
-    ##  2.8292869853321463
-    ##  2.5537952221930027
+    ##  2.1474457650911063
+    ##  2.392133745132014
 
 ``` r
 ## and the magic part
 zz
 ```
 
-    ## [1] 4.000000 2.829287 2.553795
+    ## [1] 4.000000 2.147446 2.392134
 
 Important to notice that no change of dimension has to be done in the
 `julia` side. The `julia` wrapper can only read or update value(s).
