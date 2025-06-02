@@ -13,3 +13,8 @@ test_that('jl eval R jl(c(1L,3L,2L))', {
 test_that('jl eval R c(TRUE,FALSE,TRUE)', {
   expect_jlequal(jl(c(TRUE,FALSE,TRUE)), "3-element Vector{Bool}:\n 1\n 0\n 1")
 })
+
+test_that('jl eval R matrix("one")', {
+  expect_jlequal(jl(matrix("one")), "1×1 Matrix{String}:\n \"one\"")
+})
+jl(matrix("one"))

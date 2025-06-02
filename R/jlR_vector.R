@@ -1,8 +1,9 @@
 jlvalue.double <- jlvalue.integer <- jlvalue.logical <- jlvalue.character <-function(obj, vector=FALSE, ...) {
     ## if(!.jlrunning()) .jlinit()
     jlval <- .Call("Rulia_VECSXP_to_jl_array_EXTPTRSXP", obj, PACKAGE = "Rulia")
+    if(!is.null(dim(obj))) vector <- TRUE
     if(length(obj) == 1 && !vector) {
-        jlval[1]
+      jlval[1]
     } else {
         if(is.null(dim(obj))) {
             jlval
