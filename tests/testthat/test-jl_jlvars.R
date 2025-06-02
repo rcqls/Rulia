@@ -20,3 +20,7 @@ test_that("jl jlvars jl(`c.start`)", {
 test_that("jl jlvars jl(`c.stop`)", {
   expect_jlequal(jl(`c.stop`), "3")
 })
+
+test_that("jl jlenv jl()$c", {
+  expect_jlequal(jl(c), "1:3")
+})

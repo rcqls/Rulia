@@ -441,7 +441,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x12500bbd8>
+    ## <bytecode: 0x121f6d9d8>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -656,10 +656,10 @@ jl()$b  # b variable in Main module
     ##  3
 
 ``` r
-jl()$c  # c does not exist and then fails
+jl()$d  # d does not exist and then fails
 ```
 
-    ## 1:3
+    ## Julia Exception: UndefVarError
 
 </details>
 
@@ -894,7 +894,7 @@ zz <- runif(3)
 zz
 ```
 
-    ## [1] 0.71069973 0.39423409 0.04873281
+    ## [1] 0.7336904 0.9829669 0.7289974
 
 ``` r
 Rzz <- R(zz) # jlvalue object wrapping the R object zz
@@ -902,9 +902,9 @@ Rzz
 ```
 
     ## 3-element Vector{Float64}:
-    ##  0.7106997319497168
-    ##  0.39423409453593194
-    ##  0.04873280576430261
+    ##  0.7336904120165855
+    ##  0.982966891489923
+    ##  0.7289974065497518
 
 ``` r
 class(Rzz)
@@ -925,15 +925,15 @@ Rzz
 
     ## 3-element Vector{Float64}:
     ##  2.0
-    ##  0.39423409453593194
-    ##  0.04873280576430261
+    ##  0.982966891489923
+    ##  0.7289974065497518
 
 ``` r
 ## and magically (no conversion)
 zz
 ```
 
-    ## [1] 2.00000000 0.39423409 0.04873281
+    ## [1] 2.0000000 0.9829669 0.7289974
 
 `Rzz` is viewed in the `julia` side as a true `Vector{Float64}` pointing
 exactly to address of `zz` which is an `R` vector.  
@@ -1012,15 +1012,15 @@ jl(f)(R(zz))
 
     ## 3-element Vector{Float64}:
     ##  4.0
-    ##  2.394234094535932
-    ##  2.0487328057643026
+    ##  2.982966891489923
+    ##  2.7289974065497518
 
 ``` r
 ## and the magic part
 zz
 ```
 
-    ## [1] 4.000000 2.394234 2.048733
+    ## [1] 4.000000 2.982967 2.728997
 
 Important to notice that no change of dimension has to be done in the
 `julia` side. The `julia` wrapper can only read or update value(s).

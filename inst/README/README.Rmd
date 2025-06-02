@@ -269,7 +269,7 @@ It is also possible to access a specific `julia` variable from the `julia` varia
 
 ```{r}
 jl()$b  # b variable in Main module
-jl()$c  # c does not exist and then fails
+jl()$d  # d does not exist and then fails
 ```
 
 </details>
