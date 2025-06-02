@@ -241,6 +241,7 @@ jl(a)
 jl(b)
 jl(c)
 jl(collect)(c)
+jl(`c.start, c.stop`)
 ```
 
 A special conflict case may happen now if `b` is also a `R` variable.
