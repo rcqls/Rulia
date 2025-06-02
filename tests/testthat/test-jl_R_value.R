@@ -17,4 +17,13 @@ test_that('jl eval R c(TRUE,FALSE,TRUE)', {
 test_that('jl eval R matrix("one")', {
   expect_jlequal(jl(matrix("one")), "1×1 Matrix{String}:\n \"one\"")
 })
-jl(matrix("one"))
+
+test_that('jl eval R list(a=c(TRUE,FALSE,TRUE), b=1L)', {
+  expect_jlequal(jl(list(a=c(TRUE,FALSE,TRUE), b=1L)), "(a = Bool[1, 0, 1], b = 1)")
+})
+
+test_that('jl eval R call 2 * sin(1:3)', {
+  expect_jlequal(jl(2 * sin(1:3)), "3-element Vector{Float64}:\n 1.682941969615793\n 1.8185948536513634\n 0.2822400161197344")
+})
+
+jl(2 * sin(1:3))    # this is a R call

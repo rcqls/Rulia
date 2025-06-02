@@ -236,9 +236,11 @@ jl(sum)(1:10, init=12)  # a double
 
 <details><summary><h2><code>jl()</code>: <code>julia</code> variable(s) from <code>R</code></h2></summary>
 ```{r}
-jl(a=jl(rand)(2L), b=1:3)
+jl(a=jl(rand)(2L), b=1:3, c=`1:3`)
 jl(a)
 jl(b)
+jl(c)
+jl(collect)(c)
 ```
 
 A special conflict case may happen now if `b` is also a `R` variable.
