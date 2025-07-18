@@ -14,9 +14,9 @@
 
 
 `names.jlenv` <- function(obj) {
-    ## setdiff(R(jleval("names(Main)")), c("Base","Core","Main","display_buffer","Rulia_ANSWER","preserved_refs"))
+    ## setdiff(R(jleval("names(Main)")), c("Base","Core","Main","display_buffer","preserved_refs"))
     # No Module returned
-    setdiff(R(jlvalue_eval("names(Main)[.!(convert.(Bool, isa.(eval.(names(Main)),Module)))]")), c("display_buffer","Rulia_ANSWER","preserved_refs"))
+    setdiff(R(jlvalue_eval("names(Main)[.!(convert.(Bool, isa.(eval.(names(Main)),Module)))]")), c("display_buffer","preserved_refs"))
 }
 
 `print.jlenv` <- function(obj, ...) {

@@ -2,6 +2,8 @@ module Rulia
 import TOML
 export jltrycall, funcfind
 
+global Ans = missing
+
 function display_buffer(res)
     buf = IOBuffer();
     td = TextDisplay(buf);

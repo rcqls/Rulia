@@ -13,6 +13,7 @@
 // #endif
 
 #define preserved
+#define rulia_anszzz
 
 // JULIA_DEFINE_FAST_TLS => ISSUE on docker linux relocation R_X86_64_TPOFF32 against `jl_pgcstack_localexec'
 static int Rulia_julia_running=0;
@@ -82,7 +83,6 @@ SEXP Rulia_init(SEXP args)
 #ifdef preserved
     jl_init_preserved_refs();
 #endif
-  jl_eval_string("global Rulia_ANSWER");
   }
   return R_NilValue;
 }
@@ -459,7 +459,10 @@ jl_value_t* jl_eval2jl(SEXP args) {
     return (jl_value_t *)jl_exception_occurred(); //jl_eval_string("nothing");
   }
   JL_GC_PUSH1(&res);
-  jl_set_global(jl_main_module, jl_symbol("Rulia_ANSWER"),res);
+#ifdef rulia_ans
+  jl_module_t *jl_Rulia_module = (jl_module_t*)jl_get_global(jl_main_module, jl_symbol("Rulia"));
+  jl_set_global(jl_Rulia_module, jl_symbol("Ans"), res);
+#endif
   JL_GC_POP();
   return res;
 }
@@ -633,10 +636,15 @@ SEXP Rulia_jl_symbol(SEXP ans) {
 /********/
 
 SEXP Rulia_get_ans(void) {
+#ifdef rulia_ans
   jl_value_t *res;
 
-  res=jl_get_global(jl_main_module, jl_symbol("Rulia_ANSWER"));
+  jl_module_t *jl_Rulia_module = (jl_module_t*)jl_get_global(jl_main_module, jl_symbol("Rulia"));
+  res=jl_get_global(jl_Rulia_module, jl_symbol("Ans"));
   return jl_value_to_SEXP(res);
+#else
+  return R_NilValue;
+#endif
 }
 
 SEXP Rulia_set_global_variable(SEXP args) {
