@@ -39,7 +39,7 @@ end
 
 function findpkg(pkg)
     d = TOML.parsefile(Base.active_project())
-    (pkg in Base.Filesystem.readdir(Base.Sys.STDLIB)) || (!isempty(d) && haskey(d["deps"], pkg))
+    (pkg in Base.Filesystem.readdir(Base.Sys.STDLIB)) || (!isempty(d) && haskey(d["deps"], pkg)) || (!isempty(d) && haskey(d, "name") && d["name"] == pkg)
 end
 
 end
