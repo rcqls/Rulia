@@ -336,16 +336,15 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
       JL_GC_POP();
       return resR;
     }
-    else
-    if(strcmp(resTy,"Array")==0)
+    else if(strcmp(resTy,"Array")==0)
     //if(jl_is_array(res))
     {
       nd = (int)jl_array_ndims(res);
       // Rprintf("array_ndims=%d\n",(int)nd);
       aryTy=(char*)jl_typename_str(jl_array_eltype(res));
       aryTy2=(char*)jl_typeof_str(jl_array_eltype(res));
-      //Rprintf("type elt=%s,%s\n",aryTy,(char*)jl_typeof_str(jl_array_eltype(res)));
-      if(strcmp(aryTy2,"DataType")!=0) return R_NilValue;
+      // Rprintf("type elt=%s,%s, %s\n",aryTy,aryTy2,(char*)jl_typeof_str(jl_array_eltype(res)));
+      if(strcmp(aryTy2,"DataType") !=0 ) return R_NilValue;
       if(strcmp(aryTy,"String")==0) aryTyR=STRSXP;
       else if(strcmp(aryTy,"Complex")==0) aryTyR=CPLXSXP;
       else if(strcmp(aryTy,"Bool")==0) aryTyR=LGLSXP;
@@ -416,9 +415,11 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
               }
               break;
             case VECSXP:
-              xData = jl_array_data(res, jl_value_t*);
-              SET_ELEMENT(resR,i,jl_value_to_SEXP(xData[i]));
-          }
+              // xData = jl_array_data(res, jl_value_t*);
+              // SET_ELEMENT(resR,i,jlvalue(xData[i]));
+              resR = (SEXP)jlvalue(res);
+              return resR;
+            }
         }
         if(nd > 1) {
           setAttrib(resR, R_DimSymbol, nmsR);

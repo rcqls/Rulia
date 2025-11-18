@@ -11,14 +11,23 @@ is.Struct <- function(jlval) {
     R(jlvalue_isstructtype(jlvalue_typeof(jlval)))
 }
 
-names.Struct <- function(jlval) list(type=R(jlvalue_typeof(jlval)), fields=jlfieldnamesR(jlvalue_typeof(jlval)))
+names.Struct <- function(jlval) list(type=R(jlvalue_typeof(jlval)), fields=unlist(jlfieldnamesR(jlval)))
 
 "[.Struct" <- function(jlval, field) {
-    if (field %in% names(jlval)) {
-        jlgetfield(jlval,jlsymbol(field))
+    if (field %in% names(jlval)$fields) {
+        jlgetfield(jlval, field)
     } else {
         NULL
     }
 }
 
 "$.Struct" <- function(jlval, field) jlval[field]
+
+toR.Struct <- function(jlval) {
+    obj <- list()
+    for(field in names(jlval)$fields){
+        obj[[field]] <- toR(jlval[field])
+    }
+    class(obj) <- c("jlStruct", paste0("jl",class(jlval)[1]))
+    obj
+}

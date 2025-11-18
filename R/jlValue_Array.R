@@ -11,7 +11,11 @@ length.Array <- function(jlval) {
     s <- length(jlval)
     if (i > 0 && i <= s) {
         i <- jleval(as.character(i))
-        jlvalue_call("getindex", jlval, i)
+        jlres <- jlvalue_call("getindex", jlval, i)
+        if(is.Struct(jlres)) {
+            class(jlres) <- c(class(jlres)[1], "Struct", class(jlres)[-1])
+        }
+        jlres
     } else {
         NULL
     }
@@ -24,3 +28,12 @@ length.Array <- function(jlval) {
 # `[<-.AbstractArray` <- function(jlval, index, value) {
 #     jltrycall("setindex!", jlval, value, index)
 # }
+
+toR.Array <- function(jlval) {
+    res <- toR.jlvalue(jlval)
+    if (typeof(res) == "externalptr") {
+        sapply(1:length(jlval), function(i) toR(jlval[i]))
+    } else {
+        res
+    }
+}

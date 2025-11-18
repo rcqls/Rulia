@@ -9,4 +9,4 @@
 library(testthat)
 library(Rulia)
 
-test_check("Rulia")
+test_dir("tests/testthat")
