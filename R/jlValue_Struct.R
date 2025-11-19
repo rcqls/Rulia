@@ -32,5 +32,5 @@ toR.Struct <- function(jlval) {
     obj
 }
 
-## Symbol is a Struct in Julia so this is required
-toR.Symbol <- function(jlval) toR.jlvalue(jlval)
+## Symbol, String are a Struct in Julia so this is required
+toR.Symbol <- toR.String <- function(jlval) toR.jlvalue(jlval)
