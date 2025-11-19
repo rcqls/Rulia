@@ -57,7 +57,9 @@ jlvalue_set <- function(var, value, vector = FALSE) {
   ## if (!.jlrunning()) .jlinit()
   jlval <- jlvalue(value)
   jlrun(paste("global", var))
-  .External("Rulia_set_global_variable", var, jlval, PACKAGE = "Rulia")
+  ## Julia API DOES NOT WORK: .External("Rulia_set_global_variable", var, jlval, PACKAGE = "Rulia")
+  ##jl(`setglobal!`)(jl(Main),jlsymbol(var),jlval)
+  jlcall("setglobal!",jl(Main),jlsymbol(var),jlval)
   return(invisible())
 }
 
