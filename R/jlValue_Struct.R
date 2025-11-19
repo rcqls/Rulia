@@ -31,3 +31,5 @@ toR.Struct <- function(jlval) {
     class(obj) <- c("jlStruct", paste0("jl",class(jlval)[1]))
     obj
 }
+
+toR.Symbol <- function(jlval) toR.jlvalue(jlval)

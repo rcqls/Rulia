@@ -10,7 +10,7 @@ toR.DataFrame <- function(jlval) {
     for(nm in nms) {
         res[[nm]] <- jlvalue_callR("getindex",jlval, jlcolon(), jlsymbol(nm))
     }
-    attr(res,"row.names") <- as.character(1:length(res[[1]]))
+    attr(res,"row.names") <- as.character(seq(1,length=length(res[[1]])))
     class(res) <- "data.frame"
     res
 }
