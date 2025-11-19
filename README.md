@@ -441,7 +441,7 @@ jl_set.seed
     ##     jlusing(Random)
     ##     invisible(jl(`Random.seed!`)(as.integer(n)))
     ## }
-    ## <bytecode: 0x137bfcc70>
+    ## <bytecode: 0x10d8093f8>
     ## <environment: namespace:Rulia>
 
 ``` r
@@ -533,6 +533,39 @@ jl(sum)(1:10, init=12)  # a double
 ```
 
     ## 67.0
+
+Also, one can use this syntax to call constructor of a julia struct
+
+``` r
+ jl(`struct A;a::Int;b::Vector{Float64};end`)
+```
+
+    ## nothing
+
+``` r
+ a_jl <- jl(A)(1,1:3)
+ a_jl
+```
+
+    ## A(1, [1.0, 2.0, 3.0])
+
+``` r
+ class(a_jl)
+```
+
+    ## [1] "A"       "Struct"  "jlvalue"
+
+``` r
+ R(a_jl)
+```
+
+    ## $a
+    ## [1] 1
+    ## 
+    ## $b
+    ## [1] 1 2 3
+    ## 
+    ## ## from jl: struct A
 
 </details>
 
@@ -641,7 +674,7 @@ in the `Main` module.
 jl()
 ```
 
-    ## julia environment:  a, b, c
+    ## julia environment:  A, a, b, c
 
 It is also possible to access a specific `julia` variable from the
 `julia` variables environment `R` object.
@@ -894,7 +927,7 @@ zz <- runif(3)
 zz
 ```
 
-    ## [1] 0.4733522 0.4653528 0.9670741
+    ## [1] 0.4471927 0.8720863 0.7207851
 
 ``` r
 Rzz <- R(zz) # jlvalue object wrapping the R object zz
@@ -902,9 +935,9 @@ Rzz
 ```
 
     ## 3-element Vector{Float64}:
-    ##  0.47335219685919583
-    ##  0.46535280253738165
-    ##  0.9670741097070277
+    ##  0.44719271664507687
+    ##  0.8720863468479365
+    ##  0.720785143552348
 
 ``` r
 class(Rzz)
@@ -925,15 +958,15 @@ Rzz
 
     ## 3-element Vector{Float64}:
     ##  2.0
-    ##  0.46535280253738165
-    ##  0.9670741097070277
+    ##  0.8720863468479365
+    ##  0.720785143552348
 
 ``` r
 ## and magically (no conversion)
 zz
 ```
 
-    ## [1] 2.0000000 0.4653528 0.9670741
+    ## [1] 2.0000000 0.8720863 0.7207851
 
 `Rzz` is viewed in the `julia` side as a true `Vector{Float64}` pointing
 exactly to address of `zz` which is an `R` vector.  
@@ -1012,15 +1045,15 @@ jl(f)(R(zz))
 
     ## 3-element Vector{Float64}:
     ##  4.0
-    ##  2.4653528025373816
-    ##  2.9670741097070277
+    ##  2.8720863468479365
+    ##  2.720785143552348
 
 ``` r
 ## and the magic part
 zz
 ```
 
-    ## [1] 4.000000 2.465353 2.967074
+    ## [1] 4.000000 2.872086 2.720785
 
 Important to notice that no change of dimension has to be done in the
 `julia` side. The `julia` wrapper can only read or update value(s).

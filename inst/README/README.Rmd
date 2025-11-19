@@ -232,6 +232,15 @@ jl(sum)(1:10)           # an integer
 jl(sum)(1:10, init=12)  # a double
 ```
 
+Also, one can use this syntax to call constructor of a julia struct
+
+```{r}
+ jl(`struct A;a::Int;b::Vector{Float64};end`)
+ a_jl <- jl(A)(1,1:3)
+ a_jl
+ class(a_jl)
+ R(a_jl)
+```
 </details>
 
 <details><summary><h2><code>jl()</code>: <code>julia</code> variable(s) from <code>R</code></h2></summary>
