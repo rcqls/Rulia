@@ -5,7 +5,7 @@ jlTuple <- function(...) {
 
 toR.Tuple <- function(jlval) {
     obj <- list()
-    for (i in seq(1, length(jlval))) {
+    for (i in seq(1, length=length(jlval))) {
         obj[[i]] <- toR(jlval[i])
     }
     return(obj)

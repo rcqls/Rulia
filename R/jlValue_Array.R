@@ -32,7 +32,7 @@ length.Array <- function(jlval) {
 toR.Array <- function(jlval) {
     res <- toR.jlvalue(jlval)
     if (typeof(res) == "externalptr") {
-        sapply(1:length(jlval), function(i) toR(jlval[i]))
+        sapply(seq(1,length=length(jlval)), function(i) toR(jlval[i]))
     } else {
         res
     }
