@@ -90,6 +90,9 @@ jltryfunc <- function(jlval_meth, ..., parent_envir =  parent.frame()) {
   ## TO DEBUG: print(lapply(args, jl))
   ## TO DEBUG: print(.RNamedList2jlNamedTuple(kwargs))
   jlval <- .jlvalue_tryfunc(jlval_meth, jl(lapply(args, jl)), .RNamedList2jlNamedTuple(kwargs))
+  if(is.Struct(jlval)) {
+    class(jlval) <- c(class(jlval)[1], "Struct", class(jlval)[-1])
+  }
   jlvalue_function_with_exception(jlval, match.call(), parent_envir)
 }
 

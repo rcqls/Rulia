@@ -15,7 +15,7 @@ export(
   jltypeof, jlstring,
   jltypeofR, jlstringR,
   jlArray, jlCategoricalArray, jlDataFrame,
-  jlDict, jlTuple, jlNamedTuple, jlStruct,
+  jlDict, jlTuple, jlNamedTuple #, jlStruct,
   jlcolon, jlsymbol,
   jlshow, jldisplay,
   "%<:%", "%isa%",
@@ -74,6 +74,7 @@ S3method("print",jlenv)
 S3method("names",Struct)
 S3method("[",Struct)
 S3method("$",Struct)
+S3method("print",jlStruct)
 
 S3method("names",NamedTuple)
 S3method("[",NamedTuple)
