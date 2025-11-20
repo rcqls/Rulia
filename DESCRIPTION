@@ -4,7 +4,7 @@ Title: Julia Interface
 Author: Cqls Team
 Maintainer: Remy Drouilhet <remy.drouilhet@univ-grenoble-alpes.fr>
 Description: R Interface to julia inside without Rcpp dependency.
-License: GPL Version 2 or later.
+License: GPL (>= 2)
 Config/testthat/edition: 3
 Imports: 
      testthat

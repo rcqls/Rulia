@@ -15,7 +15,7 @@ export(
   jltypeof, jlstring,
   jltypeofR, jlstringR,
   jlArray, jlCategoricalArray, jlDataFrame,
-  jlDict, jlTuple, jlNamedTuple #, jlStruct,
+  jlDict, jlTuple, jlNamedTuple, #, jlStruct,
   jlcolon, jlsymbol,
   jlshow, jldisplay,
   "%<:%", "%isa%",
