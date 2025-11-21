@@ -2,7 +2,7 @@ require(Rcpp)
 require(Rulia)
 require(microbenchmark)
 ## Needed to use UnsafeArray as wrapper of R Vector
-jlinclude(Rulia::RCallPtr)
+jlinclude(Rulia::RCall)
 
 options(width=120)
 
