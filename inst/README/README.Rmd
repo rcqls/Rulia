@@ -536,6 +536,8 @@ load("../microbenchmark/RcppVsRulia.RData")
 options(width=120)
 ```
 
+see all the R functions in the file `inst/microbenchmark/RcppVsRulia.R`.
+
 ```{r}
 summary_mbs <- round(sapply(1:6, function(i) sapply(1:28, function(k) mean((mbs[[i]][mbs[[i]]$expr == levels(mbs[[i]]$expr)[3],]$time)) / mean((mbs[[i]][mbs[[i]]$expr == levels(mbs[[i]]$expr)[k],]$time)))),2)
 rownames(summary_mbs) <- levels(mbs[[1]]$expr)

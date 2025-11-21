@@ -62,7 +62,7 @@ somme2JLValueFuncClosure <- function(x) jlvalue_func(jlv_somme2,x)
 
 #####################################
 ## change savemb to TRUE to save mb
-savembs <- FALSE
+savembs <- TRUE
 ns <- c(1000, 10000, 1e5, 1e6, 1e7,1e8)
 xx <- runif(max(ns))
 ####################################
