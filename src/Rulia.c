@@ -5,9 +5,13 @@
 //#include "julia.h"
 #include "julia.h"
 #include <Rdefines.h>
-//OLD: #include <R_ext/PrtUtil.h>
-//NEW:
+#include "Rversion.h"
+
+#if R_VERSION < R_Version(4,6,1)
+#include <R_ext/PrtUtil.h>
+#else
 #include <R_ext/ObjectTable.h>
+#endif
 
 // It seems that this fails on win32 "fd_set" missing!
 // #ifndef Win32
