@@ -5,7 +5,9 @@
 //#include "julia.h"
 #include "julia.h"
 #include <Rdefines.h>
-#include <R_ext/PrtUtil.h>
+//OLD: #include <R_ext/PrtUtil.h>
+//NEW:
+#include <R_ext/ObjectTable.h>
 
 // It seems that this fails on win32 "fd_set" missing!
 // #ifndef Win32
@@ -23,9 +25,9 @@ SEXP jlvalue(jl_value_t* jlvalue);
 #ifdef preserved
 static jl_value_t* preserved_refs;
 static jl_datatype_t* reft;
-// static jl_function_t* setindex;
-// static jl_function_t* delete;
-// static jl_function_t* getfield;
+// static jl_value_t* setindex;
+// static jl_value_t* delete;
+// static jl_value_t* getfield;
 
 void jl_init_preserved_refs() {
   preserved_refs = jl_eval_string("preserved_refs = IdDict()");
@@ -36,18 +38,18 @@ void jl_init_preserved_refs() {
 }
 
 void jl_add_preserved_ref(jl_value_t *ref) {
-  jl_function_t* setindex = jl_get_function(jl_base_module, "setindex!");
+  jl_value_t* setindex = jl_get_function(jl_base_module, "setindex!");
   jl_call3(setindex, preserved_refs, ref, ref);
 }
 
 void jl_rm_preserved_ref(jl_value_t *ref) {
-  jl_function_t* delete = jl_get_function(jl_base_module, "delete!");
+  jl_value_t* delete = jl_get_function(jl_base_module, "delete!");
   jl_call2(delete, preserved_refs, ref);
 }
 
 jl_value_t* get_preserved_jlvalue_from_R_ExternalPtrAddr(SEXP ans) {
   jl_value_t *res=NULL, *ref=NULL;
-  jl_function_t* getfield = jl_get_function(jl_base_module, "getfield");
+  jl_value_t* getfield = jl_get_function(jl_base_module, "getfield");
   JL_GC_PUSH2(&res,&ref);
   ref = (jl_value_t*)R_ExternalPtrAddr(ans);
   res = (jl_value_t*)jl_call2(getfield, ref,(jl_value_t*)jl_symbol("x"));
@@ -112,7 +114,8 @@ SEXP jl_value_type(jl_value_t *res) {
   if(res!=NULL) { //=> get a result
     resTy=(char*)jl_typeof_str(res);
     PROTECT(resR=NEW_CHARACTER(1));
-    CHARACTER_POINTER(resR)[0]=mkChar(resTy);
+    //OLD: CHARACTER_POINTER(resR)[0]=mkChar(resTy);
+    SET_STRING_ELT(resR,0,mkChar(resTy));
     UNPROTECT(1);
     return resR;
   } return R_NilValue;
@@ -152,7 +155,7 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
   int* xDataL;
   uint8_t* xDataB;
   jl_value_t** xData;
-  jl_function_t *func, *len, *func2, *collect, *convInt32, *convFloat64;
+  jl_value_t *func, *len, *func2, *collect, *convInt32, *convFloat64;
   char *resTy, *aryTy, *aryTy2;
 
   if(res!=NULL) { //=> get a result
@@ -199,7 +202,7 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
     if(Rulia_isa(res,"Number")) {
       if(strcmp(resTy,"Float64") != 0) {
         // printf("Needs to be converted\n");
-        convFloat64 = (jl_function_t*)jl_eval_string("Base.Fix1(convert,Float64)");
+        convFloat64 = (jl_value_t*)jl_eval_string("Base.Fix1(convert,Float64)");
         res = jl_call1(convFloat64, res);
       }
       PROTECT(resR=NEW_NUMERIC(1));
@@ -212,7 +215,8 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
     //if(jl_is_bool(res))
     {
       PROTECT(resR=NEW_CHARACTER(1));
-      CHARACTER_POINTER(resR)[0]=mkChar(jl_typename_str(res));
+      //OLD/ CHARACTER_POINTER(resR)[0]=mkChar(jl_typename_str(res));
+      SET_STRING_ELT(resR, 0, jl_typename_str(res));
       UNPROTECT(1);
       return resR;
     }
@@ -243,7 +247,7 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
     if(strcmp(resTy,"Regex")==0)
     //if(jl_is_bool(res))
     {
-      // call=(jl_function_t*)jl_get_global(jl_base_module, jl_symbol("show"));
+      // call=(jl_value_t*)jl_get_global(jl_base_module, jl_symbol("show"));
       // printf("ici\n");
       // if (call) tmp=jl_call1(call,res);
       // else printf("call failed!\n");
@@ -255,7 +259,8 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
     if(strcmp(resTy,"String")==0)
     {
       PROTECT(resR=NEW_CHARACTER(1));
-      CHARACTER_POINTER(resR)[0]=mkChar(jl_string_ptr(res));
+      //OLD: CHARACTER_POINTER(resR)[0]=mkChar(jl_string_ptr(res));
+      SET_STRING_ELT(resR, 0, mkChar(jl_string_ptr(res)));
       UNPROTECT(1);
       return resR;
     }
@@ -263,7 +268,8 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
     if(strcmp(resTy,"Symbol")==0 )
     {
        PROTECT(resR=NEW_CHARACTER(1));
-      CHARACTER_POINTER(resR)[0]=mkChar(jl_symbol_name((jl_sym_t *)res));
+      //OLD: CHARACTER_POINTER(resR)[0]=mkChar(jl_symbol_name((jl_sym_t *)res));
+      SET_STRING_ELT(resR, 0, mkChar(jl_symbol_name((jl_sym_t *)res)));
       UNPROTECT(1);
       return resR;
     }
@@ -370,13 +376,13 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
         }
         if(aryTyR == INTSXP && strcmp(aryTy,"Int32") != 0) {
           // printf("Needs to be converted\n");
-          convInt32 = (jl_function_t*)jl_eval_string("Base.Fix1(broadcast,Base.Fix1(convert,Int32))");
+          convInt32 = (jl_value_t*)jl_eval_string("Base.Fix1(broadcast,Base.Fix1(convert,Int32))");
           // printf("to convert Int32\n");
           res = jl_call1(convInt32, res);
           // printf("converted Int32\n");
         } else if(aryTyR == REALSXP && strcmp(aryTy,"Float64") != 0) {
           // printf("Needs to be converted Float64\n");
-          convFloat64 = (jl_function_t*)jl_eval_string("Base.Fix1(broadcast,Base.Fix1(convert,Float64))");
+          convFloat64 = (jl_value_t*)jl_eval_string("Base.Fix1(broadcast,Base.Fix1(convert,Float64))");
           // printf("to convert Float64\n");
           res = jl_call1(convFloat64, res);
           // printf("converted Float64\n");
@@ -731,7 +737,7 @@ SEXP Rulia_jlvalue_eval(SEXP args)
 SEXP Rulia_jlvalue_call0(SEXP args) {
   char *meth;
   jl_value_t *res=NULL;
-  jl_function_t *func;
+  jl_value_t *func;
   SEXP resR;
 
   JL_GC_PUSH2(&res,&func);
@@ -746,7 +752,7 @@ SEXP Rulia_jlvalue_call0(SEXP args) {
 SEXP Rulia_jlvalue_call1(SEXP args) {
   char *meth;
   jl_value_t *jlv=NULL, *res=NULL;
-  jl_function_t *func=NULL;
+  jl_value_t *func=NULL;
   SEXP resR;
 
   meth = (char*)CHAR(STRING_ELT(CADR(args),0));
@@ -761,10 +767,10 @@ SEXP Rulia_jlvalue_call1(SEXP args) {
 
 SEXP Rulia_jlvalue_func_call1(SEXP args) {
   jl_value_t *jlv=NULL, *res=NULL;
-  jl_function_t *func=NULL;
+  jl_value_t *func=NULL;
   SEXP resR;
   JL_GC_PUSH3(&jlv,&func,&res);
-  func = (jl_function_t*)get_preserved_jlvalue_from_R_ExternalPtrAddr(CADR(args));
+  func = (jl_value_t*)get_preserved_jlvalue_from_R_ExternalPtrAddr(CADR(args));
   jlv=(jl_value_t*)get_preserved_jlvalue_from_R_ExternalPtrAddr(CADDR(args));
   res = jl_call1(func, jlv);
   resR=(SEXP)jlvalue(res);
@@ -775,7 +781,7 @@ SEXP Rulia_jlvalue_func_call1(SEXP args) {
 SEXP Rulia_jlvalue_call2(SEXP args) {
   char *meth;
   jl_value_t *jlv = NULL, *res = NULL, *jlarg = NULL;
-  jl_function_t *func=NULL;
+  jl_value_t *func=NULL;
   SEXP resR;
 
   meth = (char*)CHAR(STRING_ELT(CADR(args),0));
@@ -794,7 +800,7 @@ SEXP Rulia_jlvalue_call2(SEXP args) {
 SEXP Rulia_jlvalue_call3(SEXP args) {
   char *meth;
   jl_value_t *jlv=NULL, *res=NULL, *jlarg=NULL, *jlarg2=NULL;
-  jl_function_t *func=NULL;
+  jl_value_t *func=NULL;
   SEXP resR;
 
   meth = (char*)CHAR(STRING_ELT(CADR(args),0));
@@ -814,7 +820,7 @@ SEXP Rulia_jlvalue_call(SEXP jl_meth, SEXP jl_args, SEXP jl_nargs) {
   int nargs;
   jl_value_t **args;
   jl_value_t *res;
-  jl_function_t *func;
+  jl_value_t *func;
   SEXP resR;
 
   // printf("type %d\n", TYPEOF(jl_args));
@@ -838,7 +844,7 @@ SEXP Rulia_jlvalue_call(SEXP jl_meth, SEXP jl_args, SEXP jl_nargs) {
 
 SEXP Rulia_jlvalue_trycall(SEXP args) {
   jl_value_t *jlv=NULL, *res=NULL, *jlarg=NULL, *jlarg2=NULL;
-  jl_function_t *func=NULL;
+  jl_value_t *func=NULL;
   SEXP resR;
 
   jl_module_t *jl_Rulia_module = (jl_module_t*)jl_get_global(jl_main_module, jl_symbol("Rulia"));
@@ -856,14 +862,14 @@ SEXP Rulia_jlvalue_trycall(SEXP args) {
 
 SEXP Rulia_jlvalue_tryfunc(SEXP args) {
   jl_value_t *res=NULL, *jlarg=NULL, *jlarg2=NULL;
-  jl_function_t *func=NULL, *jlv=NULL;
+  jl_value_t *func=NULL, *jlv=NULL;
   SEXP resR;
 
   jl_module_t *jl_Rulia_module = (jl_module_t*)jl_get_global(jl_main_module, jl_symbol("Rulia"));
   func = jl_get_function(jl_Rulia_module, "jltryfunc");
 
   JL_GC_PUSH4(&jlv,&res,&jlarg,&jlarg2);
-  jlv = (jl_function_t*)get_preserved_jlvalue_from_R_ExternalPtrAddr(CADR(args));
+  jlv = (jl_value_t*)get_preserved_jlvalue_from_R_ExternalPtrAddr(CADR(args));
   jlarg=(jl_value_t*)get_preserved_jlvalue_from_R_ExternalPtrAddr(CADDR(args));
   jlarg2=(jl_value_t*)get_preserved_jlvalue_from_R_ExternalPtrAddr(CADDDR(args));
   res = jl_call3(func, jlv, jlarg, jlarg2);
@@ -876,7 +882,7 @@ SEXP Rulia_jlvalue_func_call(SEXP jl_func, SEXP jl_args, SEXP jl_nargs) {
   int nargs;
   jl_value_t **args;
   jl_value_t *res;
-  jl_function_t *func;
+  jl_value_t *func;
   SEXP resR;
 
   // printf("type %d\n", TYPEOF(jl_args));
@@ -889,7 +895,7 @@ SEXP Rulia_jlvalue_func_call(SEXP jl_func, SEXP jl_args, SEXP jl_nargs) {
   for(int i=0;i < nargs;i++) {
     args[i] = (jl_value_t*)(get_preserved_jlvalue_from_R_ExternalPtrAddr(VECTOR_ELT(jl_args,i)));
   }
-  func = (jl_function_t*)(get_preserved_jlvalue_from_R_ExternalPtrAddr(jl_func));
+  func = (jl_value_t*)(get_preserved_jlvalue_from_R_ExternalPtrAddr(jl_func));
   res = jl_call(func, args, nargs);
   // printf("func call inter\n");
   resR=(SEXP)jlvalue(res);
@@ -945,11 +951,11 @@ SEXP Rulia_jlvalue_new_struct(SEXP jl_dt, SEXP jl_args, SEXP jl_nargs) {
 
 // SEXP Rulia_jlvalue_func_new_struct(SEXP args) {
 //   jl_value_t *jlv=NULL, *res=NULL;
-//   jl_function_t *func=NULL;
+//   jl_value_t *func=NULL;
 //   SEXP resR;
 
 //   JL_GC_PUSH3(&jlv,&func,&res);
-//   func = (jl_function_t*)get_preserved_jlvalue_from_R_ExternalPtrAddr(CADR(args));
+//   func = (jl_value_t*)get_preserved_jlvalue_from_R_ExternalPtrAddr(CADR(args));
 //   jlv=(jl_value_t*)get_preserved_jlvalue_from_R_ExternalPtrAddr(CADDR(args));
 //   res = jl_call1(func, jlv);
 //   resR=(SEXP)jlvalue(res);
@@ -985,7 +991,7 @@ SEXP Rulia_typeof2R(SEXP args)
 
 SEXP Rulia_show_preserved_ref(SEXP ans) {
   jl_value_t *res=NULL;
-  jl_function_t* display=NULL;
+  jl_value_t* display=NULL;
   
   JL_GC_PUSH2(&res,&display);
     display = jl_get_function(jl_main_module, "display");
@@ -997,7 +1003,7 @@ SEXP Rulia_show_preserved_ref(SEXP ans) {
 
 SEXP Rulia_capture_preserved_ref(SEXP ans) {
   jl_value_t *res=NULL, *out=NULL;
-  jl_function_t* display=NULL;
+  jl_value_t* display=NULL;
   SEXP outR;
 
   jl_module_t *jl_Rulia_module = (jl_module_t*)jl_get_global(jl_main_module, jl_symbol("Rulia"));
