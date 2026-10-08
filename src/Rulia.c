@@ -220,7 +220,7 @@ SEXP jl_value_to_SEXP(jl_value_t *res) {
     {
       PROTECT(resR=NEW_CHARACTER(1));
       //OLD/ CHARACTER_POINTER(resR)[0]=mkChar(jl_typename_str(res));
-      SET_STRING_ELT(resR, 0, jl_typename_str(res));
+      SET_STRING_ELT(resR, 0, (const char*)jl_typename_str(res));
       UNPROTECT(1);
       return resR;
     }
